@@ -204,10 +204,6 @@
               "target": "Package",
               "version": "[11.3.12, )"
             },
-            "Avalonia.Fonts.Inter": {
-              "target": "Package",
-              "version": "[11.3.12, )"
-            },
             "Avalonia.Themes.Fluent": {
               "target": "Package",
               "version": "[11.3.12, )"

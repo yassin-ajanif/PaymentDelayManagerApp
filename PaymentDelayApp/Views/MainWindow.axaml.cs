@@ -110,7 +110,7 @@ public partial class MainWindow : Window
         };
         var regler = new MenuItem
         {
-            Header = "Régler",
+            Header = RowContextHeader("💰", "Régler"),
             Command = vm.ReglerInvoiceCommand,
             CommandParameter = invoiceRow,
             IsEnabled = invoiceRow.CanRegler,

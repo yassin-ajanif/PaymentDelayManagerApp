@@ -178,22 +178,6 @@
           }
         }
       },
-      "Avalonia.Fonts.Inter/11.3.12": {
-        "type": "package",
-        "dependencies": {
-          "Avalonia": "11.3.12"
-        },
-        "compile": {
-          "lib/net8.0/Avalonia.Fonts.Inter.dll": {
-            "related": ".xml"
-          }
-        },
-        "runtime": {
-          "lib/net8.0/Avalonia.Fonts.Inter.dll": {
-            "related": ".xml"
-          }
-        }
-      },
       "Avalonia.FreeDesktop/11.3.12": {
         "type": "package",
         "dependencies": {
@@ -1380,24 +1364,6 @@
         "lib/net8.0/Avalonia.Diagnostics.xml",
         "lib/netstandard2.0/Avalonia.Diagnostics.dll",
         "lib/netstandard2.0/Avalonia.Diagnostics.xml"
-      ]
-    },
-    "Avalonia.Fonts.Inter/11.3.12": {
-      "sha512": "Q28QGYnGbvrlTwg6md5U0sR8PuP7H77cysnJDR6a/hnCBH71/GPKxi4GGOKh2qFyo15XmvAwNZ+3QetfnOKSXw==",
-      "type": "package",
-      "path": "avalonia.fonts.inter/11.3.12",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "Icon.png",
-        "avalonia.fonts.inter.11.3.12.nupkg.sha512",
-        "avalonia.fonts.inter.nuspec",
-        "lib/net6.0/Avalonia.Fonts.Inter.dll",
-        "lib/net6.0/Avalonia.Fonts.Inter.xml",
-        "lib/net8.0/Avalonia.Fonts.Inter.dll",
-        "lib/net8.0/Avalonia.Fonts.Inter.xml",
-        "lib/netstandard2.0/Avalonia.Fonts.Inter.dll",
-        "lib/netstandard2.0/Avalonia.Fonts.Inter.xml"
       ]
     },
     "Avalonia.FreeDesktop/11.3.12": {
@@ -2630,7 +2596,6 @@
       "Avalonia.Controls.DataGrid >= 11.3.12",
       "Avalonia.Desktop >= 11.3.12",
       "Avalonia.Diagnostics >= 11.3.12",
-      "Avalonia.Fonts.Inter >= 11.3.12",
       "Avalonia.Themes.Fluent >= 11.3.12",
       "CommunityToolkit.Mvvm >= 8.2.1",
       "Microsoft.EntityFrameworkCore.Sqlite >= 9.0.0",
@@ -2705,10 +2670,6 @@
             "version": "[11.3.12, )"
           },
           "Avalonia.Diagnostics": {
-            "target": "Package",
-            "version": "[11.3.12, )"
-          },
-          "Avalonia.Fonts.Inter": {
             "target": "Package",
             "version": "[11.3.12, )"
           },

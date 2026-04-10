@@ -19,20 +19,11 @@
     </Design.DataContext>
 
     <Window.Styles>
-        <Style Selector="DataGridColumnHeader">
-            <Setter Property="Background" Value="#1f2937" />
-            <Setter Property="Foreground" Value="#f9fafb" />
-            <Setter Property="FontWeight" Value="SemiBold" />
-            <Setter Property="Padding" Value="8,10" />
-            <Setter Property="BorderBrush" Value="#374151" />
-            <Setter Property="BorderThickness" Value="0,0,1,1" />
-            <Setter Property="VerticalContentAlignment" Value="Top" />
-            <Setter Property="MinHeight" Value="44" />
+        <Style Selector="TextBlock.title">
+            <Setter Property="Foreground" Value="{DynamicResource AppBrushTextPrimary}" />
         </Style>
-        <Style Selector="DataGridColumnHeader TextBlock">
-            <Setter Property="TextWrapping" Value="Wrap" />
-            <Setter Property="TextAlignment" Value="Center" />
-            <Setter Property="TextTrimming" Value="None" />
+        <Style Selector="TextBlock.subtitle">
+            <Setter Property="Foreground" Value="{DynamicResource AppBrushTextSecondary}" />
         </Style>
         <Style Selector="DataGridRow" x:DataType="models:InvoiceDashboardRow">
             <Setter Property="Background" Value="{Binding RowAlertBackground}" />
@@ -44,8 +35,8 @@
         <!-- Titre + actions -->
         <Grid Grid.Row="0" ColumnDefinitions="*,Auto">
             <StackPanel Spacing="4">
-                <TextBlock Text="Dashboard" FontSize="22" FontWeight="SemiBold" />
-                <TextBlock Text="Factures — recherche et liste" Opacity="0.7" FontSize="13" />
+                <TextBlock Classes="title" Text="Dashboard" FontSize="22" FontWeight="SemiBold" />
+                <TextBlock Classes="subtitle" Text="Factures — recherche et liste" FontSize="13" />
             </StackPanel>
             <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
                 <Button Content="Paramètres" Padding="12,6" IsEnabled="False" Opacity="0.5" />
@@ -54,7 +45,12 @@
         </Grid>
 
         <!-- Barre recherche + liens plan -->
-        <Border Grid.Row="1" Background="#f3f4f6" CornerRadius="8" Padding="12">
+        <Border Grid.Row="1"
+                Background="{DynamicResource AppBrushCard}"
+                BorderBrush="{DynamicResource AppBrushBorder}"
+                BorderThickness="1"
+                CornerRadius="8"
+                Padding="12">
             <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
                 <TextBlock Text="Recherche facture" VerticalAlignment="Center" FontWeight="SemiBold" />
                 <TextBox Grid.Column="1"
@@ -69,21 +65,26 @@
             </Grid>
         </Border>
 
-        <DataGrid x:Name="InvoiceGrid"
-                  Grid.Row="2"
-                  ItemsSource="{Binding Rows}"
-                  SelectedItem="{Binding SelectedRow}"
-                  AutoGenerateColumns="False"
-                  IsReadOnly="True"
-                  CanUserReorderColumns="True"
-                  CanUserResizeColumns="True"
-                  CanUserSortColumns="True"
-                  GridLinesVisibility="Horizontal"
-                  HeadersVisibility="Column"
-                  SelectionMode="Single"
-                  HorizontalScrollBarVisibility="Auto"
-                  VerticalScrollBarVisibility="Auto"
-                  PointerReleased="InvoiceGrid_OnPointerReleased">
+        <Border Grid.Row="2"
+                BorderBrush="{DynamicResource AppBrushFieldBorder}"
+                BorderThickness="1"
+                CornerRadius="6"
+                ClipToBounds="True">
+            <DataGrid x:Name="InvoiceGrid"
+                      ItemsSource="{Binding Rows}"
+                      SelectedItem="{Binding SelectedRow}"
+                      AutoGenerateColumns="False"
+                      IsReadOnly="True"
+                      CanUserReorderColumns="True"
+                      CanUserResizeColumns="True"
+                      CanUserSortColumns="True"
+                      GridLinesVisibility="All"
+                      HeadersVisibility="Column"
+                      SelectionMode="Single"
+                      HorizontalScrollBarVisibility="Auto"
+                      VerticalScrollBarVisibility="Auto"
+                      BorderThickness="0"
+                      PointerReleased="InvoiceGrid_OnPointerReleased">
 
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Date de facture" Binding="{Binding DateFactureDisplay}" Width="120" />
@@ -106,6 +107,7 @@
                 </DataGridTemplateColumn>
                 <DataGridTextColumn Header="Date d'échéance/facture" Binding="{Binding EcheanceFactureDisplay}" Width="140" />
             </DataGrid.Columns>
-        </DataGrid>
+            </DataGrid>
+        </Border>
     </Grid>
 </Window>

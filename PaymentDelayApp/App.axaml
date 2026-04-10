@@ -2,15 +2,157 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="PaymentDelayApp.App"
              xmlns:local="using:PaymentDelayApp"
-             RequestedThemeVariant="Default">
-             <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
+             RequestedThemeVariant="Light">
+
+    <Application.Resources>
+        <!-- Header blue #3396D3 + related tints, gray surfaces & text -->
+        <SolidColorBrush x:Key="AppBrushBluePrimary" Color="#3396D3" />
+        <SolidColorBrush x:Key="AppBrushBlueAccent" Color="#2a7bb0" />
+        <SolidColorBrush x:Key="AppBrushBlueMuted" Color="#7ec4eb" />
+        <SolidColorBrush x:Key="AppBrushBlueButtonHover" Color="#4aa8e0" />
+        <SolidColorBrush x:Key="AppBrushBlueButtonPressed" Color="#2478b8" />
+        <SolidColorBrush x:Key="AppBrushWhite" Color="#ffffff" />
+        <SolidColorBrush x:Key="AppBrushPageBackground" Color="#f1f5f9" />
+        <SolidColorBrush x:Key="AppBrushSurface" Color="#e2e8f0" />
+        <SolidColorBrush x:Key="AppBrushCard" Color="#ffffff" />
+        <SolidColorBrush x:Key="AppBrushBorder" Color="#cbd5e1" />
+        <!-- Borders for TextBox, ComboBox, DataGrid, etc. -->
+        <SolidColorBrush x:Key="AppBrushFieldBorder" Color="#D2D2D2" />
+        <SolidColorBrush x:Key="AppBrushTableHeaderBackground" Color="#d8d8d8" />
+        <SolidColorBrush x:Key="AppBrushTextPrimary" Color="#334155" />
+        <SolidColorBrush x:Key="AppBrushTextSecondary" Color="#64748b" />
+        <!-- Reddit Sans variable (Google Fonts). Fallback: Segoe UI until RedditSans-Variable.ttf is in Assets/Fonts. -->
+        <FontFamily x:Key="AppFontPrimary">avares://PaymentDelayApp/Assets/Fonts/RedditSans-Variable.ttf#Reddit Sans, Segoe UI</FontFamily>
+        <x:Double x:Key="AppFontSizeUi">15</x:Double>
+        <x:Double x:Key="AppFontSizeTableHeader">14</x:Double>
+    </Application.Resources>
 
     <Application.DataTemplates>
         <local:ViewLocator/>
     </Application.DataTemplates>
-  
+
     <Application.Styles>
         <FluentTheme />
         <StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml"/>
+
+        <Style Selector="Window">
+            <Setter Property="Background" Value="{DynamicResource AppBrushPageBackground}" />
+            <Setter Property="FontFamily" Value="{DynamicResource AppFontPrimary}" />
+        </Style>
+
+        <Style Selector="DataGridColumnHeader">
+            <Setter Property="Background" Value="{DynamicResource AppBrushTableHeaderBackground}" />
+            <Setter Property="Foreground" Value="{DynamicResource AppBrushTextPrimary}" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Padding" Value="8" />
+            <Setter Property="BorderBrush" Value="{DynamicResource AppBrushFieldBorder}" />
+            <Setter Property="BorderThickness" Value="0,0,1,1" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="MinHeight" Value="44" />
+            <Setter Property="FontFamily" Value="{DynamicResource AppFontPrimary}" />
+            <Setter Property="FontSize" Value="{DynamicResource AppFontSizeTableHeader}" />
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Grid Name="PART_ColumnHeaderRoot"
+                          ColumnDefinitions="*,Auto"
+                          Background="{TemplateBinding Background}">
+                        <Grid HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                              Margin="{TemplateBinding Padding}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition MinWidth="0" Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <ContentPresenter Content="{TemplateBinding Content}"
+                                              ContentTemplate="{TemplateBinding ContentTemplate}" />
+                            <Path Name="SortIcon"
+                                  Grid.Column="1"
+                                  Fill="{TemplateBinding Foreground}"
+                                  HorizontalAlignment="Center"
+                                  VerticalAlignment="Center"
+                                  Stretch="Uniform"
+                                  Height="12" />
+                        </Grid>
+                        <Rectangle Name="VerticalSeparator"
+                                   Grid.Column="1"
+                                   Width="1"
+                                   VerticalAlignment="Stretch"
+                                   Fill="{TemplateBinding SeparatorBrush}"
+                                   IsVisible="{TemplateBinding AreSeparatorsVisible}" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter>
+        </Style>
+        <Style Selector="DataGridColumnHeader /template/ Path#SortIcon">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="DataGridColumnHeader:sortascending /template/ Path#SortIcon">
+            <Setter Property="IsVisible" Value="True" />
+            <Setter Property="Data" Value="{StaticResource DataGridSortIconAscendingPath}" />
+        </Style>
+        <Style Selector="DataGridColumnHeader:sortdescending /template/ Path#SortIcon">
+            <Setter Property="IsVisible" Value="True" />
+            <Setter Property="Data" Value="{StaticResource DataGridSortIconDescendingPath}" />
+        </Style>
+        <Style Selector="DataGridColumnHeader TextBlock">
+            <Setter Property="Foreground" Value="{DynamicResource AppBrushTextPrimary}" />
+            <Setter Property="FontSize" Value="{DynamicResource AppFontSizeTableHeader}" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="TextAlignment" Value="Center" />
+            <Setter Property="TextTrimming" Value="None" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+
+        <Style Selector="DataGrid">
+            <Setter Property="BorderBrush" Value="{DynamicResource AppBrushFieldBorder}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="HorizontalGridLinesBrush" Value="{DynamicResource AppBrushFieldBorder}" />
+            <Setter Property="VerticalGridLinesBrush" Value="{DynamicResource AppBrushFieldBorder}" />
+        </Style>
+
+        <!-- All buttons: app blue, no border, semibold label -->
+        <Style Selector="Button">
+            <Setter Property="Background" Value="{DynamicResource AppBrushBluePrimary}" />
+            <Setter Property="Foreground" Value="{DynamicResource AppBrushWhite}" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="FontSize" Value="{DynamicResource AppFontSizeUi}" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="CornerRadius" Value="4" />
+        </Style>
+        <Style Selector="Button:pointerover">
+            <Setter Property="Background" Value="{DynamicResource AppBrushBlueButtonHover}" />
+        </Style>
+        <Style Selector="Button:pressed">
+            <Setter Property="Background" Value="{DynamicResource AppBrushBlueButtonPressed}" />
+        </Style>
+        <Style Selector="Button:disabled">
+            <Setter Property="Background" Value="{DynamicResource AppBrushSurface}" />
+            <Setter Property="Foreground" Value="{DynamicResource AppBrushTextSecondary}" />
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="Button TextBlock">
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="FontSize" Value="{DynamicResource AppFontSizeUi}" />
+        </Style>
+
+        <!-- Input fields: border only (#D2D2D2), fill from Fluent theme -->
+        <Style Selector="TextBox">
+            <Setter Property="BorderBrush" Value="{DynamicResource AppBrushFieldBorder}" />
+            <Setter Property="BorderThickness" Value="1" />
+        </Style>
+        <Style Selector="ComboBox">
+            <Setter Property="BorderBrush" Value="{DynamicResource AppBrushFieldBorder}" />
+            <Setter Property="BorderThickness" Value="1" />
+        </Style>
+        <Style Selector="NumericUpDown">
+            <Setter Property="BorderBrush" Value="{DynamicResource AppBrushFieldBorder}" />
+            <Setter Property="BorderThickness" Value="1" />
+        </Style>
+        <Style Selector="DatePicker">
+            <Setter Property="BorderBrush" Value="{DynamicResource AppBrushFieldBorder}" />
+            <Setter Property="BorderThickness" Value="1" />
+        </Style>
     </Application.Styles>
 </Application>

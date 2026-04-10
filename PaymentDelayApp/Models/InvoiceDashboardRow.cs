@@ -26,7 +26,9 @@ public sealed class InvoiceDashboardRow
     public bool IsResteJoursAlert => !IsSettled && ResteDesJours < AlertSeuilJours;
 
     public IBrush ResteForeground =>
-        IsResteJoursAlert ? new SolidColorBrush(Color.Parse("#b91c1c")) : Brushes.Black;
+        IsResteJoursAlert
+            ? new SolidColorBrush(Color.Parse("#b91c1c"))
+            : new SolidColorBrush(Color.Parse("#334155"));
 
     public IBrush RowAlertBackground =>
         IsResteJoursAlert ? new SolidColorBrush(Color.Parse("#fef2f2")) : Brushes.Transparent;
@@ -45,7 +47,7 @@ public sealed class InvoiceDashboardRow
     public string EcheanceRespecteeDisplay => EcheanceLimiteDisplay;
     public string EcheanceFactureDisplay => EcheanceLimiteDisplay;
 
-    /// <summary>Reste des jours = échéance normale (j) − délai facture (j).</summary>
+    /// <summary>Reste des jours = échéance à respecter (j) − échéance normale (j) — jours jusqu'à la date limite.</summary>
     public string ResteDisplay => $"{ResteDesJours} j";
 
     public static InvoiceDashboardRow FromInvoice(Invoice invoice, DateOnly today)

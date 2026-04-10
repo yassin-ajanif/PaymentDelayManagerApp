@@ -86,7 +86,7 @@ public partial class InvoiceEditViewModel : ViewModelBase
 
     public string EcheanceRespecteeDisplay => EcheanceLimiteDisplay;
 
-    /// <summary>Reste des jours = normale (j) − délai facture (j).</summary>
+    /// <summary>Reste des jours = délai facture (j) − normale (j) — jours jusqu'à la date limite.</summary>
     public string ResteDisplay => FormatJoursNormale(ComputeResteJours());
 
     /// <summary>Date limite = date de facture + délai (jours).</summary>
@@ -123,7 +123,7 @@ public partial class InvoiceEditViewModel : ViewModelBase
         var n = ComputeNormaleJours();
         if (n is null)
             return null;
-        return n.Value - EcheanceFactureJours;
+        return EcheanceFactureJours - n.Value;
     }
 
     partial void OnInvoiceDateUiChanged(DateTimeOffset? value) => RefreshComputed();

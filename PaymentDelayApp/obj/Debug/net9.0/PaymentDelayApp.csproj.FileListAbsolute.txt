@@ -17,7 +17,6 @@ C:\Users\yassin\Desktop\Payment Delay App\PaymentDelayApp\bin\Debug\net9.0\Avalo
 C:\Users\yassin\Desktop\Payment Delay App\PaymentDelayApp\bin\Debug\net9.0\Avalonia.Controls.ColorPicker.dll
 C:\Users\yassin\Desktop\Payment Delay App\PaymentDelayApp\bin\Debug\net9.0\Avalonia.Desktop.dll
 C:\Users\yassin\Desktop\Payment Delay App\PaymentDelayApp\bin\Debug\net9.0\Avalonia.Diagnostics.dll
-C:\Users\yassin\Desktop\Payment Delay App\PaymentDelayApp\bin\Debug\net9.0\Avalonia.Fonts.Inter.dll
 C:\Users\yassin\Desktop\Payment Delay App\PaymentDelayApp\bin\Debug\net9.0\Avalonia.FreeDesktop.dll
 C:\Users\yassin\Desktop\Payment Delay App\PaymentDelayApp\bin\Debug\net9.0\Avalonia.Native.dll
 C:\Users\yassin\Desktop\Payment Delay App\PaymentDelayApp\bin\Debug\net9.0\Avalonia.Remote.Protocol.dll
