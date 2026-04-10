@@ -1,0 +1,53 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:PaymentDelayApp.ViewModels"
+        x:Class="PaymentDelayApp.Views.Dialogs.SupplierListWindow"
+        x:DataType="vm:SupplierListViewModel"
+        Width="920"
+        Height="640"
+        MinWidth="720"
+        MinHeight="480"
+        WindowStartupLocation="CenterOwner"
+        Title="Liste des fournisseurs">
+    <DockPanel Margin="16">
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Spacing="8" Margin="0,0,0,12">
+            <Button Content="Actualiser" Command="{Binding RefreshCommand}" Padding="12,6" />
+            <Button Content="Modifier" Command="{Binding EditSupplierCommand}" Padding="12,6" />
+            <Button Content="Supprimer" Command="{Binding DeleteSupplierCommand}" Padding="12,6" />
+            <Button Content="Fermer" Command="{Binding CloseCommand}" Padding="12,6" />
+        </StackPanel>
+        <Grid RowDefinitions="Auto,*,Auto,*" RowSpacing="8">
+            <TextBlock Grid.Row="0" Text="Liste fournisseur" FontWeight="SemiBold" />
+            <DataGrid Grid.Row="1"
+                      ItemsSource="{Binding SupplierRows}"
+                      SelectedItem="{Binding SelectedSupplierRow}"
+                      AutoGenerateColumns="False"
+                      IsReadOnly="True"
+                      GridLinesVisibility="Horizontal"
+                      HeadersVisibility="Column">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Nom" Binding="{Binding Name}" Width="*" MinWidth="140" />
+                    <DataGridTextColumn Header="ICE" Binding="{Binding Ice}" Width="120" />
+                    <DataGridTextColumn Header="IF" Binding="{Binding FiscalId}" Width="100" />
+                    <DataGridTextColumn Header="Adresse" Binding="{Binding Address}" Width="1.5*" MinWidth="120" />
+                    <DataGridTextColumn Header="Activite" Binding="{Binding Activite}" Width="*" MinWidth="100" />
+                    <DataGridTextColumn Header="Seuil alerte (j)" Binding="{Binding AlertSeuilJours}" Width="110" />
+                </DataGrid.Columns>
+            </DataGrid>
+            <TextBlock Grid.Row="2" Text="Page d'alerte (factures sous seuil)" FontWeight="SemiBold" Margin="0,8,0,0" />
+            <DataGrid Grid.Row="3"
+                      ItemsSource="{Binding AlertRows}"
+                      AutoGenerateColumns="False"
+                      IsReadOnly="True"
+                      GridLinesVisibility="Horizontal"
+                      HeadersVisibility="Column">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Date de facture" Binding="{Binding DateFactureDisplay}" Width="120" />
+                    <DataGridTextColumn Header="Client" Binding="{Binding ClientName}" Width="*" MinWidth="140" />
+                    <DataGridTextColumn Header="TTC" Binding="{Binding TtcDisplay}" Width="100" />
+                    <DataGridTextColumn Header="Reste des jours" Binding="{Binding ResteDisplay}" Width="120" />
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+    </DockPanel>
+</Window>

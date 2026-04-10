@@ -1,0 +1,35 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:PaymentDelayApp.ViewModels"
+        xmlns:models="using:PaymentDelayApp.Models"
+        x:Class="PaymentDelayApp.Views.Dialogs.PaymentAlertWindow"
+        x:DataType="vm:PaymentAlertViewModel"
+        Width="640"
+        Height="420"
+        MinHeight="320"
+        WindowStartupLocation="CenterOwner"
+        Title="Alerte paiement">
+    <DockPanel Margin="16">
+        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,12,0,0">
+            <Button Content="OK" MinWidth="100" Command="{Binding OkCommand}" />
+        </StackPanel>
+        <StackPanel Spacing="12">
+            <TextBlock Text="Clients concernés par un paiement à traiter (reste des jours sous le seuil d'alerte)."
+                       TextWrapping="Wrap"
+                       FontWeight="SemiBold" />
+            <DataGrid ItemsSource="{Binding Lines}"
+                      AutoGenerateColumns="False"
+                      IsReadOnly="True"
+                      GridLinesVisibility="Horizontal"
+                      HeadersVisibility="Column">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Date facture" Binding="{Binding DateFactureDisplay}" Width="110" />
+                    <DataGridTextColumn Header="Client" Binding="{Binding SupplierName}" Width="*" MinWidth="120" />
+                    <DataGridTextColumn Header="N° facture" Binding="{Binding InvoiceNumber}" Width="100" />
+                    <DataGridTextColumn Header="TTC" Binding="{Binding TtcDisplay}" Width="90" />
+                    <DataGridTextColumn Header="Reste (j)" Binding="{Binding ResteDisplay}" Width="90" />
+                </DataGrid.Columns>
+            </DataGrid>
+        </StackPanel>
+    </DockPanel>
+</Window>

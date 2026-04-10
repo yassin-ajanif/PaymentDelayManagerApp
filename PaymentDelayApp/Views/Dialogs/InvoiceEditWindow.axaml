@@ -1,0 +1,59 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:PaymentDelayApp.ViewModels"
+        xmlns:m="using:PaymentDelayApp.BusinessLayer.Models"
+        x:Class="PaymentDelayApp.Views.Dialogs.InvoiceEditWindow"
+        x:DataType="vm:InvoiceEditViewModel"
+        Width="560"
+        MinHeight="520"
+        WindowStartupLocation="CenterOwner"
+        Title="{Binding WindowTitle}">
+    <DockPanel Margin="20">
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Spacing="8" HorizontalAlignment="Right" Margin="0,0,0,16">
+            <Button Content="Enregistrer" Padding="14,6" Command="{Binding SaveCommand}" />
+            <Button Content="Annuler" Padding="14,6" Command="{Binding CancelCommand}" />
+        </StackPanel>
+        <ScrollViewer>
+            <StackPanel Spacing="14">
+                <Grid ColumnDefinitions="160,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto" RowSpacing="10" ColumnSpacing="12">
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Date de facture" VerticalAlignment="Center" />
+                    <DatePicker Grid.Row="0" Grid.Column="1" SelectedDate="{Binding InvoiceDateUi}" />
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Date de livraison ou préstation" VerticalAlignment="Center" />
+                    <DatePicker Grid.Row="1" Grid.Column="1" SelectedDate="{Binding DeliveryDateUi}" />
+                    <TextBlock Grid.Row="2" Grid.Column="0" Text="N° de Facture" VerticalAlignment="Center" />
+                    <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding InvoiceNumber}" />
+                    <TextBlock Grid.Row="3" Grid.Column="0" Text="Fournisseur" VerticalAlignment="Center" />
+                    <ComboBox Grid.Row="3" Grid.Column="1"
+                              ItemsSource="{Binding Suppliers}"
+                              SelectedItem="{Binding SelectedSupplier}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate DataType="m:Supplier">
+                                <TextBlock Text="{Binding Name}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                    <TextBlock Grid.Row="4" Grid.Column="0" Text="Désignation" VerticalAlignment="Center" />
+                    <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding Designation}" AcceptsReturn="True" MinHeight="48" />
+                    <TextBlock Grid.Row="5" Grid.Column="0" Text="TTC" VerticalAlignment="Center" />
+                    <NumericUpDown Grid.Row="5" Grid.Column="1"
+                                   Minimum="0"
+                                   Maximum="1000000000"
+                                   Increment="0.01"
+                                   Value="{Binding TtcAmount}"
+                                   FormatString="N2" />
+                    <TextBlock Grid.Row="6" Grid.Column="0" Text="Date d'échéance/facture" VerticalAlignment="Center" />
+                    <NumericUpDown Grid.Row="6" Grid.Column="1"
+                                   Maximum="120"
+                                   Value="{Binding EcheanceFactureJours}"
+                                   FormatString="N0" />
+                    <TextBlock Grid.Row="7" Grid.Column="0" Text="Date d'échéance normale" VerticalAlignment="Center" />
+                    <TextBlock Grid.Row="7" Grid.Column="1" Text="{Binding EcheanceNormaleDisplay}" VerticalAlignment="Center" />
+                    <TextBlock Grid.Row="8" Grid.Column="0" Text="Date d'échéance respectée" VerticalAlignment="Center" />
+                    <TextBlock Grid.Row="8" Grid.Column="1" Text="{Binding EcheanceRespecteeDisplay}" VerticalAlignment="Center" />
+                    <TextBlock Grid.Row="9" Grid.Column="0" Text="Reste des jours" VerticalAlignment="Center" />
+                    <TextBlock Grid.Row="9" Grid.Column="1" Text="{Binding ResteDisplay}" VerticalAlignment="Center" />
+                </Grid>
+            </StackPanel>
+        </ScrollViewer>
+    </DockPanel>
+</Window>
