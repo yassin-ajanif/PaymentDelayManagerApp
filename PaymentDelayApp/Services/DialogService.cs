@@ -1,9 +1,7 @@
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using PaymentDelayApp.BusinessLayer.Abstractions;
-using PaymentDelayApp.BusinessLayer.Calculators;
 using PaymentDelayApp.BusinessLayer.Models;
-using PaymentDelayApp.Models;
 using PaymentDelayApp.ViewModels;
 using PaymentDelayApp.Views.Dialogs;
 
@@ -46,7 +44,7 @@ public sealed class DialogService : IDialogService
     {
         cancellationToken.ThrowIfCancellationRequested();
         var win = new SupplierListWindow();
-        var vm = new SupplierListViewModel(_supplierService, _invoiceService, this, win);
+        var vm = new SupplierListViewModel(_supplierService, this, win);
         win.DataContext = vm;
         await win.ShowDialog(ResolveOwner(owner));
         cancellationToken.ThrowIfCancellationRequested();
@@ -75,18 +73,6 @@ public sealed class DialogService : IDialogService
         return await win.ShowDialog<DateTime?>(ResolveOwner(owner));
     }
 
-    public async Task ShowPaymentAlertAsync(
-        IReadOnlyList<PaymentAlertLine> lines,
-        Window? owner = null,
-        CancellationToken cancellationToken = default)
-    {
-        cancellationToken.ThrowIfCancellationRequested();
-        var win = new PaymentAlertWindow();
-        win.DataContext = new PaymentAlertViewModel(win, lines);
-        await win.ShowDialog(ResolveOwner(owner));
-        cancellationToken.ThrowIfCancellationRequested();
-    }
-
     public async Task<bool> ConfirmAsync(
         string title,
         string message,
@@ -112,31 +98,5 @@ public sealed class DialogService : IDialogService
         win.DataContext = new MessageDialogViewModel(win, title, message);
         await win.ShowDialog(ResolveOwner(owner));
         cancellationToken.ThrowIfCancellationRequested();
-    }
-
-    public async Task ShowStartupPaymentAlertsIfNeededAsync(CancellationToken cancellationToken = default)
-    {
-        var alerts = await _invoiceService.GetAlertInvoicesAsync(cancellationToken);
-        if (alerts.Count == 0)
-            return;
-
-        var today = DateOnly.FromDateTime(DateTime.Today);
-        var lines = new List<PaymentAlertLine>();
-        foreach (var inv in alerts)
-        {
-            var supplier = inv.Supplier ?? await _supplierService.GetSupplierAsync(inv.SupplierId, cancellationToken);
-            var name = supplier?.Name ?? "-";
-            var reste = EcheanceCalculator.ResteDesJours(inv.InvoiceDate, today, inv.EcheanceFactureJours);
-            lines.Add(new PaymentAlertLine
-            {
-                SupplierName = name,
-                InvoiceNumber = inv.InvoiceNumber,
-                DateFactureDisplay = inv.InvoiceDate.ToString("dd/MM/yyyy"),
-                TtcDisplay = inv.TtcAmount.ToString("N2"),
-                ResteDesJours = reste,
-            });
-        }
-
-        await ShowPaymentAlertAsync(lines, null, cancellationToken);
     }
 }

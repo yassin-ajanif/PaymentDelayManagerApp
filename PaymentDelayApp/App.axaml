@@ -21,6 +21,15 @@
         <SolidColorBrush x:Key="AppBrushTableHeaderBackground" Color="#d8d8d8" />
         <SolidColorBrush x:Key="AppBrushTextPrimary" Color="#334155" />
         <SolidColorBrush x:Key="AppBrushTextSecondary" Color="#64748b" />
+        <SolidColorBrush x:Key="AppBrushResteAlert" Color="#FF0004" />
+        <!-- Alert row fill; keep #fecaca in sync with InvoiceDashboardRow.RowStripeBackground -->
+        <SolidColorBrush x:Key="AppBrushRowAlertBackground" Color="#fecaca" />
+        <SolidColorBrush x:Key="AppBrushGreenPrimary" Color="#16a34a" />
+        <SolidColorBrush x:Key="AppBrushGreenButtonHover" Color="#22c55e" />
+        <!-- Settled row fill; keep #d1fae5 in sync with InvoiceDashboardRow.RowStripeBackground -->
+        <SolidColorBrush x:Key="AppBrushRowSettledBackground" Color="#d1fae5" />
+        <SolidColorBrush x:Key="AppBrushAmberPrimary" Color="#d97706" />
+        <SolidColorBrush x:Key="AppBrushAmberButtonHover" Color="#f59e0b" />
         <!-- Reddit Sans variable (Google Fonts). Fallback: Segoe UI until RedditSans-Variable.ttf is in Assets/Fonts. -->
         <FontFamily x:Key="AppFontPrimary">avares://PaymentDelayApp/Assets/Fonts/RedditSans-Variable.ttf#Reddit Sans, Segoe UI</FontFamily>
         <x:Double x:Key="AppFontSizeUi">15</x:Double>
@@ -112,8 +121,8 @@
             <Setter Property="VerticalGridLinesBrush" Value="{DynamicResource AppBrushFieldBorder}" />
         </Style>
 
-        <!-- All buttons: app blue, no border, semibold label -->
-        <Style Selector="Button">
+        <!-- All buttons: app blue, no border, semibold label (exclude .filter-chip ToggleButtons) -->
+        <Style Selector="Button:not(.filter-chip)">
             <Setter Property="Background" Value="{DynamicResource AppBrushBluePrimary}" />
             <Setter Property="Foreground" Value="{DynamicResource AppBrushWhite}" />
             <Setter Property="FontWeight" Value="SemiBold" />
@@ -121,18 +130,18 @@
             <Setter Property="BorderThickness" Value="0" />
             <Setter Property="CornerRadius" Value="4" />
         </Style>
-        <Style Selector="Button:pointerover">
+        <Style Selector="Button:not(.filter-chip):pointerover">
             <Setter Property="Background" Value="{DynamicResource AppBrushBlueButtonHover}" />
         </Style>
-        <Style Selector="Button:pressed">
+        <Style Selector="Button:not(.filter-chip):pressed">
             <Setter Property="Background" Value="{DynamicResource AppBrushBlueButtonPressed}" />
         </Style>
-        <Style Selector="Button:disabled">
+        <Style Selector="Button:not(.filter-chip):disabled">
             <Setter Property="Background" Value="{DynamicResource AppBrushSurface}" />
             <Setter Property="Foreground" Value="{DynamicResource AppBrushTextSecondary}" />
             <Setter Property="Opacity" Value="1" />
         </Style>
-        <Style Selector="Button TextBlock">
+        <Style Selector="Button:not(.filter-chip) TextBlock">
             <Setter Property="FontWeight" Value="SemiBold" />
             <Setter Property="FontSize" Value="{DynamicResource AppFontSizeUi}" />
         </Style>

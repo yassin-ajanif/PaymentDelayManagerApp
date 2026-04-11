@@ -22,16 +22,21 @@ public sealed class InvoiceDashboardRow
 
     public bool CanRegler => !IsSettled;
 
+    public bool CanUnsettle => IsSettled;
+
     /// <summary>Facture non réglée et reste des jours strictement inférieur au seuil.</summary>
     public bool IsResteJoursAlert => !IsSettled && ResteDesJours < AlertSeuilJours;
 
-    public IBrush ResteForeground =>
-        IsResteJoursAlert
-            ? new SolidColorBrush(Color.Parse("#b91c1c"))
-            : new SolidColorBrush(Color.Parse("#334155"));
+    /// <summary>Used in grid cell template (IsVisible); Foreground binding to IBrush was unreliable with DataGrid recycling.</summary>
+    public bool IsResteJoursNormalColor => !IsResteJoursAlert;
 
-    public IBrush RowAlertBackground =>
-        IsResteJoursAlert ? new SolidColorBrush(Color.Parse("#fef2f2")) : Brushes.Transparent;
+    /// <summary>Row fill: réglée (vert), alerte reste des jours (rose), sinon transparent.</summary>
+    public IBrush RowStripeBackground =>
+        IsSettled
+            ? new SolidColorBrush(Color.Parse("#d1fae5"))
+            : IsResteJoursAlert
+                ? new SolidColorBrush(Color.Parse("#fecaca"))
+                : Brushes.Transparent;
 
     public string DateFactureDisplay => InvoiceDate.ToString("dd/MM/yyyy");
     public string DateLivraisonDisplay => DeliveryOrServiceDate?.ToString("dd/MM/yyyy") ?? "—";

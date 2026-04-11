@@ -3,7 +3,6 @@ using Avalonia.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using PaymentDelayApp.BusinessLayer.Abstractions;
-using PaymentDelayApp.BusinessLayer.Calculators;
 using PaymentDelayApp.Models;
 using PaymentDelayApp.Services;
 
@@ -12,7 +11,6 @@ namespace PaymentDelayApp.ViewModels;
 public partial class SupplierListViewModel : ViewModelBase
 {
     private readonly ISupplierService _supplierService;
-    private readonly IInvoiceService _invoiceService;
     private readonly IDialogService _dialogs;
     private readonly Window _window;
 
@@ -20,19 +18,14 @@ public partial class SupplierListViewModel : ViewModelBase
     private ObservableCollection<SupplierListRow> _supplierRows = [];
 
     [ObservableProperty]
-    private ObservableCollection<SupplierAlertRow> _alertRows = [];
-
-    [ObservableProperty]
     private SupplierListRow? _selectedSupplierRow;
 
     public SupplierListViewModel(
         ISupplierService supplierService,
-        IInvoiceService invoiceService,
         IDialogService dialogs,
         Window window)
     {
         _supplierService = supplierService;
-        _invoiceService = invoiceService;
         _dialogs = dialogs;
         _window = window;
         _ = RefreshAsync();
@@ -41,7 +34,6 @@ public partial class SupplierListViewModel : ViewModelBase
     [RelayCommand]
     private async Task RefreshAsync()
     {
-        var today = DateOnly.FromDateTime(DateTime.Today);
         var suppliers = await _supplierService.GetSuppliersAsync();
         SupplierRows = new ObservableCollection<SupplierListRow>(
             suppliers.Select(s => new SupplierListRow
@@ -54,24 +46,6 @@ public partial class SupplierListViewModel : ViewModelBase
                 Activite = s.Activite,
                 AlertSeuilJours = s.AlertSeuilJours,
             }));
-
-        var alerts = await _invoiceService.GetAlertInvoicesAsync();
-        var rows = new List<SupplierAlertRow>();
-        foreach (var inv in alerts)
-        {
-            var supplier = inv.Supplier ?? await _supplierService.GetSupplierAsync(inv.SupplierId);
-            var name = supplier?.Name ?? "-";
-            var reste = EcheanceCalculator.ResteDesJours(inv.InvoiceDate, today, inv.EcheanceFactureJours);
-            rows.Add(new SupplierAlertRow
-            {
-                DateFactureDisplay = inv.InvoiceDate.ToString("dd/MM/yyyy"),
-                ClientName = name,
-                TtcDisplay = inv.TtcAmount.ToString("N2"),
-                ResteDisplay = reste + " j",
-            });
-        }
-
-        AlertRows = new ObservableCollection<SupplierAlertRow>(rows);
     }
 
     [RelayCommand]

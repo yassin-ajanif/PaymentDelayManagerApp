@@ -11,26 +11,17 @@ public partial class ReglementDialogViewModel : ViewModelBase
     public ReglementDialogViewModel(Window window)
     {
         _window = window;
-        var n = DateTime.Now;
         SelectedDate = new DateTimeOffset(DateTime.SpecifyKind(DateTime.Today, DateTimeKind.Local));
-        Hour = n.Hour;
-        Minute = n.Minute;
     }
 
     [ObservableProperty]
     private DateTimeOffset? _selectedDate;
 
-    [ObservableProperty]
-    private int _hour;
-
-    [ObservableProperty]
-    private int _minute;
-
     [RelayCommand]
     private void Confirm()
     {
         var date = SelectedDate?.LocalDateTime.Date ?? DateTime.Today;
-        var dt = new DateTime(date.Year, date.Month, date.Day, Hour, Minute, 0, DateTimeKind.Local);
+        var dt = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0, DateTimeKind.Local);
         _window.Close(dt);
     }
 

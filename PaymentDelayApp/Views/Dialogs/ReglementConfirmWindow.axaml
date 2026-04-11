@@ -11,17 +11,10 @@
     <Border Padding="20">
         <StackPanel Spacing="14">
             <TextBlock TextWrapping="Wrap"
-                       Text="Entrez la date et l'heure auxquelles vous enregistrez le paiement (par défaut : maintenant)." />
-            <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto" RowSpacing="10" ColumnSpacing="12">
+                       Text="Indiquez la date à laquelle vous enregistrez le paiement (par défaut : aujourd'hui)." />
+            <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto" RowSpacing="10" ColumnSpacing="12">
                 <TextBlock Grid.Row="0" Grid.Column="0" Text="Date du règlement" VerticalAlignment="Center" />
                 <DatePicker Grid.Row="0" Grid.Column="1" SelectedDate="{Binding SelectedDate}" />
-                <TextBlock Grid.Row="1" Grid.Column="0" Text="Heure" VerticalAlignment="Center" />
-                <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" Spacing="8">
-                    <NumericUpDown Minimum="0" Maximum="23" Value="{Binding Hour}" Width="80" FormatString="N0" />
-                    <TextBlock Text="h" VerticalAlignment="Center" />
-                    <NumericUpDown Minimum="0" Maximum="59" Value="{Binding Minute}" Width="80" FormatString="N0" />
-                    <TextBlock Text="min" VerticalAlignment="Center" />
-                </StackPanel>
             </Grid>
             <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Right" Margin="0,8,0,0">
                 <Button Content="Annuler" MinWidth="100" Command="{Binding CancelCommand}" />

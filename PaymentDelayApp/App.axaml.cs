@@ -5,7 +5,6 @@ using Avalonia.Data.Core.Plugins;
 using Microsoft.Extensions.DependencyInjection;
 using PaymentDelayApp.DataAccessLayer;
 using PaymentDelayApp.DependencyInjection;
-using PaymentDelayApp.Services;
 using PaymentDelayApp.ViewModels;
 using PaymentDelayApp.Views;
 using System.Linq;
@@ -36,13 +35,11 @@ public partial class App : Application
             DatabaseMigrator.Migrate(db);
 
             var dashboard = _serviceProvider.GetRequiredService<DashboardViewModel>();
-            var dialogs = _serviceProvider.GetRequiredService<IDialogService>();
 
             var main = new MainWindow { DataContext = dashboard };
             main.Opened += async (_, _) =>
             {
                 await dashboard.LoadAsync();
-                await dialogs.ShowStartupPaymentAlertsIfNeededAsync();
             };
             desktop.MainWindow = main;
 

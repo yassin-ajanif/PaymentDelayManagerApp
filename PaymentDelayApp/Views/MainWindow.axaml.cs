@@ -96,12 +96,6 @@ public partial class MainWindow : Window
 
         vm.SelectedRow = invoiceRow;
 
-        var edit = new MenuItem
-        {
-            Header = RowContextHeader("✎", "Modifier"),
-            Command = vm.EditInvoiceCommand,
-            CommandParameter = invoiceRow,
-        };
         var delete = new MenuItem
         {
             Header = RowContextHeader("🗑", "Supprimer"),
@@ -115,12 +109,32 @@ public partial class MainWindow : Window
             CommandParameter = invoiceRow,
             IsEnabled = invoiceRow.CanRegler,
         };
+        var unsettle = new MenuItem
+        {
+            Header = RowContextHeader("↩", "Annuler le règlement"),
+            Command = vm.UnsettleInvoiceCommand,
+            CommandParameter = invoiceRow,
+            IsEnabled = invoiceRow.CanUnsettle,
+        };
 
         var menu = new ContextMenu();
-        menu.Items.Add(edit);
         menu.Items.Add(delete);
         menu.Items.Add(regler);
+        menu.Items.Add(unsettle);
         menu.Open(row);
+    }
+
+    private void InvoiceGrid_OnDoubleTapped(object? sender, TappedEventArgs e)
+    {
+        if (sender is not DataGrid grid || grid.DataContext is not DashboardViewModel vm)
+            return;
+        if (e.Source is not Visual source)
+            return;
+        var row = source.FindAncestorOfType<DataGridRow>();
+        if (row?.DataContext is not InvoiceDashboardRow invoiceRow)
+            return;
+        vm.SelectedRow = invoiceRow;
+        vm.EditInvoiceCommand.Execute(invoiceRow);
     }
 
     private static StackPanel RowContextHeader(string icon, string label) =>

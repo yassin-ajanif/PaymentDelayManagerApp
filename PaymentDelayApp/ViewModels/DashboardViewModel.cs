@@ -20,7 +20,44 @@ public partial class DashboardViewModel : ViewModelBase
     private string _searchText = string.Empty;
 
     [ObservableProperty]
+    private bool _showAlertInvoicesOnly;
+
+    [ObservableProperty]
+    private bool _showSettledInvoicesOnly;
+
+    [ObservableProperty]
+    private bool _showUnsettledInvoicesOnly;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(AlertFilterChipCaption))]
+    private int _alertInvoiceCount;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(SettledFilterChipCaption))]
+    private int _settledInvoiceCount;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(UnsettledFilterChipCaption))]
+    private int _unsettledInvoiceCount;
+
+    [ObservableProperty]
     private InvoiceDashboardRow? _selectedRow;
+
+    /// <summary>Label for the alert-only filter chip (count from full list, not filtered grid).</summary>
+    public string AlertFilterChipCaption =>
+        AlertInvoiceCount == 0
+            ? "Factures en alerte"
+            : $"Factures en alerte ({AlertInvoiceCount})";
+
+    public string SettledFilterChipCaption =>
+        SettledInvoiceCount == 0
+            ? "Factures réglées"
+            : $"Factures réglées ({SettledInvoiceCount})";
+
+    public string UnsettledFilterChipCaption =>
+        UnsettledInvoiceCount == 0
+            ? "Factures non réglées"
+            : $"Factures non réglées ({UnsettledInvoiceCount})";
 
     public DashboardViewModel()
     {
@@ -45,18 +82,58 @@ public partial class DashboardViewModel : ViewModelBase
         var list = await _invoiceService.GetInvoicesAsync(cancellationToken);
         var today = DateOnly.FromDateTime(DateTime.Today);
         _allRows = list.Select(i => InvoiceDashboardRow.FromInvoice(i, today)).ToList();
+        AlertInvoiceCount = _allRows.Count(r => r.IsResteJoursAlert);
+        SettledInvoiceCount = _allRows.Count(r => r.IsSettled);
+        UnsettledInvoiceCount = _allRows.Count(r => !r.IsSettled);
         ApplyFilter();
     }
 
     partial void OnSearchTextChanged(string value) => ApplyFilter();
 
+    partial void OnShowAlertInvoicesOnlyChanged(bool value)
+    {
+        if (value)
+        {
+            ShowSettledInvoicesOnly = false;
+            ShowUnsettledInvoicesOnly = false;
+        }
+        ApplyFilter();
+    }
+
+    partial void OnShowSettledInvoicesOnlyChanged(bool value)
+    {
+        if (value)
+        {
+            ShowAlertInvoicesOnly = false;
+            ShowUnsettledInvoicesOnly = false;
+        }
+        ApplyFilter();
+    }
+
+    partial void OnShowUnsettledInvoicesOnlyChanged(bool value)
+    {
+        if (value)
+        {
+            ShowAlertInvoicesOnly = false;
+            ShowSettledInvoicesOnly = false;
+        }
+        ApplyFilter();
+    }
+
     private void ApplyFilter()
     {
-        var q = SearchText.Trim();
         IEnumerable<InvoiceDashboardRow> src = _allRows;
+        if (ShowAlertInvoicesOnly)
+            src = src.Where(r => r.IsResteJoursAlert);
+        else if (ShowSettledInvoicesOnly)
+            src = src.Where(r => r.IsSettled);
+        else if (ShowUnsettledInvoicesOnly)
+            src = src.Where(r => !r.IsSettled);
+
+        var q = SearchText.Trim();
         if (q.Length > 0)
         {
-            src = _allRows.Where(r =>
+            src = src.Where(r =>
                 r.InvoiceNumber.Contains(q, StringComparison.OrdinalIgnoreCase) ||
                 r.SupplierName.Contains(q, StringComparison.OrdinalIgnoreCase) ||
                 (r.Designation?.Contains(q, StringComparison.OrdinalIgnoreCase) ?? false));
@@ -135,6 +212,19 @@ public partial class DashboardViewModel : ViewModelBase
         if (paidAt is null)
             return;
         await _invoiceService.SettleInvoiceAsync(row.Id, paidAt.Value);
+        await LoadAsync();
+    }
+
+    [RelayCommand]
+    private async Task UnsettleInvoiceAsync(InvoiceDashboardRow? row)
+    {
+        if (_dialogs is null || row is null || _invoiceService is null)
+            return;
+        if (!await _dialogs.ConfirmAsync(
+                "Annuler le règlement",
+                "Remettre cette facture en non réglée ? La date de paiement enregistrée sera effacée."))
+            return;
+        await _invoiceService.UnsettleInvoiceAsync(row.Id);
         await LoadAsync();
     }
 }
