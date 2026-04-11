@@ -12,11 +12,10 @@
     <DockPanel Margin="16">
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Spacing="8" Margin="0,0,0,12">
             <Button Content="Actualiser" Command="{Binding RefreshCommand}" Padding="12,6" />
-            <Button Content="Supprimer" Command="{Binding DeleteSupplierCommand}" Padding="12,6" />
             <Button Content="Fermer" Command="{Binding CloseCommand}" Padding="12,6" />
         </StackPanel>
         <Grid RowDefinitions="Auto,*" RowSpacing="8">
-            <TextBlock Grid.Row="0" Text="Liste fournisseur" FontWeight="SemiBold" />
+            <TextBlock Grid.Row="0" Classes="dialog-section-title" Text="Liste fournisseur" FontSize="15" />
             <DataGrid Grid.Row="1"
                       ItemsSource="{Binding SupplierRows}"
                       SelectedItem="{Binding SelectedSupplierRow}"
@@ -24,6 +23,7 @@
                       IsReadOnly="True"
                       GridLinesVisibility="Horizontal"
                       HeadersVisibility="Column"
+                      PointerReleased="SupplierGrid_OnPointerReleased"
                       DoubleTapped="SupplierGrid_OnDoubleTapped">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Nom" Binding="{Binding Name}" Width="*" MinWidth="140" />

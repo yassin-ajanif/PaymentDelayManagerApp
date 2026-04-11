@@ -10,7 +10,7 @@
         Title="{Binding Title}">
     <Border Padding="20" Margin="0">
         <StackPanel Spacing="16">
-            <TextBlock Text="{Binding Message}" TextWrapping="Wrap" />
+            <TextBlock Classes="dialog-body" Text="{Binding Message}" TextWrapping="Wrap" />
             <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Right">
                 <Button Content="Non" MinWidth="88" Command="{Binding NoCommand}" />
                 <Button Content="Oui" MinWidth="88" Command="{Binding YesCommand}" />

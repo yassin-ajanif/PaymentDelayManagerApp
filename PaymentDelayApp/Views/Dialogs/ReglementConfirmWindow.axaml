@@ -10,10 +10,11 @@
         Title="Confirmer le règlement">
     <Border Padding="20">
         <StackPanel Spacing="14">
-            <TextBlock TextWrapping="Wrap"
+            <TextBlock Classes="dialog-body"
+                       TextWrapping="Wrap"
                        Text="Indiquez la date à laquelle vous enregistrez le paiement (par défaut : aujourd'hui)." />
             <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto" RowSpacing="10" ColumnSpacing="12">
-                <TextBlock Grid.Row="0" Grid.Column="0" Text="Date du règlement" VerticalAlignment="Center" />
+                <TextBlock Grid.Row="0" Grid.Column="0" Classes="dialog-label" Text="Date du règlement" VerticalAlignment="Center" />
                 <DatePicker Grid.Row="0" Grid.Column="1" SelectedDate="{Binding SelectedDate}" />
             </Grid>
             <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Right" Margin="0,8,0,0">

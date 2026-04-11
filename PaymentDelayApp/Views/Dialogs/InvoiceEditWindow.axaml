@@ -20,20 +20,30 @@
                       RowSpacing="18"
                       ColumnSpacing="24">
                     <TextBlock Grid.Row="0" Grid.Column="0"
+                               Classes="dialog-label"
                                Text="Date de facture"
                                VerticalAlignment="Center"
                                TextWrapping="Wrap"
                                Margin="0,0,8,0" />
-                    <DatePicker Grid.Row="0" Grid.Column="1" SelectedDate="{Binding InvoiceDateUi}" MinHeight="36" />
+                    <DatePicker Grid.Row="0" Grid.Column="1"
+                                SelectedDate="{Binding InvoiceDateUi}"
+                                MinYear="{Binding InvoiceDatePickerMinYear}"
+                                MaxYear="{Binding InvoiceDatePickerMaxYear}"
+                                MinHeight="36" />
                     <TextBlock Grid.Row="1" Grid.Column="0"
+                               Classes="dialog-label"
                                Text="Date de livraison ou préstation"
                                VerticalAlignment="Center"
                                TextWrapping="Wrap"
                                Margin="0,0,8,0" />
-                    <DatePicker Grid.Row="1" Grid.Column="1" SelectedDate="{Binding DeliveryDateUi}" MinHeight="36" />
-                    <TextBlock Grid.Row="2" Grid.Column="0" Text="N° de Facture" VerticalAlignment="Center" TextWrapping="Wrap" Margin="0,0,8,0" />
+                    <DatePicker Grid.Row="1" Grid.Column="1"
+                                SelectedDate="{Binding DeliveryDateUi}"
+                                MinYear="{Binding InvoiceDatePickerMinYear}"
+                                MaxYear="{Binding InvoiceDatePickerMaxYear}"
+                                MinHeight="36" />
+                    <TextBlock Grid.Row="2" Grid.Column="0" Classes="dialog-label" Text="N° de Facture" VerticalAlignment="Center" TextWrapping="Wrap" Margin="0,0,8,0" />
                     <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding InvoiceNumber}" MinHeight="36" />
-                    <TextBlock Grid.Row="3" Grid.Column="0" Text="Fournisseur" VerticalAlignment="Center" TextWrapping="Wrap" Margin="0,0,8,0" />
+                    <TextBlock Grid.Row="3" Grid.Column="0" Classes="dialog-label" Text="Fournisseur" VerticalAlignment="Center" TextWrapping="Wrap" Margin="0,0,8,0" />
                     <ComboBox Grid.Row="3" Grid.Column="1"
                               ItemsSource="{Binding Suppliers}"
                               SelectedItem="{Binding SelectedSupplier}"
@@ -44,9 +54,9 @@
                             </DataTemplate>
                         </ComboBox.ItemTemplate>
                     </ComboBox>
-                    <TextBlock Grid.Row="4" Grid.Column="0" Text="Désignation" VerticalAlignment="Top" TextWrapping="Wrap" Margin="0,6,8,0" />
+                    <TextBlock Grid.Row="4" Grid.Column="0" Classes="dialog-label" Text="Désignation" VerticalAlignment="Top" TextWrapping="Wrap" Margin="0,6,8,0" />
                     <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding Designation}" AcceptsReturn="True" MinHeight="56" />
-                    <TextBlock Grid.Row="5" Grid.Column="0" Text="TTC" VerticalAlignment="Center" TextWrapping="Wrap" Margin="0,0,8,0" />
+                    <TextBlock Grid.Row="5" Grid.Column="0" Classes="dialog-label" Text="TTC" VerticalAlignment="Center" TextWrapping="Wrap" Margin="0,0,8,0" />
                     <NumericUpDown Grid.Row="5" Grid.Column="1"
                                    Minimum="0"
                                    Maximum="1000000000"
@@ -55,6 +65,7 @@
                                    FormatString="N2"
                                    MinHeight="36" />
                     <TextBlock Grid.Row="6" Grid.Column="0"
+                               Classes="dialog-label"
                                Text="Date d'échéance/facture"
                                VerticalAlignment="Center"
                                TextWrapping="Wrap"
@@ -65,25 +76,30 @@
                                    FormatString="N0"
                                    MinHeight="36" />
                     <TextBlock Grid.Row="7" Grid.Column="0"
+                               Classes="dialog-label"
                                Text="Date d'échéance normale"
                                VerticalAlignment="Center"
                                TextWrapping="Wrap"
                                Margin="0,0,8,0" />
                     <TextBlock Grid.Row="7" Grid.Column="1"
+                               Classes="dialog-label"
                                Text="{Binding EcheanceNormaleDisplay}"
                                VerticalAlignment="Center"
                                Margin="4,0,0,0" />
                     <TextBlock Grid.Row="8" Grid.Column="0"
+                               Classes="dialog-label"
                                Text="Date d'échéance respectée"
                                VerticalAlignment="Center"
                                TextWrapping="Wrap"
                                Margin="0,0,8,0" />
                     <TextBlock Grid.Row="8" Grid.Column="1"
+                               Classes="dialog-label"
                                Text="{Binding EcheanceRespecteeDisplay}"
                                VerticalAlignment="Center"
                                Margin="4,0,0,0" />
-                    <TextBlock Grid.Row="9" Grid.Column="0" Text="Reste des jours" VerticalAlignment="Center" TextWrapping="Wrap" Margin="0,0,8,0" />
+                    <TextBlock Grid.Row="9" Grid.Column="0" Classes="dialog-label" Text="Reste des jours" VerticalAlignment="Center" TextWrapping="Wrap" Margin="0,0,8,0" />
                     <TextBlock Grid.Row="9" Grid.Column="1"
+                               Classes="dialog-label"
                                Text="{Binding ResteDisplay}"
                                VerticalAlignment="Center"
                                Margin="4,0,0,0" />

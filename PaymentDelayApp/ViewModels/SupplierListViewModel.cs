@@ -62,17 +62,19 @@ public partial class SupplierListViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    private async Task DeleteSupplierAsync()
+    private async Task DeleteSupplierAsync(SupplierListRow? row)
     {
-        if (SelectedSupplierRow is null)
+        var target = row ?? SelectedSupplierRow;
+        if (target is null)
             return;
-        var msg = "Supprimer " + SelectedSupplierRow.Name + " ?";
+        SelectedSupplierRow = target;
+        var msg = "Supprimer " + target.Name + " ?";
         if (!await _dialogs.ConfirmAsync("Supprimer le fournisseur", msg, _window))
             return;
 
         try
         {
-            await _supplierService.DeleteSupplierAsync(SelectedSupplierRow.Id);
+            await _supplierService.DeleteSupplierAsync(target.Id);
             await RefreshAsync();
         }
         catch (Exception ex)

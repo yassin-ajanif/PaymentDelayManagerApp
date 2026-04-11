@@ -14,19 +14,19 @@
         </StackPanel>
         <ScrollViewer>
             <StackPanel Spacing="14">
-                <TextBlock Text="Fournisseur" FontSize="18" FontWeight="SemiBold" />
+                <TextBlock Classes="dialog-section-title" Text="Fournisseur" />
                 <Grid ColumnDefinitions="160,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto" RowSpacing="10" ColumnSpacing="12">
-                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Nom *" VerticalAlignment="Center" />
+                    <TextBlock Grid.Row="0" Grid.Column="0" Classes="dialog-label" Text="Nom *" VerticalAlignment="Center" />
                     <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Name}" Watermark="Raison sociale" />
-                    <TextBlock Grid.Row="1" Grid.Column="0" Text="ICE" VerticalAlignment="Center" />
+                    <TextBlock Grid.Row="1" Grid.Column="0" Classes="dialog-label" Text="ICE" VerticalAlignment="Center" />
                     <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Ice}" />
-                    <TextBlock Grid.Row="2" Grid.Column="0" Text="IF" VerticalAlignment="Center" />
+                    <TextBlock Grid.Row="2" Grid.Column="0" Classes="dialog-label" Text="IF" VerticalAlignment="Center" />
                     <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding FiscalId}" />
-                    <TextBlock Grid.Row="3" Grid.Column="0" Text="Adresse" VerticalAlignment="Center" />
+                    <TextBlock Grid.Row="3" Grid.Column="0" Classes="dialog-label" Text="Adresse" VerticalAlignment="Center" />
                     <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Address}" AcceptsReturn="True" MinHeight="56" />
-                    <TextBlock Grid.Row="4" Grid.Column="0" Text="Activité" VerticalAlignment="Center" />
+                    <TextBlock Grid.Row="4" Grid.Column="0" Classes="dialog-label" Text="Activité" VerticalAlignment="Center" />
                     <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding Activite}" />
-                    <TextBlock Grid.Row="5" Grid.Column="0" Text="Seuil d'alerte (jours)" VerticalAlignment="Center" />
+                    <TextBlock Grid.Row="5" Grid.Column="0" Classes="dialog-label" Text="Seuil d'alerte (jours)" VerticalAlignment="Center" />
                     <NumericUpDown Grid.Row="5" Grid.Column="1"
                                    Minimum="0"
                                    Maximum="365"

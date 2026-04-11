@@ -10,7 +10,7 @@
         Title="{Binding Title}">
     <Border Padding="20">
         <StackPanel Spacing="16">
-            <TextBlock Text="{Binding Message}" TextWrapping="Wrap" />
+            <TextBlock Classes="dialog-body" Text="{Binding Message}" TextWrapping="Wrap" />
             <Button Content="OK" MinWidth="100" HorizontalAlignment="Right" Command="{Binding OkCommand}" />
         </StackPanel>
     </Border>

@@ -44,6 +44,13 @@ public partial class InvoiceEditViewModel : ViewModelBase
     [ObservableProperty]
     private int _echeanceFactureJours = 60;
 
+    /// <summary>DatePicker bounds: only the current calendar year.</summary>
+    public DateTimeOffset InvoiceDatePickerMinYear { get; } =
+        new(new DateTime(DateTime.Today.Year, 1, 1, 0, 0, 0, DateTimeKind.Local));
+
+    public DateTimeOffset InvoiceDatePickerMaxYear { get; } =
+        new(new DateTime(DateTime.Today.Year, 12, 31, 0, 0, 0, DateTimeKind.Local));
+
     public InvoiceEditViewModel(
         IInvoiceService invoiceService,
         ISupplierService supplierService,
@@ -59,9 +66,11 @@ public partial class InvoiceEditViewModel : ViewModelBase
 
         if (existing is not null)
         {
-            InvoiceDateUi = ToDateTimeOffset(existing.InvoiceDate.ToDateTime(TimeOnly.MinValue));
+            var y = DateTime.Today.Year;
+            InvoiceDateUi = ToDateTimeOffset(
+                EnsureInCalendarYear(existing.InvoiceDate, y).ToDateTime(TimeOnly.MinValue));
             DeliveryDateUi = existing.DeliveryOrServiceDate is { } del
-                ? ToDateTimeOffset(del.ToDateTime(TimeOnly.MinValue))
+                ? ToDateTimeOffset(EnsureInCalendarYear(del, y).ToDateTime(TimeOnly.MinValue))
                 : null;
             InvoiceNumber = existing.InvoiceNumber;
             Designation = existing.Designation;
@@ -104,6 +113,17 @@ public partial class InvoiceEditViewModel : ViewModelBase
 
     private static DateTimeOffset ToDateTimeOffset(DateTime date) =>
         new(DateTime.SpecifyKind(date.Date, DateTimeKind.Local));
+
+    /// <summary>If the date is not in <paramref name="year"/>, project month/day into that year (clamp day).</summary>
+    private static DateOnly EnsureInCalendarYear(DateOnly d, int year)
+    {
+        if (d.Year == year)
+            return d;
+        var m = d.Month;
+        var maxDay = DateTime.DaysInMonth(year, m);
+        var day = Math.Min(d.Day, maxDay);
+        return new DateOnly(year, m, day);
+    }
 
     /// <summary>Date facture − aujourd'hui (jours entiers signés).</summary>
     private int? ComputeNormaleJours()
@@ -160,6 +180,28 @@ public partial class InvoiceEditViewModel : ViewModelBase
         }
 
         var invoiceDateOnly = DateOnly.FromDateTime(InvoiceDateUi.Value.LocalDateTime.Date);
+        var calendarYear = DateTime.Today.Year;
+        if (invoiceDateOnly.Year != calendarYear)
+        {
+            await _dialogs.ShowMessageAsync(
+                "Validation",
+                $"La date de facture doit être dans l'année {calendarYear} (année en cours).",
+                _window);
+            return;
+        }
+
+        if (DeliveryDateUi is { } delUi)
+        {
+            var delOnly = DateOnly.FromDateTime(delUi.LocalDateTime.Date);
+            if (delOnly.Year != calendarYear)
+            {
+                await _dialogs.ShowMessageAsync(
+                    "Validation",
+                    $"La date de livraison ou prestation doit être dans l'année {calendarYear} (année en cours).",
+                    _window);
+                return;
+            }
+        }
 
         if (string.IsNullOrWhiteSpace(InvoiceNumber))
         {

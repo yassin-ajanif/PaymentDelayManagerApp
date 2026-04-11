@@ -63,14 +63,14 @@
         }
       }
     },
-    "C:\\Users\\yassin\\Desktop\\Payment Delay App\\PaymentDelayApp.DataAccessLayer\\PaymentDelayApp.DataAccessLayer.csproj": {
+    "c:\\Users\\yassin\\Desktop\\Payment Delay App\\PaymentDelayApp.DataAccessLayer\\PaymentDelayApp.DataAccessLayer.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\yassin\\Desktop\\Payment Delay App\\PaymentDelayApp.DataAccessLayer\\PaymentDelayApp.DataAccessLayer.csproj",
+        "projectUniqueName": "c:\\Users\\yassin\\Desktop\\Payment Delay App\\PaymentDelayApp.DataAccessLayer\\PaymentDelayApp.DataAccessLayer.csproj",
         "projectName": "PaymentDelayApp.DataAccessLayer",
-        "projectPath": "C:\\Users\\yassin\\Desktop\\Payment Delay App\\PaymentDelayApp.DataAccessLayer\\PaymentDelayApp.DataAccessLayer.csproj",
+        "projectPath": "c:\\Users\\yassin\\Desktop\\Payment Delay App\\PaymentDelayApp.DataAccessLayer\\PaymentDelayApp.DataAccessLayer.csproj",
         "packagesPath": "C:\\Users\\yassin\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\yassin\\Desktop\\Payment Delay App\\PaymentDelayApp.DataAccessLayer\\obj\\",
+        "outputPath": "c:\\Users\\yassin\\Desktop\\Payment Delay App\\PaymentDelayApp.DataAccessLayer\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\yassin\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -163,8 +163,8 @@
               "C:\\Users\\yassin\\Desktop\\Payment Delay App\\PaymentDelayApp.BusinessLayer\\PaymentDelayApp.BusinessLayer.csproj": {
                 "projectPath": "C:\\Users\\yassin\\Desktop\\Payment Delay App\\PaymentDelayApp.BusinessLayer\\PaymentDelayApp.BusinessLayer.csproj"
               },
-              "C:\\Users\\yassin\\Desktop\\Payment Delay App\\PaymentDelayApp.DataAccessLayer\\PaymentDelayApp.DataAccessLayer.csproj": {
-                "projectPath": "C:\\Users\\yassin\\Desktop\\Payment Delay App\\PaymentDelayApp.DataAccessLayer\\PaymentDelayApp.DataAccessLayer.csproj"
+              "c:\\Users\\yassin\\Desktop\\Payment Delay App\\PaymentDelayApp.DataAccessLayer\\PaymentDelayApp.DataAccessLayer.csproj": {
+                "projectPath": "c:\\Users\\yassin\\Desktop\\Payment Delay App\\PaymentDelayApp.DataAccessLayer\\PaymentDelayApp.DataAccessLayer.csproj"
               }
             }
           }

@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("PaymentDelayApp")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a73fd8dff167d286a824a8e5dd1319b9892d33ce")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5530e38b136fb40635057d2d1c6f7bae2d816639")]
 [assembly: System.Reflection.AssemblyProductAttribute("PaymentDelayApp")]
 [assembly: System.Reflection.AssemblyTitleAttribute("PaymentDelayApp")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

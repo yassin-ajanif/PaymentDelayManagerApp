@@ -34,6 +34,7 @@
         <FontFamily x:Key="AppFontPrimary">avares://PaymentDelayApp/Assets/Fonts/RedditSans-Variable.ttf#Reddit Sans, Segoe UI</FontFamily>
         <x:Double x:Key="AppFontSizeUi">15</x:Double>
         <x:Double x:Key="AppFontSizeTableHeader">14</x:Double>
+        <x:Double x:Key="AppFontSizeTableCell">13</x:Double>
     </Application.Resources>
 
     <Application.DataTemplates>
@@ -114,11 +115,36 @@
             <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
 
+        <!-- Dialogs / forms: add Classes on TextBlocks (see SupplierFormWindow, InvoiceEditWindow, etc.) -->
+        <Style Selector="TextBlock.dialog-section-title">
+            <Setter Property="FontSize" Value="18" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="{DynamicResource AppBrushTextPrimary}" />
+            <Setter Property="FontFamily" Value="{DynamicResource AppFontPrimary}" />
+        </Style>
+        <Style Selector="TextBlock.dialog-label">
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="{DynamicResource AppBrushTextPrimary}" />
+            <Setter Property="FontFamily" Value="{DynamicResource AppFontPrimary}" />
+        </Style>
+        <Style Selector="TextBlock.dialog-body">
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="{DynamicResource AppBrushTextPrimary}" />
+            <Setter Property="FontFamily" Value="{DynamicResource AppFontPrimary}" />
+        </Style>
+
         <Style Selector="DataGrid">
             <Setter Property="BorderBrush" Value="{DynamicResource AppBrushFieldBorder}" />
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="HorizontalGridLinesBrush" Value="{DynamicResource AppBrushFieldBorder}" />
             <Setter Property="VerticalGridLinesBrush" Value="{DynamicResource AppBrushFieldBorder}" />
+        </Style>
+
+        <!-- Body cells: slightly smaller + clearly readable weight -->
+        <Style Selector="DataGridCell TextBlock">
+            <Setter Property="FontSize" Value="{DynamicResource AppFontSizeTableCell}" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="FontFamily" Value="{DynamicResource AppFontPrimary}" />
         </Style>
 
         <!-- All buttons: app blue, no border, semibold label (exclude .filter-chip ToggleButtons) -->
