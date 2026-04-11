@@ -23,9 +23,6 @@ public class InvoiceService : IInvoiceService
     public Task<Invoice?> GetInvoiceAsync(int id, CancellationToken cancellationToken = default) =>
         _invoices.GetByIdAsync(id, cancellationToken);
 
-    public Task<IReadOnlyList<Invoice>> GetAlertInvoicesAsync(CancellationToken cancellationToken = default) =>
-        _invoices.GetAlertCandidatesAsync(cancellationToken);
-
     public async Task SaveInvoiceAsync(Invoice invoice, CancellationToken cancellationToken = default)
     {
         if (invoice.EcheanceFactureJours > MaxEcheanceFactureJours)
@@ -56,6 +53,23 @@ public class InvoiceService : IInvoiceService
 
         existing.IsSettled = true;
         existing.PaidAt = paidAt;
+        var today = DateOnly.FromDateTime(DateTime.Today);
+        PaymentAlertEvaluator.ApplyPaymentAlertFlag(existing, supplier, today);
+        await _invoices.UpdateAsync(existing, cancellationToken);
+    }
+
+    public async Task UnsettleInvoiceAsync(int id, CancellationToken cancellationToken = default)
+    {
+        var existing = await _invoices.GetByIdAsync(id, cancellationToken)
+            ?? throw new InvalidOperationException("Facture introuvable.");
+        if (!existing.IsSettled)
+            return;
+        var supplier = existing.Supplier
+            ?? await _suppliers.GetByIdAsync(existing.SupplierId, cancellationToken)
+            ?? throw new InvalidOperationException("Fournisseur introuvable.");
+
+        existing.IsSettled = false;
+        existing.PaidAt = null;
         var today = DateOnly.FromDateTime(DateTime.Today);
         PaymentAlertEvaluator.ApplyPaymentAlertFlag(existing, supplier, today);
         await _invoices.UpdateAsync(existing, cancellationToken);

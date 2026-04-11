@@ -24,14 +24,6 @@ public class InvoiceAccess : IInvoiceAccess
             .Include(i => i.Supplier)
             .FirstOrDefaultAsync(i => i.Id == id, cancellationToken);
 
-    public async Task<IReadOnlyList<Invoice>> GetAlertCandidatesAsync(CancellationToken cancellationToken = default) =>
-        await _db.Invoices
-            .AsNoTracking()
-            .Include(i => i.Supplier)
-            .Where(i => i.IsPaymentAlert && !i.IsSettled)
-            .OrderByDescending(i => i.InvoiceDate)
-            .ToListAsync(cancellationToken);
-
     public async Task AddAsync(Invoice invoice, CancellationToken cancellationToken = default)
     {
         _db.Invoices.Add(invoice);
