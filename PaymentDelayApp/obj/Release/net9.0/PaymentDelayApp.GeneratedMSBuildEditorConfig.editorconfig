@@ -33,10 +33,10 @@ build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 [c:/Users/yassin/Desktop/Payment Delay App/PaymentDelayApp/Views/Dialogs/MessageWindow.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[c:/Users/yassin/Desktop/Payment Delay App/PaymentDelayApp/Views/Dialogs/PaymentAlertWindow.axaml]
+[c:/Users/yassin/Desktop/Payment Delay App/PaymentDelayApp/Views/Dialogs/ReglementConfirmWindow.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[c:/Users/yassin/Desktop/Payment Delay App/PaymentDelayApp/Views/Dialogs/ReglementConfirmWindow.axaml]
+[c:/Users/yassin/Desktop/Payment Delay App/PaymentDelayApp/Views/Dialogs/SettingsWindow.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
 [c:/Users/yassin/Desktop/Payment Delay App/PaymentDelayApp/Views/Dialogs/SupplierFormWindow.axaml]

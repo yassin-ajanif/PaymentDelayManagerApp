@@ -41,8 +41,15 @@ public partial class InvoiceEditViewModel : ViewModelBase
     [ObservableProperty]
     private decimal _ttcAmount;
 
+    /// <summary>0 = utilisateur n'a pas encore choisi la date d'échéance/facture (nouvelle facture).</summary>
     [ObservableProperty]
-    private int _echeanceFactureJours = 60;
+    private int _echeanceFactureJours;
+
+    /// <summary>Calendar deadline = date de facture + <see cref="EcheanceFactureJours"/> (stored value remains days in DB).</summary>
+    [ObservableProperty]
+    private DateTimeOffset? _echeanceFactureDateUi;
+
+    private bool _suppressEcheanceDateSync;
 
     /// <summary>DatePicker bounds: only the current calendar year.</summary>
     public DateTimeOffset InvoiceDatePickerMinYear { get; } =
@@ -50,6 +57,13 @@ public partial class InvoiceEditViewModel : ViewModelBase
 
     public DateTimeOffset InvoiceDatePickerMaxYear { get; } =
         new(new DateTime(DateTime.Today.Year, 12, 31, 0, 0, 0, DateTimeKind.Local));
+
+    /// <summary>Deadline picker: from invoice year Jan 1 through end of following year (invoice + up to 120 days).</summary>
+    public DateTimeOffset EcheanceFactureDatePickerMinYear =>
+        new(new DateTime(InvoiceDateUi?.Year ?? DateTime.Today.Year, 1, 1, 0, 0, 0, DateTimeKind.Local));
+
+    public DateTimeOffset EcheanceFactureDatePickerMaxYear =>
+        new(new DateTime((InvoiceDateUi?.Year ?? DateTime.Today.Year) + 1, 12, 31, 0, 0, 0, DateTimeKind.Local));
 
     public InvoiceEditViewModel(
         IInvoiceService invoiceService,
@@ -67,6 +81,7 @@ public partial class InvoiceEditViewModel : ViewModelBase
         if (existing is not null)
         {
             var y = DateTime.Today.Year;
+            EcheanceFactureJours = existing.EcheanceFactureJours;
             InvoiceDateUi = ToDateTimeOffset(
                 EnsureInCalendarYear(existing.InvoiceDate, y).ToDateTime(TimeOnly.MinValue));
             DeliveryDateUi = existing.DeliveryOrServiceDate is { } del
@@ -75,7 +90,6 @@ public partial class InvoiceEditViewModel : ViewModelBase
             InvoiceNumber = existing.InvoiceNumber;
             Designation = existing.Designation;
             TtcAmount = existing.TtcAmount;
-            EcheanceFactureJours = existing.EcheanceFactureJours;
             _preserveSettled = existing.IsSettled;
             _preservePaidAt = existing.PaidAt;
             _preservePaymentAlert = existing.IsPaymentAlert;
@@ -83,6 +97,8 @@ public partial class InvoiceEditViewModel : ViewModelBase
         else
         {
             InvoiceDateUi = ToDateTimeOffset(DateTime.Today);
+            EcheanceFactureJours = 0;
+            EcheanceFactureDateUi = null;
         }
 
         _ = LoadSuppliersAsync(existing);
@@ -90,15 +106,17 @@ public partial class InvoiceEditViewModel : ViewModelBase
 
     public string WindowTitle => _invoiceId == 0 ? "Nouvelle facture" : "Modifier la facture";
 
-    /// <summary>Échéance normale (j) = date de facture − aujourd'hui.</summary>
-    public string EcheanceNormaleDisplay => FormatJoursNormale(ComputeNormaleJours());
+    private bool IsEcheanceFactureUnset => EcheanceFactureJours <= 0 || EcheanceFactureDateUi is null;
 
     public string EcheanceRespecteeDisplay => EcheanceLimiteDisplay;
 
-    /// <summary>Reste des jours = délai facture (j) − normale (j) — jours jusqu'à la date limite.</summary>
+    /// <summary>Échéance respectée (date) − aujourd'hui ; délai par défaut 60 j si échéance/facture non renseignée.</summary>
     public string ResteDisplay => FormatJoursNormale(ComputeResteJours());
 
-    /// <summary>Date limite = date de facture + délai (jours).</summary>
+    /// <summary>
+    /// Date limite affichée pour « échéance respectée » : date de facture + délai.
+    /// Mode par défaut (échéance/facture non renseignée) : +60 jours.
+    /// </summary>
     private string EcheanceLimiteDisplay
     {
         get
@@ -107,7 +125,8 @@ public partial class InvoiceEditViewModel : ViewModelBase
             if (d is null)
                 return "—";
             var inv = DateOnly.FromDateTime(d.Value.LocalDateTime.Date);
-            return EcheanceCalculator.DateEcheanceNormale(inv, EcheanceFactureJours).ToString("dd/MM/yyyy");
+            var jours = IsEcheanceFactureUnset ? 60 : EcheanceFactureJours;
+            return EcheanceCalculator.DateEcheanceNormale(inv, jours).ToString("dd/MM/yyyy");
         }
     }
 
@@ -125,33 +144,83 @@ public partial class InvoiceEditViewModel : ViewModelBase
         return new DateOnly(year, m, day);
     }
 
-    /// <summary>Date facture − aujourd'hui (jours entiers signés).</summary>
-    private int? ComputeNormaleJours()
+    private static string FormatJoursNormale(int? j) => j is null ? "—" : $"{j} j";
+
+    private int? ComputeResteJours()
     {
         var d = InvoiceDateUi;
         if (d is null)
             return null;
         var inv = DateOnly.FromDateTime(d.Value.LocalDateTime.Date);
         var today = DateOnly.FromDateTime(DateTime.Today);
-        return EcheanceCalculator.EcheanceNormaleJours(inv, today);
-    }
-
-    private static string FormatJoursNormale(int? j) => j is null ? "—" : $"{j} j";
-
-    private int? ComputeResteJours()
-    {
-        var n = ComputeNormaleJours();
-        if (n is null)
+        var termJours = IsEcheanceFactureUnset ? 60 : EcheanceFactureJours;
+        if (termJours <= 0)
             return null;
-        return EcheanceFactureJours - n.Value;
+        var echeanceRespectee = EcheanceCalculator.DateEcheanceNormale(inv, termJours);
+        return EcheanceCalculator.ResteDesJours(echeanceRespectee, today);
     }
 
-    partial void OnInvoiceDateUiChanged(DateTimeOffset? value) => RefreshComputed();
+    partial void OnInvoiceDateUiChanged(DateTimeOffset? value)
+    {
+        OnPropertyChanged(nameof(EcheanceFactureDatePickerMinYear));
+        OnPropertyChanged(nameof(EcheanceFactureDatePickerMaxYear));
+        RefreshEcheanceFactureDateFromJours();
+        RefreshComputed();
+    }
+
     partial void OnEcheanceFactureJoursChanged(int value) => RefreshComputed();
+
+    partial void OnEcheanceFactureDateUiChanged(DateTimeOffset? value)
+    {
+        if (_suppressEcheanceDateSync)
+            return;
+        if (value is null)
+        {
+            if (EcheanceFactureJours != 0)
+                EcheanceFactureJours = 0;
+            RefreshComputed();
+            return;
+        }
+
+        if (InvoiceDateUi is null)
+            return;
+        var inv = DateOnly.FromDateTime(InvoiceDateUi.Value.LocalDateTime.Date);
+        var deadline = DateOnly.FromDateTime(value.Value.LocalDateTime.Date);
+        var jours = deadline.DayNumber - inv.DayNumber;
+        var clamped = Math.Clamp(jours, 1, 120);
+        if (clamped != EcheanceFactureJours)
+            EcheanceFactureJours = clamped;
+
+        var expected = EcheanceCalculator.DateEcheanceNormale(inv, EcheanceFactureJours);
+        if (deadline != expected)
+        {
+            _suppressEcheanceDateSync = true;
+            EcheanceFactureDateUi = ToDateTimeOffset(expected.ToDateTime(TimeOnly.MinValue));
+            _suppressEcheanceDateSync = false;
+        }
+
+        RefreshComputed();
+    }
+
+    private void RefreshEcheanceFactureDateFromJours()
+    {
+        if (InvoiceDateUi is null)
+            return;
+        _suppressEcheanceDateSync = true;
+        if (EcheanceFactureJours <= 0)
+            EcheanceFactureDateUi = null;
+        else
+        {
+            var inv = DateOnly.FromDateTime(InvoiceDateUi.Value.LocalDateTime.Date);
+            EcheanceFactureDateUi = ToDateTimeOffset(
+                EcheanceCalculator.DateEcheanceNormale(inv, EcheanceFactureJours).ToDateTime(TimeOnly.MinValue));
+        }
+
+        _suppressEcheanceDateSync = false;
+    }
 
     private void RefreshComputed()
     {
-        OnPropertyChanged(nameof(EcheanceNormaleDisplay));
         OnPropertyChanged(nameof(EcheanceRespecteeDisplay));
         OnPropertyChanged(nameof(ResteDisplay));
     }
@@ -209,11 +278,24 @@ public partial class InvoiceEditViewModel : ViewModelBase
             return;
         }
 
-        if (EcheanceFactureJours > 120)
+        if (EcheanceFactureDateUi is null)
         {
-            await _dialogs.ShowMessageAsync("Validation", "La date d'échéance/facture ne peut pas dépasser 120 jours.", _window);
+            await _dialogs.ShowMessageAsync("Validation", "Indiquez la date d'échéance/facture.", _window);
             return;
         }
+
+        var deadline = DateOnly.FromDateTime(EcheanceFactureDateUi.Value.LocalDateTime.Date);
+        var joursFromDates = deadline.DayNumber - invoiceDateOnly.DayNumber;
+        if (joursFromDates is < 1 or > 120)
+        {
+            await _dialogs.ShowMessageAsync(
+                "Validation",
+                "La date d'échéance/facture doit être entre 1 et 120 jours après la date de facture.",
+                _window);
+            return;
+        }
+
+        EcheanceFactureJours = joursFromDates;
 
         var invoice = new Invoice
         {
@@ -241,6 +323,15 @@ public partial class InvoiceEditViewModel : ViewModelBase
         {
             await _dialogs.ShowMessageAsync("Erreur", ex.Message, _window);
         }
+    }
+
+    /// <summary>Remet la date d'échéance/facture à vide (le DatePicker Avalonia n'a pas d'action « effacer » intégrée).</summary>
+    [RelayCommand]
+    private void ClearEcheanceFactureDate()
+    {
+        if (EcheanceFactureDateUi is null && EcheanceFactureJours <= 0)
+            return;
+        EcheanceFactureDateUi = null;
     }
 
     [RelayCommand]

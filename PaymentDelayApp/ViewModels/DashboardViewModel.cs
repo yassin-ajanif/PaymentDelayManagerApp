@@ -143,6 +143,14 @@ public partial class DashboardViewModel : ViewModelBase
     }
 
     [RelayCommand]
+    private async Task OpenSettingsAsync()
+    {
+        if (_dialogs is null)
+            return;
+        await _dialogs.ShowSettingsAsync();
+    }
+
+    [RelayCommand]
     private async Task RefreshAsync()
     {
         if (_invoiceService is not null)

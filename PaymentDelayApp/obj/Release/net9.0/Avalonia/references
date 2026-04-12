@@ -5,7 +5,6 @@ C:\Users\yassin\.nuget\packages\avalonia\11.3.12\ref\net8.0\Avalonia.DesignerSup
 C:\Users\yassin\.nuget\packages\avalonia.desktop\11.3.12\lib\net8.0\Avalonia.Desktop.dll
 C:\Users\yassin\.nuget\packages\avalonia\11.3.12\ref\net8.0\Avalonia.Dialogs.dll
 C:\Users\yassin\.nuget\packages\avalonia\11.3.12\ref\net8.0\Avalonia.dll
-C:\Users\yassin\.nuget\packages\avalonia.fonts.inter\11.3.12\lib\net8.0\Avalonia.Fonts.Inter.dll
 C:\Users\yassin\.nuget\packages\avalonia.freedesktop\11.3.12\lib\net8.0\Avalonia.FreeDesktop.dll
 C:\Users\yassin\.nuget\packages\avalonia\11.3.12\ref\net8.0\Avalonia.Markup.dll
 C:\Users\yassin\.nuget\packages\avalonia\11.3.12\ref\net8.0\Avalonia.Markup.Xaml.dll
@@ -46,7 +45,7 @@ C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\9.0.14\ref\net9.0\Micros
 C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\9.0.14\ref\net9.0\mscorlib.dll
 C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\9.0.14\ref\net9.0\netstandard.dll
 c:\Users\yassin\Desktop\Payment Delay App\PaymentDelayApp.BusinessLayer\obj\Release\net9.0\ref\PaymentDelayApp.BusinessLayer.dll
-C:\Users\yassin\Desktop\Payment Delay App\PaymentDelayApp.DataAccessLayer\obj\Release\net9.0\ref\PaymentDelayApp.DataAccessLayer.dll
+c:\Users\yassin\Desktop\Payment Delay App\PaymentDelayApp.DataAccessLayer\obj\Release\net9.0\ref\PaymentDelayApp.DataAccessLayer.dll
 C:\Users\yassin\.nuget\packages\skiasharp\2.88.9\lib\net6.0\SkiaSharp.dll
 C:\Users\yassin\.nuget\packages\sqlitepclraw.bundle_e_sqlite3\2.1.10\lib\netstandard2.0\SQLitePCLRaw.batteries_v2.dll
 C:\Users\yassin\.nuget\packages\sqlitepclraw.core\2.1.10\lib\netstandard2.0\SQLitePCLRaw.core.dll

@@ -52,14 +52,15 @@ public sealed class InvoiceDashboardRow
     public string EcheanceRespecteeDisplay => EcheanceLimiteDisplay;
     public string EcheanceFactureDisplay => EcheanceLimiteDisplay;
 
-    /// <summary>Reste des jours = échéance à respecter (j) − échéance normale (j) — jours jusqu'à la date limite.</summary>
+    /// <summary>Date d'échéance respectée − aujourd'hui (affichage grille).</summary>
     public string ResteDisplay => $"{ResteDesJours} j";
 
     public static InvoiceDashboardRow FromInvoice(Invoice invoice, DateOnly today)
     {
         var norm = EcheanceCalculator.EcheanceNormaleJours(invoice.InvoiceDate, today);
         var resp = EcheanceCalculator.EcheanceRespecteeJours(invoice.EcheanceFactureJours);
-        var reste = EcheanceCalculator.ResteDesJours(invoice.InvoiceDate, today, invoice.EcheanceFactureJours);
+        var echeanceRespectee = EcheanceCalculator.DateEcheanceNormale(invoice.InvoiceDate, invoice.EcheanceFactureJours);
+        var reste = EcheanceCalculator.ResteDesJours(echeanceRespectee, today);
         return new InvoiceDashboardRow
         {
             Id = invoice.Id,

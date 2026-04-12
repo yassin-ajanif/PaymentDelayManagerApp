@@ -12,7 +12,6 @@
           "Avalonia.Controls.DataGrid": "11.3.12",
           "Avalonia.Desktop": "11.3.12",
           "Avalonia.Diagnostics": "11.3.12",
-          "Avalonia.Fonts.Inter": "11.3.12",
           "Avalonia.Themes.Fluent": "11.3.12",
           "CommunityToolkit.Mvvm": "8.2.1",
           "Microsoft.EntityFrameworkCore.Sqlite": "9.0.0",
@@ -134,17 +133,6 @@
           "Avalonia": "11.3.12",
           "Avalonia.Controls.ColorPicker": "11.3.12",
           "Avalonia.Themes.Simple": "11.3.12"
-        }
-      },
-      "Avalonia.Fonts.Inter/11.3.12": {
-        "dependencies": {
-          "Avalonia": "11.3.12"
-        },
-        "runtime": {
-          "lib/net8.0/Avalonia.Fonts.Inter.dll": {
-            "assemblyVersion": "11.3.12.0",
-            "fileVersion": "11.3.12.0"
-          }
         }
       },
       "Avalonia.FreeDesktop/11.3.12": {
@@ -850,13 +838,6 @@
       "sha512": "sha512-fV+CTB/IDsFPqUVu5OQbpFLNeGLv9EmwxEjjuesJkzgT5R7mhkpLdZN3iWNC8gWkb2zfWG6mhu/q9jzDkiNhLA==",
       "path": "avalonia.diagnostics/11.3.12",
       "hashPath": "avalonia.diagnostics.11.3.12.nupkg.sha512"
-    },
-    "Avalonia.Fonts.Inter/11.3.12": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-Q28QGYnGbvrlTwg6md5U0sR8PuP7H77cysnJDR6a/hnCBH71/GPKxi4GGOKh2qFyo15XmvAwNZ+3QetfnOKSXw==",
-      "path": "avalonia.fonts.inter/11.3.12",
-      "hashPath": "avalonia.fonts.inter.11.3.12.nupkg.sha512"
     },
     "Avalonia.FreeDesktop/11.3.12": {
       "type": "package",

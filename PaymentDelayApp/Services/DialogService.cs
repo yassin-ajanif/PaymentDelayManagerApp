@@ -99,4 +99,14 @@ public sealed class DialogService : IDialogService
         await win.ShowDialog(ResolveOwner(owner));
         cancellationToken.ThrowIfCancellationRequested();
     }
+
+    public async Task ShowSettingsAsync(Window? owner = null, CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        var win = new SettingsWindow();
+        var vm = new SettingsViewModel(this, win);
+        win.DataContext = vm;
+        await win.ShowDialog(ResolveOwner(owner));
+        cancellationToken.ThrowIfCancellationRequested();
+    }
 }

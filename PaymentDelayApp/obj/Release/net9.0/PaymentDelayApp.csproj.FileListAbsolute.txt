@@ -15,7 +15,6 @@ C:\Users\yassin\Desktop\Payment Delay App\PaymentDelayApp\bin\Release\net9.0\Ava
 C:\Users\yassin\Desktop\Payment Delay App\PaymentDelayApp\bin\Release\net9.0\Avalonia.Vulkan.dll
 C:\Users\yassin\Desktop\Payment Delay App\PaymentDelayApp\bin\Release\net9.0\Avalonia.dll
 C:\Users\yassin\Desktop\Payment Delay App\PaymentDelayApp\bin\Release\net9.0\Avalonia.Desktop.dll
-C:\Users\yassin\Desktop\Payment Delay App\PaymentDelayApp\bin\Release\net9.0\Avalonia.Fonts.Inter.dll
 C:\Users\yassin\Desktop\Payment Delay App\PaymentDelayApp\bin\Release\net9.0\Avalonia.FreeDesktop.dll
 C:\Users\yassin\Desktop\Payment Delay App\PaymentDelayApp\bin\Release\net9.0\Avalonia.Native.dll
 C:\Users\yassin\Desktop\Payment Delay App\PaymentDelayApp\bin\Release\net9.0\Avalonia.Remote.Protocol.dll
@@ -113,3 +112,4 @@ C:\Users\yassin\Desktop\Payment Delay App\PaymentDelayApp\obj\Release\net9.0\Pay
 C:\Users\yassin\Desktop\Payment Delay App\PaymentDelayApp\obj\Release\net9.0\PaymentDelayApp.genruntimeconfig.cache
 C:\Users\yassin\Desktop\Payment Delay App\PaymentDelayApp\obj\Release\net9.0\ref\PaymentDelayApp.dll
 C:\Users\yassin\Desktop\Payment Delay App\PaymentDelayApp\bin\Release\net9.0\Avalonia.Controls.DataGrid.dll
+c:\Users\yassin\Desktop\Payment Delay App\PaymentDelayApp\obj\Release\net9.0\PaymentDelayApp.sourcelink.json

@@ -16,4 +16,6 @@ public interface IDialogService
     Task<bool> ConfirmAsync(string title, string message, Window? owner = null, CancellationToken cancellationToken = default);
 
     Task ShowMessageAsync(string title, string message, Window? owner = null, CancellationToken cancellationToken = default);
+
+    Task ShowSettingsAsync(Window? owner = null, CancellationToken cancellationToken = default);
 }

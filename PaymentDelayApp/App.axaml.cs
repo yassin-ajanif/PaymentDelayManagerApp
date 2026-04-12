@@ -36,6 +36,9 @@ public partial class App : Application
 
             var dashboard = _serviceProvider.GetRequiredService<DashboardViewModel>();
 
+            if (HasShowAlertsArgument(desktop))
+                dashboard.ShowAlertInvoicesOnly = true;
+
             var main = new MainWindow { DataContext = dashboard };
             main.Opened += async (_, _) =>
             {
@@ -51,6 +54,26 @@ public partial class App : Application
         }
 
         base.OnFrameworkInitializationCompleted();
+    }
+
+    private static bool HasShowAlertsArgument(IClassicDesktopStyleApplicationLifetime desktop)
+    {
+        if (desktop.Args is { Length: > 0 } args)
+        {
+            foreach (var a in args)
+            {
+                if (string.Equals(a, "--show-alerts", StringComparison.OrdinalIgnoreCase))
+                    return true;
+            }
+        }
+
+        foreach (var a in Environment.GetCommandLineArgs())
+        {
+            if (string.Equals(a, "--show-alerts", StringComparison.OrdinalIgnoreCase))
+                return true;
+        }
+
+        return false;
     }
 
     private void DisableAvaloniaDataAnnotationValidation()

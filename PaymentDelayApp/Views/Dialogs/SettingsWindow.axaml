@@ -1,0 +1,33 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:PaymentDelayApp.ViewModels"
+        x:Class="PaymentDelayApp.Views.Dialogs.SettingsWindow"
+        x:DataType="vm:SettingsViewModel"
+        Width="480"
+        SizeToContent="Height"
+        CanResize="False"
+        WindowStartupLocation="CenterOwner"
+        Title="Paramètres">
+    <Border Padding="20" Margin="0">
+        <StackPanel Spacing="16">
+            <TextBlock FontWeight="SemiBold" FontSize="15" Text="Surveillance (AlterWatcherService)" />
+            <TextBlock TextWrapping="Wrap"
+                       Foreground="{DynamicResource AppBrushTextSecondary}"
+                       Text="Intervalle entre deux analyses de la base (factures en alerte). La valeur s'applique à partir du prochain cycle d'attente du service." />
+            <StackPanel Orientation="Horizontal" Spacing="12">
+                <TextBlock Text="Intervalle (minutes)" VerticalAlignment="Center" MinWidth="140" />
+                <NumericUpDown Minimum="1"
+                               Maximum="1440"
+                               Value="{Binding ScanIntervalMinutes}"
+                               Width="120"
+                               Increment="1"
+                               FormatString="0"
+                               ShowButtonSpinner="True" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Right">
+                <Button Content="Annuler" MinWidth="88" Command="{Binding CancelCommand}" />
+                <Button Content="Enregistrer" MinWidth="88" Command="{Binding SaveCommand}" />
+            </StackPanel>
+        </StackPanel>
+    </Border>
+</Window>

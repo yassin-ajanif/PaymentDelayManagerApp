@@ -90,7 +90,7 @@
                 </StackPanel>
             </StackPanel>
             <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
-                <Button Content="Paramètres" Padding="12,6" IsEnabled="False" Opacity="0.5" />
+                <Button Content="Paramètres" Padding="12,6" Command="{Binding OpenSettingsCommand}" />
                 <Button Content="Actualiser" Padding="12,6" Command="{Binding RefreshCommand}" />
             </StackPanel>
         </Grid>
@@ -152,7 +152,6 @@
                 <DataGridTextColumn Header="Fournisseur" Binding="{Binding SupplierName}" Width="200" MinWidth="120" />
                 <DataGridTextColumn Header="Désignation" Binding="{Binding Designation}" Width="200" MinWidth="140" />
                 <DataGridTextColumn Header="TTC" Binding="{Binding TtcDisplay}" Width="90" />
-                <DataGridTextColumn Header="Date d'échéance normale" Binding="{Binding EcheanceNormaleDisplay}" Width="130" />
                 <DataGridTextColumn Header="Date d'échéance respectée" Binding="{Binding EcheanceRespecteeDisplay}" Width="150" />
                 <DataGridTemplateColumn Header="Reste des jours"
                                         Width="110"

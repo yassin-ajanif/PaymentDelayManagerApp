@@ -16,7 +16,7 @@
         <ScrollViewer Padding="0,0,8,0">
             <StackPanel Spacing="4">
                 <Grid ColumnDefinitions="220,*"
-                      RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
+                      RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
                       RowSpacing="18"
                       ColumnSpacing="24">
                     <TextBlock Grid.Row="0" Grid.Column="0"
@@ -70,35 +70,33 @@
                                VerticalAlignment="Center"
                                TextWrapping="Wrap"
                                Margin="0,0,8,0" />
-                    <NumericUpDown Grid.Row="6" Grid.Column="1"
-                                   Maximum="120"
-                                   Value="{Binding EcheanceFactureJours}"
-                                   FormatString="N0"
-                                   MinHeight="36" />
+                    <Grid Grid.Row="6" Grid.Column="1" ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                        <DatePicker Grid.Column="0"
+                                    SelectedDate="{Binding EcheanceFactureDateUi}"
+                                    MinYear="{Binding EcheanceFactureDatePickerMinYear}"
+                                    MaxYear="{Binding EcheanceFactureDatePickerMaxYear}"
+                                    MinHeight="36"
+                                    HorizontalAlignment="Stretch" />
+                        <Button Grid.Column="1"
+                                Content="Effacer"
+                                Padding="10,6"
+                                VerticalAlignment="Center"
+                                ToolTip.Tip="Retirer la date d'échéance/facture"
+                                Command="{Binding ClearEcheanceFactureDateCommand}" />
+                    </Grid>
                     <TextBlock Grid.Row="7" Grid.Column="0"
-                               Classes="dialog-label"
-                               Text="Date d'échéance normale"
-                               VerticalAlignment="Center"
-                               TextWrapping="Wrap"
-                               Margin="0,0,8,0" />
-                    <TextBlock Grid.Row="7" Grid.Column="1"
-                               Classes="dialog-label"
-                               Text="{Binding EcheanceNormaleDisplay}"
-                               VerticalAlignment="Center"
-                               Margin="4,0,0,0" />
-                    <TextBlock Grid.Row="8" Grid.Column="0"
                                Classes="dialog-label"
                                Text="Date d'échéance respectée"
                                VerticalAlignment="Center"
                                TextWrapping="Wrap"
                                Margin="0,0,8,0" />
-                    <TextBlock Grid.Row="8" Grid.Column="1"
+                    <TextBlock Grid.Row="7" Grid.Column="1"
                                Classes="dialog-label"
                                Text="{Binding EcheanceRespecteeDisplay}"
                                VerticalAlignment="Center"
                                Margin="4,0,0,0" />
-                    <TextBlock Grid.Row="9" Grid.Column="0" Classes="dialog-label" Text="Reste des jours" VerticalAlignment="Center" TextWrapping="Wrap" Margin="0,0,8,0" />
-                    <TextBlock Grid.Row="9" Grid.Column="1"
+                    <TextBlock Grid.Row="8" Grid.Column="0" Classes="dialog-label" Text="Reste des jours" VerticalAlignment="Center" TextWrapping="Wrap" Margin="0,0,8,0" />
+                    <TextBlock Grid.Row="8" Grid.Column="1"
                                Classes="dialog-label"
                                Text="{Binding ResteDisplay}"
                                VerticalAlignment="Center"
