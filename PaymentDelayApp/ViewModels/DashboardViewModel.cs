@@ -19,6 +19,14 @@ public partial class DashboardViewModel : ViewModelBase
     [ObservableProperty]
     private string _searchText = string.Empty;
 
+    /// <summary>Filtre plage : date de facture ≥ (inclus). Null = pas de borne basse.</summary>
+    [ObservableProperty]
+    private DateTimeOffset? _invoiceDateFilterFrom;
+
+    /// <summary>Filtre plage : date de facture ≤ (inclus). Null = pas de borne haute.</summary>
+    [ObservableProperty]
+    private DateTimeOffset? _invoiceDateFilterTo;
+
     [ObservableProperty]
     private bool _showAlertInvoicesOnly;
 
@@ -59,6 +67,13 @@ public partial class DashboardViewModel : ViewModelBase
             ? "Factures non réglées"
             : $"Factures non réglées ({UnsettledInvoiceCount})";
 
+    /// <summary>Bornes DatePicker pour le filtre date de facture (année en cours uniquement).</summary>
+    public DateTimeOffset InvoiceDateFilterPickerMin { get; } =
+        new(new DateTime(DateTime.Today.Year, 1, 1, 0, 0, 0, DateTimeKind.Local));
+
+    public DateTimeOffset InvoiceDateFilterPickerMax { get; } =
+        new(new DateTime(DateTime.Today.Year, 12, 31, 0, 0, 0, DateTimeKind.Local));
+
     public DashboardViewModel()
     {
         _invoiceService = null!;
@@ -89,6 +104,10 @@ public partial class DashboardViewModel : ViewModelBase
     }
 
     partial void OnSearchTextChanged(string value) => ApplyFilter();
+
+    partial void OnInvoiceDateFilterFromChanged(DateTimeOffset? value) => ApplyFilter();
+
+    partial void OnInvoiceDateFilterToChanged(DateTimeOffset? value) => ApplyFilter();
 
     partial void OnShowAlertInvoicesOnlyChanged(bool value)
     {
@@ -139,7 +158,29 @@ public partial class DashboardViewModel : ViewModelBase
                 (r.Designation?.Contains(q, StringComparison.OrdinalIgnoreCase) ?? false));
         }
 
+        var from = ToDateOnly(InvoiceDateFilterFrom);
+        var to = ToDateOnly(InvoiceDateFilterTo);
+        if (from is not null && to is not null && from > to)
+            (from, to) = (to, from);
+
+        if (from is not null)
+            src = src.Where(r => r.InvoiceDate >= from.Value);
+        if (to is not null)
+            src = src.Where(r => r.InvoiceDate <= to.Value);
+
         Rows = new ObservableCollection<InvoiceDashboardRow>(src);
+    }
+
+    private static DateOnly? ToDateOnly(DateTimeOffset? dto) =>
+        dto is null ? null : DateOnly.FromDateTime(dto.Value.LocalDateTime.Date);
+
+    [RelayCommand]
+    private void ClearInvoiceDateFilters()
+    {
+        if (InvoiceDateFilterFrom is null && InvoiceDateFilterTo is null)
+            return;
+        InvoiceDateFilterFrom = null;
+        InvoiceDateFilterTo = null;
     }
 
     [RelayCommand]
