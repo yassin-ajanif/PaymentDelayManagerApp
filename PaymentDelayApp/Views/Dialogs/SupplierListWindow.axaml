@@ -11,8 +11,8 @@
         Title="Liste des fournisseurs">
     <DockPanel Margin="16">
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Spacing="8" Margin="0,0,0,12">
-            <Button Content="Actualiser" Command="{Binding RefreshCommand}" Padding="12,6" />
-            <Button Content="Fermer" Command="{Binding CloseCommand}" Padding="12,6" />
+            <Button Classes="bluebutton" Content="Actualiser" Command="{Binding RefreshCommand}" Padding="12,6" />
+            <Button Classes="bluebutton" Content="Fermer" Command="{Binding CloseCommand}" Padding="12,6" />
         </StackPanel>
         <Grid RowDefinitions="Auto,*" RowSpacing="8">
             <TextBlock Grid.Row="0" Classes="dialog-section-title" Text="Liste fournisseur" FontSize="15" />

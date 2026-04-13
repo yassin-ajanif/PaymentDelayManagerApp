@@ -11,7 +11,7 @@
     <Border Padding="20">
         <StackPanel Spacing="16">
             <TextBlock Classes="dialog-body" Text="{Binding Message}" TextWrapping="Wrap" />
-            <Button Content="OK" MinWidth="100" HorizontalAlignment="Right" Command="{Binding OkCommand}" />
+            <Button Classes="bluebutton" Content="OK" MinWidth="100" HorizontalAlignment="Right" Command="{Binding OkCommand}" />
         </StackPanel>
     </Border>
 </Window>

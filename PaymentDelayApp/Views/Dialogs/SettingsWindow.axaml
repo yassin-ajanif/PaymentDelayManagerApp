@@ -25,8 +25,8 @@
                                ShowButtonSpinner="True" />
             </StackPanel>
             <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Right">
-                <Button Content="Annuler" MinWidth="88" Command="{Binding CancelCommand}" />
-                <Button Content="Enregistrer" MinWidth="88" Command="{Binding SaveCommand}" />
+                <Button Classes="bluebutton" Content="Annuler" MinWidth="88" Command="{Binding CancelCommand}" />
+                <Button Classes="bluebutton" Content="Enregistrer" MinWidth="88" Command="{Binding SaveCommand}" />
             </StackPanel>
         </StackPanel>
     </Border>

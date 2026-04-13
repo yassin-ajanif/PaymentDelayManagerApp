@@ -4,14 +4,15 @@
         xmlns:m="using:PaymentDelayApp.BusinessLayer.Models"
         x:Class="PaymentDelayApp.Views.Dialogs.InvoiceEditWindow"
         x:DataType="vm:InvoiceEditViewModel"
-        Width="640"
+        Width="740"
+        MinWidth="740"
         MinHeight="540"
         WindowStartupLocation="CenterOwner"
         Title="{Binding WindowTitle}">
     <DockPanel Margin="28,24">
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Spacing="10" HorizontalAlignment="Right" Margin="0,0,0,20">
-            <Button Content="Enregistrer" Padding="14,6" Command="{Binding SaveCommand}" />
-            <Button Content="Annuler" Padding="14,6" Command="{Binding CancelCommand}" />
+            <Button Classes="bluebutton" Content="Enregistrer" Padding="14,6" Command="{Binding SaveCommand}" />
+            <Button Classes="bluebutton" Content="Annuler" Padding="14,6" Command="{Binding CancelCommand}" />
         </StackPanel>
         <ScrollViewer Padding="0,0,8,0">
             <StackPanel Spacing="4">
@@ -78,6 +79,7 @@
                                     MinHeight="36"
                                     HorizontalAlignment="Stretch" />
                         <Button Grid.Column="1"
+                                Classes="bluebutton"
                                 Content="Effacer"
                                 Padding="10,6"
                                 VerticalAlignment="Center"

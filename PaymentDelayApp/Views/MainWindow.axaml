@@ -46,7 +46,7 @@
         <Style Selector="ToggleButton.filter-chip:checked:pointerover">
             <Setter Property="Background" Value="{DynamicResource AppBrushBlueButtonHover}" />
         </Style>
-        <!-- Same base as filter-chip; green when checked (needs .filter-chip for global Button exclusion) -->
+        <!-- Same base as filter-chip; green when checked -->
         <Style Selector="ToggleButton.filter-chip.filter-chip-settled:checked">
             <Setter Property="Background" Value="{DynamicResource AppBrushGreenPrimary}" />
             <Setter Property="Foreground" Value="{DynamicResource AppBrushWhite}" />
@@ -90,8 +90,8 @@
                 </StackPanel>
             </StackPanel>
             <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
-                <Button Content="Paramètres" Padding="12,6" Command="{Binding OpenSettingsCommand}" />
-                <Button Content="Actualiser" Padding="12,6" Command="{Binding RefreshCommand}" />
+                <Button Classes="bluebutton" Content="Paramètres" Padding="12,6" Command="{Binding OpenSettingsCommand}" />
+                <Button Classes="bluebutton" Content="Actualiser" Padding="12,6" Command="{Binding RefreshCommand}" />
             </StackPanel>
         </Grid>
 
@@ -113,9 +113,9 @@
                              Text="{Binding SearchText}"
                              MinHeight="36" />
                     <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="8">
-                        <Button Content="Ajouter fournisseur" Command="{Binding AddSupplierCommand}" Padding="10,6" />
-                        <Button Content="Nouvelle facture" Command="{Binding NewInvoiceCommand}" Padding="10,6" />
-                        <Button Content="Liste fournisseurs" Command="{Binding OpenSupplierListCommand}" Padding="10,6" />
+                        <Button Classes="bluebutton" Content="Ajouter fournisseur" Command="{Binding AddSupplierCommand}" Padding="10,6" />
+                        <Button Classes="bluebutton" Content="Nouvelle facture" Command="{Binding NewInvoiceCommand}" Padding="10,6" />
+                        <Button Classes="bluebutton" Content="Liste fournisseurs" Command="{Binding OpenSupplierListCommand}" Padding="10,6" />
                     </StackPanel>
                 </Grid>
                 <Grid Grid.Row="1"
@@ -129,23 +129,34 @@
                                Text="Du"
                                VerticalAlignment="Center"
                                Margin="0,0,2,0" />
+
+
                     <DatePicker Grid.Column="2"
                                 SelectedDate="{Binding InvoiceDateFilterFrom}"
                                 MinYear="{Binding InvoiceDateFilterPickerMin}"
                                 MaxYear="{Binding InvoiceDateFilterPickerMax}"
                                 MinHeight="36"
-                                Width="150" />
+                                Width="150"
+                                 />
+
+                                
+
                     <TextBlock Grid.Column="3"
                                Text="Au"
                                VerticalAlignment="Center"
                                Margin="4,0,2,0" />
+                    
                     <DatePicker Grid.Column="4"
                                 SelectedDate="{Binding InvoiceDateFilterTo}"
                                 MinYear="{Binding InvoiceDateFilterPickerMin}"
                                 MaxYear="{Binding InvoiceDateFilterPickerMax}"
                                 MinHeight="36"
-                                Width="150" />
+                                Width="150"
+                                />
+
+
                     <Button Grid.Column="5"
+                            Classes="bluebutton"
                             Content="Réinitialiser les dates"
                             Command="{Binding ClearInvoiceDateFiltersCommand}"
                             Padding="10,6"
@@ -188,8 +199,9 @@
                 <DataGridTextColumn Header="Date de facture" Binding="{Binding DateFactureDisplay}" Width="120" />
                 <DataGridTextColumn Header="Date de livraison ou préstation" Binding="{Binding DateLivraisonDisplay}" Width="160" />
                 <DataGridTextColumn Header="N° de Facture" Binding="{Binding InvoiceNumber}" Width="110" />
-                <DataGridTextColumn Header="Fournisseur" Binding="{Binding SupplierName}" Width="200" MinWidth="120" />
-                <DataGridTextColumn Header="Désignation" Binding="{Binding Designation}" Width="200" MinWidth="140" />
+                <!-- * / 2* share extra grid width (Désignation gets more room for long text). -->
+                <DataGridTextColumn Header="Fournisseur" Binding="{Binding SupplierName}" Width="*" MinWidth="120" />
+                <DataGridTextColumn Header="Désignation" Binding="{Binding Designation}" Width="*" MinWidth="120" />
                 <DataGridTextColumn Header="TTC" Binding="{Binding TtcDisplay}" Width="90" />
                 <DataGridTextColumn Header="Date d'échéance respectée" Binding="{Binding EcheanceRespecteeDisplay}" Width="150" />
                 <DataGridTemplateColumn Header="Reste des jours"
@@ -210,7 +222,7 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTextColumn Header="Date d'échéance/facture" Binding="{Binding EcheanceFactureDisplay}" Width="140" />
+                <DataGridTextColumn Header="Date d'échéance/facture" Binding="{Binding EcheanceFactureDisplay}"/>
             </DataGrid.Columns>
             </DataGrid>
         </Border>

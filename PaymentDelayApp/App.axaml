@@ -35,25 +35,6 @@
         <x:Double x:Key="AppFontSizeUi">15</x:Double>
         <x:Double x:Key="AppFontSizeTableHeader">14</x:Double>
         <x:Double x:Key="AppFontSizeTableCell">13</x:Double>
-
-        <!-- Override Fluent DatePicker theme resource keys so segments are gray, not accent blue -->
-        <SolidColorBrush x:Key="DatePickerButtonBackground" Color="#e2e8f0" />
-        <SolidColorBrush x:Key="DatePickerButtonBackgroundPointerOver" Color="#ffffff" />
-        <SolidColorBrush x:Key="DatePickerButtonBackgroundPressed" Color="#e2e8f0" />
-        <SolidColorBrush x:Key="DatePickerButtonBackgroundDisabled" Color="#e2e8f0" />
-        <SolidColorBrush x:Key="DatePickerButtonBackgroundFocused" Color="#e2e8f0" />
-        <SolidColorBrush x:Key="DatePickerButtonForeground" Color="#334155" />
-        <SolidColorBrush x:Key="DatePickerButtonForegroundPointerOver" Color="#334155" />
-        <SolidColorBrush x:Key="DatePickerButtonForegroundPressed" Color="#334155" />
-        <SolidColorBrush x:Key="DatePickerButtonForegroundDisabled" Color="#64748b" />
-        <SolidColorBrush x:Key="DatePickerButtonBorderBrush" Color="#D2D2D2" />
-        <SolidColorBrush x:Key="DatePickerButtonBorderBrushPointerOver" Color="#D2D2D2" />
-        <SolidColorBrush x:Key="DatePickerButtonBorderBrushPressed" Color="#D2D2D2" />
-        <SolidColorBrush x:Key="DatePickerButtonBorderBrushDisabled" Color="#D2D2D2" />
-        <SolidColorBrush x:Key="DatePickerFlyoutPresenterBackground" Color="#ffffff" />
-        <SolidColorBrush x:Key="DatePickerFlyoutPresenterBorderBrush" Color="#D2D2D2" />
-        <SolidColorBrush x:Key="DatePickerFlyoutPresenterHighlightFill" Color="#e2e8f0" />
-        <SolidColorBrush x:Key="DatePickerFlyoutPresenterSpacerFill" Color="#D2D2D2" />
     </Application.Resources>
 
     <Application.DataTemplates>
@@ -73,12 +54,12 @@
             <Setter Property="Background" Value="{DynamicResource AppBrushTableHeaderBackground}" />
             <Setter Property="Foreground" Value="{DynamicResource AppBrushTextPrimary}" />
             <Setter Property="FontWeight" Value="SemiBold" />
-            <Setter Property="Padding" Value="8" />
+            <Setter Property="Padding" Value="8,5" />
             <Setter Property="BorderBrush" Value="{DynamicResource AppBrushFieldBorder}" />
             <Setter Property="BorderThickness" Value="0,0,1,1" />
             <Setter Property="HorizontalContentAlignment" Value="Center" />
             <Setter Property="VerticalContentAlignment" Value="Center" />
-            <Setter Property="MinHeight" Value="44" />
+            <Setter Property="MinHeight" Value="36" />
             <Setter Property="FontFamily" Value="{DynamicResource AppFontPrimary}" />
             <Setter Property="FontSize" Value="{DynamicResource AppFontSizeTableHeader}" />
             <Setter Property="Template">
@@ -93,7 +74,10 @@
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition MinWidth="0" Width="Auto" />
                             </Grid.ColumnDefinitions>
-                            <ContentPresenter Content="{TemplateBinding Content}"
+                            <ContentPresenter Grid.Column="0"
+                                              VerticalAlignment="Center"
+                                              HorizontalAlignment="Stretch"
+                                              Content="{TemplateBinding Content}"
                                               ContentTemplate="{TemplateBinding ContentTemplate}" />
                             <Path Name="SortIcon"
                                   Grid.Column="1"
@@ -129,6 +113,8 @@
             <Setter Property="FontSize" Value="{DynamicResource AppFontSizeTableHeader}" />
             <Setter Property="FontWeight" Value="SemiBold" />
             <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="MaxLines" Value="2" />
+            <Setter Property="LineHeight" Value="18" />
             <Setter Property="TextAlignment" Value="Center" />
             <Setter Property="TextTrimming" Value="None" />
             <Setter Property="VerticalAlignment" Value="Center" />
@@ -166,8 +152,8 @@
             <Setter Property="FontFamily" Value="{DynamicResource AppFontPrimary}" />
         </Style>
 
-        <!-- All buttons: app blue, no border, semibold label (exclude .filter-chip ToggleButtons) -->
-        <Style Selector="Button:not(.filter-chip)">
+        <!-- Primary actions only: set Classes="bluebutton" on each Button (avoids DatePicker inner buttons). -->
+        <Style Selector="Button.bluebutton">
             <Setter Property="Background" Value="{DynamicResource AppBrushBluePrimary}" />
             <Setter Property="Foreground" Value="{DynamicResource AppBrushWhite}" />
             <Setter Property="FontWeight" Value="SemiBold" />
@@ -175,18 +161,18 @@
             <Setter Property="BorderThickness" Value="0" />
             <Setter Property="CornerRadius" Value="4" />
         </Style>
-        <Style Selector="Button:not(.filter-chip):pointerover">
+        <Style Selector="Button.bluebutton:pointerover">
             <Setter Property="Background" Value="{DynamicResource AppBrushBlueButtonHover}" />
         </Style>
-        <Style Selector="Button:not(.filter-chip):pressed">
+        <Style Selector="Button.bluebutton:pressed">
             <Setter Property="Background" Value="{DynamicResource AppBrushBlueButtonPressed}" />
         </Style>
-        <Style Selector="Button:not(.filter-chip):disabled">
+        <Style Selector="Button.bluebutton:disabled">
             <Setter Property="Background" Value="{DynamicResource AppBrushSurface}" />
             <Setter Property="Foreground" Value="{DynamicResource AppBrushTextSecondary}" />
             <Setter Property="Opacity" Value="1" />
         </Style>
-        <Style Selector="Button:not(.filter-chip) TextBlock">
+        <Style Selector="Button.bluebutton TextBlock">
             <Setter Property="FontWeight" Value="SemiBold" />
             <Setter Property="FontSize" Value="{DynamicResource AppFontSizeUi}" />
         </Style>
@@ -197,15 +183,18 @@
             <Setter Property="BorderThickness" Value="1" />
         </Style>
         <Style Selector="ComboBox">
+            <Setter Property="Background" Value="{DynamicResource AppBrushSurface}" />
             <Setter Property="BorderBrush" Value="{DynamicResource AppBrushFieldBorder}" />
             <Setter Property="BorderThickness" Value="1" />
+        </Style>
+        <Style Selector="ComboBox:pointerover">
+            <Setter Property="Background" Value="{DynamicResource AppBrushCard}" />
         </Style>
         <Style Selector="NumericUpDown">
             <Setter Property="BorderBrush" Value="{DynamicResource AppBrushFieldBorder}" />
             <Setter Property="BorderThickness" Value="1" />
         </Style>
         <Style Selector="DatePicker">
-            <Setter Property="Background" Value="{DynamicResource AppBrushSurface}" />
             <Setter Property="BorderBrush" Value="{DynamicResource AppBrushFieldBorder}" />
             <Setter Property="BorderThickness" Value="1" />
         </Style>

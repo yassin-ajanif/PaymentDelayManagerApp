@@ -9,8 +9,8 @@
         Title="{Binding WindowTitle}">
     <DockPanel Margin="20">
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Spacing="8" HorizontalAlignment="Right" Margin="0,0,0,16">
-            <Button Content="Enregistrer" Padding="14,6" Command="{Binding SaveCommand}" />
-            <Button Content="Annuler" Padding="14,6" Command="{Binding CancelCommand}" />
+            <Button Classes="bluebutton" Content="Enregistrer" Padding="14,6" Command="{Binding SaveCommand}" />
+            <Button Classes="bluebutton" Content="Annuler" Padding="14,6" Command="{Binding CancelCommand}" />
         </StackPanel>
         <ScrollViewer>
             <StackPanel Spacing="14">
