@@ -10,10 +10,63 @@
         WindowStartupLocation="CenterOwner"
         Title="Liste des fournisseurs">
     <DockPanel Margin="16">
-        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Spacing="8" Margin="0,0,0,12">
-            <Button Classes="bluebutton" Content="Actualiser" Command="{Binding RefreshCommand}" Padding="12,6" />
-            <Button Classes="bluebutton" Content="Fermer" Command="{Binding CloseCommand}" Padding="12,6" />
-        </StackPanel>
+        <Grid DockPanel.Dock="Top" ColumnDefinitions="*,Auto" Margin="0,0,0,12">
+            <StackPanel Grid.Column="0"
+                        Orientation="Horizontal"
+                        Spacing="8"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Left">
+                <Button Classes="bluebutton" Content="Actualiser" Command="{Binding RefreshCommand}" Padding="12,6" />
+                <Button Classes="bluebutton" Content="Fermer" Command="{Binding CloseCommand}" Padding="12,6" />
+            </StackPanel>
+            <StackPanel Grid.Column="1"
+                        Orientation="Horizontal"
+                        Spacing="8"
+                        VerticalAlignment="Center">
+                <Button Classes="exportfiletile"
+                        ToolTip.Tip="export"
+                        Command="{Binding ExportExcelCommand}"
+                        VerticalAlignment="Center">
+                    <Border Width="20" Height="20" CornerRadius="2" ClipToBounds="True">
+                        <Grid>
+                            <Grid ColumnDefinitions="*,*">
+                                <Border Grid.Column="0"
+                                        Background="{DynamicResource AppBrushExportExcelGreenLight}" />
+                                <Border Grid.Column="1"
+                                        Background="{DynamicResource AppBrushExportExcelGreenDark}" />
+                            </Grid>
+                            <TextBlock Text="↑"
+                                       FontSize="11"
+                                       FontWeight="Bold"
+                                       Foreground="{DynamicResource AppBrushWhite}"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" />
+                        </Grid>
+                    </Border>
+                </Button>
+                <Button Classes="exportfiletile"
+                        ToolTip.Tip="import excel"
+                        Command="{Binding ImportExcelCommand}"
+                        VerticalAlignment="Center">
+                    <Border Width="20" Height="20" CornerRadius="2" ClipToBounds="True">
+                        <Grid>
+                            <Grid ColumnDefinitions="*,*">
+                                <Border Grid.Column="0"
+                                        Background="{DynamicResource AppBrushExportExcelGreenLight}" />
+                                <Border Grid.Column="1"
+                                        Background="{DynamicResource AppBrushExportExcelGreenDark}" />
+                            </Grid>
+                            <TextBlock Text="↓"
+                                       FontSize="11"
+                                       FontWeight="Bold"
+                                       Foreground="{DynamicResource AppBrushWhite}"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" />
+                        </Grid>
+                    </Border>
+                </Button>
+            </StackPanel>
+        </Grid>
         <Grid RowDefinitions="Auto,*" RowSpacing="8">
             <TextBlock Grid.Row="0" Classes="dialog-section-title" Text="Liste fournisseur" FontSize="15" />
             <DataGrid Grid.Row="1"

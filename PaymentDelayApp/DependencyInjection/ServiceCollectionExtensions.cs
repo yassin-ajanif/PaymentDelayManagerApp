@@ -22,8 +22,11 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<ISupplierAccess, SupplierAccess>();
         services.AddSingleton<IInvoiceService, InvoiceService>();
         services.AddSingleton<ISupplierService, SupplierService>();
+        services.AddSingleton<IBackupService, DatabaseBackupService>();
         services.AddSingleton<IDialogService, DialogService>();
         services.AddSingleton<IInvoiceDashboardExportService, InvoiceDashboardExportService>();
+        services.AddSingleton<IInvoiceDashboardImportService, InvoiceDashboardImportService>();
+        services.AddSingleton<ISupplierExcelService, SupplierExcelService>();
         services.AddSingleton<DashboardViewModel>();
 
         return services;

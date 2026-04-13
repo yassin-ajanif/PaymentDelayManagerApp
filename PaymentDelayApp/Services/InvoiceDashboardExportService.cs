@@ -8,18 +8,7 @@ namespace PaymentDelayApp.Services;
 
 public sealed class InvoiceDashboardExportService : IInvoiceDashboardExportService
 {
-    private static readonly string[] Headers =
-    [
-        "Date de facture",
-        "Date de livraison ou préstation",
-        "N° de Facture",
-        "Fournisseur",
-        "Désignation",
-        "TTC",
-        "Date d'échéance respectée",
-        "Reste des jours",
-        "Date d'échéance/facture",
-    ];
+    private static IReadOnlyList<string> Headers => DashboardInvoiceExcelLayout.ColumnHeaders;
 
     static InvoiceDashboardExportService()
     {
@@ -67,7 +56,7 @@ public sealed class InvoiceDashboardExportService : IInvoiceDashboardExportServi
 
                             table.Header(header =>
                             {
-                                foreach (var title in Headers)
+                                foreach (var title in DashboardInvoiceExcelLayout.ColumnHeaders)
                                     header.Cell().Element(CellStyle).Text(title).SemiBold();
                             });
 
@@ -106,24 +95,24 @@ public sealed class InvoiceDashboardExportService : IInvoiceDashboardExportServi
         var sheetName = SanitizeSheetName(reportTitle);
         var ws = workbook.Worksheets.Add(sheetName);
 
-        ws.Range(1, 1, 1, Headers.Length).Merge();
+        ws.Range(1, 1, 1, Headers.Count).Merge();
         ws.Cell(1, 1).Value = reportTitle;
         ws.Cell(1, 1).Style.Font.Bold = true;
         ws.Cell(1, 1).Style.Font.FontSize = 14;
 
-        ws.Range(2, 1, 2, Headers.Length).Merge();
+        ws.Range(2, 1, 2, Headers.Count).Merge();
         ws.Cell(2, 1).Value = exportTimestampLine;
         ws.Cell(2, 1).Style.Font.FontSize = 10;
 
-        const int headerRow = 3;
-        for (var c = 0; c < Headers.Length; c++)
+        var headerRow = DashboardInvoiceExcelLayout.HeaderRowNumber;
+        for (var c = 0; c < Headers.Count; c++)
         {
             var cell = ws.Cell(headerRow, c + 1);
             cell.Value = Headers[c];
             cell.Style.Font.Bold = true;
         }
 
-        var r = headerRow + 1;
+        var r = DashboardInvoiceExcelLayout.FirstDataRowNumber;
         foreach (var row in rows)
         {
             cancellationToken.ThrowIfCancellationRequested();

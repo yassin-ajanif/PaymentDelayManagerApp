@@ -12,11 +12,19 @@ public sealed class DialogService : IDialogService
 {
     private readonly IInvoiceService _invoiceService;
     private readonly ISupplierService _supplierService;
+    private readonly ISupplierExcelService _supplierExcel;
+    private readonly IBackupService _backupService;
 
-    public DialogService(IInvoiceService invoiceService, ISupplierService supplierService)
+    public DialogService(
+        IInvoiceService invoiceService,
+        ISupplierService supplierService,
+        ISupplierExcelService supplierExcel,
+        IBackupService backupService)
     {
         _invoiceService = invoiceService;
         _supplierService = supplierService;
+        _supplierExcel = supplierExcel;
+        _backupService = backupService;
     }
 
     private static Window ResolveOwner(Window? owner)
@@ -45,7 +53,7 @@ public sealed class DialogService : IDialogService
     {
         cancellationToken.ThrowIfCancellationRequested();
         var win = new SupplierListWindow();
-        var vm = new SupplierListViewModel(_supplierService, this, win);
+        var vm = new SupplierListViewModel(_supplierService, _supplierExcel, this, win);
         win.DataContext = vm;
         await win.ShowDialog(ResolveOwner(owner));
         cancellationToken.ThrowIfCancellationRequested();
@@ -111,6 +119,16 @@ public sealed class DialogService : IDialogService
         cancellationToken.ThrowIfCancellationRequested();
     }
 
+    public async Task ShowBackupSettingsAsync(Window? owner = null, CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        var win = new BackupSettingsWindow();
+        var vm = new BackupSettingsViewModel(this, _backupService, win);
+        win.DataContext = vm;
+        await win.ShowDialog(ResolveOwner(owner));
+        cancellationToken.ThrowIfCancellationRequested();
+    }
+
     public async Task<IStorageFile?> PickSaveExportFileAsync(
         string suggestedFileName,
         IReadOnlyList<FilePickerFileType> fileTypes,
@@ -133,5 +151,32 @@ public sealed class DialogService : IDialogService
         var file = await storage.SaveFilePickerAsync(options);
         cancellationToken.ThrowIfCancellationRequested();
         return file;
+    }
+
+    private static readonly FilePickerFileType[] ExcelOpenTypes =
+    [
+        new("Excel") { Patterns = ["*.xlsx"], MimeTypes = ["application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"] },
+    ];
+
+    public async Task<IStorageFile?> PickOpenImportExcelFileAsync(
+        Window? owner = null,
+        CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        var window = ResolveOwner(owner);
+        var topLevel = TopLevel.GetTopLevel(window);
+        if (topLevel?.StorageProvider is not { CanOpen: true } storage)
+            return null;
+
+        var options = new FilePickerOpenOptions
+        {
+            Title = "Importer des factures",
+            AllowMultiple = false,
+            FileTypeFilter = new List<FilePickerFileType>(ExcelOpenTypes),
+        };
+
+        var files = await storage.OpenFilePickerAsync(options);
+        cancellationToken.ThrowIfCancellationRequested();
+        return files is { Count: > 0 } ? files[0] : null;
     }
 }

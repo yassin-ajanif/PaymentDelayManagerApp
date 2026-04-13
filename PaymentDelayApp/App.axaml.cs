@@ -5,6 +5,7 @@ using Avalonia.Data.Core.Plugins;
 using Microsoft.Extensions.DependencyInjection;
 using PaymentDelayApp.DataAccessLayer;
 using PaymentDelayApp.DependencyInjection;
+using PaymentDelayApp.Services;
 using PaymentDelayApp.ViewModels;
 using PaymentDelayApp.Views;
 using System.Linq;
@@ -48,12 +49,65 @@ public partial class App : Application
 
             desktop.ShutdownRequested += (_, _) =>
             {
-                _serviceProvider?.Dispose();
-                _serviceProvider = null;
+                try
+                {
+                    TryBackupOnExit(_serviceProvider);
+                }
+                finally
+                {
+                    _serviceProvider?.Dispose();
+                    _serviceProvider = null;
+                }
             };
         }
 
         base.OnFrameworkInitializationCompleted();
+    }
+
+    /// <summary>
+    /// Writes a timestamped SQLite backup using <see cref="BackupSettingsFile"/> before the host disposes services.
+    /// Disposes <see cref="PaymentDelayDbContext"/> first so the main connection does not block the backup connection.
+    /// </summary>
+    private static void TryBackupOnExit(ServiceProvider? serviceProvider)
+    {
+        if (serviceProvider is null)
+            return;
+
+        try
+        {
+            var dbContext = serviceProvider.GetService<PaymentDelayDbContext>();
+            dbContext?.Dispose();
+
+            var backup = serviceProvider.GetRequiredService<IBackupService>();
+            var doc = BackupSettingsFile.LoadOrDefault();
+            var source = (doc.DatabasePath ?? string.Empty).Trim();
+            var dir = (doc.BackupsDirectory ?? string.Empty).Trim();
+            if (source.Length == 0 || dir.Length == 0)
+                return;
+
+            try
+            {
+                source = Path.GetFullPath(source);
+                dir = Path.GetFullPath(dir);
+            }
+            catch
+            {
+                return;
+            }
+
+            if (!File.Exists(source))
+                return;
+
+            backup.CreateBackupAsync(source, dir, doc.RetentionDays, CancellationToken.None).GetAwaiter().GetResult();
+
+            var updated = BackupSettingsFile.LoadOrDefault();
+            updated.LastBackupUtc = DateTime.UtcNow;
+            BackupSettingsFile.Save(updated);
+        }
+        catch
+        {
+            // Best-effort on exit; avoid blocking or surfacing UI.
+        }
     }
 
     private static bool HasShowAlertsArgument(IClassicDesktopStyleApplicationLifetime desktop)

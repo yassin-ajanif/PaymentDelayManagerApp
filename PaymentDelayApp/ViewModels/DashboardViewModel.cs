@@ -23,6 +23,7 @@ public partial class DashboardViewModel : ViewModelBase
     private readonly IInvoiceService _invoiceService;
     private readonly IDialogService _dialogs;
     private readonly IInvoiceDashboardExportService _export;
+    private readonly IInvoiceDashboardImportService _import;
     private List<InvoiceDashboardRow> _allRows = [];
 
     [ObservableProperty]
@@ -91,16 +92,19 @@ public partial class DashboardViewModel : ViewModelBase
         _invoiceService = null!;
         _dialogs = null!;
         _export = null!;
+        _import = null!;
     }
 
     public DashboardViewModel(
         IInvoiceService invoiceService,
         IDialogService dialogs,
-        IInvoiceDashboardExportService export)
+        IInvoiceDashboardExportService export,
+        IInvoiceDashboardImportService import)
     {
         _invoiceService = invoiceService;
         _dialogs = dialogs;
         _export = export;
+        _import = import;
     }
 
     public async Task LoadAsync(CancellationToken cancellationToken = default)
@@ -291,11 +295,59 @@ public partial class DashboardViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    private async Task OpenSettingsAsync()
+    private async Task ImportExcelAsync(CancellationToken cancellationToken)
+    {
+        if (_dialogs is null || _import is null)
+            return;
+        var file = await _dialogs.PickOpenImportExcelFileAsync(null, cancellationToken);
+        if (file is null)
+            return;
+        try
+        {
+            await using var stream = await file.OpenReadAsync();
+            var result = await _import.ImportFromExcelAsync(stream, cancellationToken);
+            await _dialogs.ShowMessageAsync("Import Excel", FormatImportResultMessage(result));
+            if (result.Success && _invoiceService is not null)
+                await LoadAsync(cancellationToken);
+        }
+        catch (Exception ex)
+        {
+            await _dialogs.ShowMessageAsync("Import Excel", $"Erreur : {ex.Message}");
+        }
+    }
+
+    private static string FormatImportResultMessage(InvoiceDashboardImportResult r)
+    {
+        if (r.MissingHeaders.Count > 0)
+            return string.Join(Environment.NewLine, r.MissingHeaders);
+        if (!r.Success)
+        {
+            var lines = r.RowErrors.Take(50).Select(e => $"Ligne {e.ExcelRow} : {e.Message}");
+            var body = string.Join(Environment.NewLine, lines);
+            if (r.RowErrors.Count > 50)
+                body += $"{Environment.NewLine}… et {r.RowErrors.Count - 50} autre(s) erreur(s).";
+            return $"Import annulé — aucune facture enregistrée.{Environment.NewLine}{Environment.NewLine}{r.RowErrors.Count} erreur(s) :{Environment.NewLine}{body}";
+        }
+
+        return r.ImportedCount == 0
+            ? "Aucune ligne de données à importer (fichier vide ou uniquement des lignes vides)."
+            : $"{r.ImportedCount} facture(s) importée(s).";
+    }
+
+    [RelayCommand]
+    private async Task OpenWatcherSettingsAsync()
     {
         if (_dialogs is null)
             return;
         await _dialogs.ShowSettingsAsync();
+    }
+
+    [RelayCommand]
+    private async Task OpenBackupSettingsAsync()
+    {
+        if (_dialogs is null)
+            return;
+        await _dialogs.ShowBackupSettingsAsync();
     }
 
     [RelayCommand]

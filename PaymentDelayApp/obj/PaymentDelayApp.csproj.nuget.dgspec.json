@@ -63,14 +63,14 @@
         }
       }
     },
-    "c:\\Users\\yassin\\Desktop\\Payment Delay App\\PaymentDelayApp.DataAccessLayer\\PaymentDelayApp.DataAccessLayer.csproj": {
+    "C:\\Users\\yassin\\Desktop\\Payment Delay App\\PaymentDelayApp.DataAccessLayer\\PaymentDelayApp.DataAccessLayer.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\Users\\yassin\\Desktop\\Payment Delay App\\PaymentDelayApp.DataAccessLayer\\PaymentDelayApp.DataAccessLayer.csproj",
+        "projectUniqueName": "C:\\Users\\yassin\\Desktop\\Payment Delay App\\PaymentDelayApp.DataAccessLayer\\PaymentDelayApp.DataAccessLayer.csproj",
         "projectName": "PaymentDelayApp.DataAccessLayer",
-        "projectPath": "c:\\Users\\yassin\\Desktop\\Payment Delay App\\PaymentDelayApp.DataAccessLayer\\PaymentDelayApp.DataAccessLayer.csproj",
+        "projectPath": "C:\\Users\\yassin\\Desktop\\Payment Delay App\\PaymentDelayApp.DataAccessLayer\\PaymentDelayApp.DataAccessLayer.csproj",
         "packagesPath": "C:\\Users\\yassin\\.nuget\\packages\\",
-        "outputPath": "c:\\Users\\yassin\\Desktop\\Payment Delay App\\PaymentDelayApp.DataAccessLayer\\obj\\",
+        "outputPath": "C:\\Users\\yassin\\Desktop\\Payment Delay App\\PaymentDelayApp.DataAccessLayer\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\yassin\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -163,8 +163,8 @@
               "C:\\Users\\yassin\\Desktop\\Payment Delay App\\PaymentDelayApp.BusinessLayer\\PaymentDelayApp.BusinessLayer.csproj": {
                 "projectPath": "C:\\Users\\yassin\\Desktop\\Payment Delay App\\PaymentDelayApp.BusinessLayer\\PaymentDelayApp.BusinessLayer.csproj"
               },
-              "c:\\Users\\yassin\\Desktop\\Payment Delay App\\PaymentDelayApp.DataAccessLayer\\PaymentDelayApp.DataAccessLayer.csproj": {
-                "projectPath": "c:\\Users\\yassin\\Desktop\\Payment Delay App\\PaymentDelayApp.DataAccessLayer\\PaymentDelayApp.DataAccessLayer.csproj"
+              "C:\\Users\\yassin\\Desktop\\Payment Delay App\\PaymentDelayApp.DataAccessLayer\\PaymentDelayApp.DataAccessLayer.csproj": {
+                "projectPath": "C:\\Users\\yassin\\Desktop\\Payment Delay App\\PaymentDelayApp.DataAccessLayer\\PaymentDelayApp.DataAccessLayer.csproj"
               }
             }
           }
@@ -215,6 +215,12 @@
             "CommunityToolkit.Mvvm": {
               "target": "Package",
               "version": "[8.2.1, )"
+            },
+            "Microsoft.EntityFrameworkCore.Design": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[9.0.0, )"
             },
             "Microsoft.EntityFrameworkCore.Sqlite": {
               "target": "Package",

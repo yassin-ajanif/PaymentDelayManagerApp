@@ -90,7 +90,39 @@
                 </StackPanel>
             </StackPanel>
             <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
-                <Button Classes="bluebutton" Content="Paramètres" Padding="12,6" Command="{Binding OpenSettingsCommand}" />
+                <Button Classes="exportfiletile"
+                        ToolTip.Tip="Importer un fichier Excel (même format que l'export)"
+                        Command="{Binding ImportExcelCommand}"
+                        VerticalAlignment="Center">
+                    <Border Width="20" Height="20" CornerRadius="2" ClipToBounds="True">
+                        <Grid>
+                            <Grid ColumnDefinitions="*,*">
+                                <Border Grid.Column="0"
+                                        Background="{DynamicResource AppBrushExportExcelGreenLight}" />
+                                <Border Grid.Column="1"
+                                        Background="{DynamicResource AppBrushExportExcelGreenDark}" />
+                            </Grid>
+                            <TextBlock Text="↓"
+                                       FontSize="11"
+                                       FontWeight="Bold"
+                                       Foreground="{DynamicResource AppBrushWhite}"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" />
+                        </Grid>
+                    </Border>
+                </Button>
+                <Button Classes="bluebutton"
+                        Content="Paramètres"
+                        Padding="12,6">
+                    <Button.Flyout>
+                        <MenuFlyout Placement="BottomEdgeAlignedRight">
+                            <MenuItem Header="Intervalle de surveillance"
+                                      Command="{Binding OpenWatcherSettingsCommand}" />
+                            <MenuItem Header="Sauvegardes"
+                                      Command="{Binding OpenBackupSettingsCommand}" />
+                        </MenuFlyout>
+                    </Button.Flyout>
+                </Button>
                 <Button Classes="bluebutton" Content="Actualiser" Padding="12,6" Command="{Binding RefreshCommand}" />
             </StackPanel>
         </Grid>
