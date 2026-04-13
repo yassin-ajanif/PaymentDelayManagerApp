@@ -23,6 +23,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IInvoiceService, InvoiceService>();
         services.AddSingleton<ISupplierService, SupplierService>();
         services.AddSingleton<IDialogService, DialogService>();
+        services.AddSingleton<IInvoiceDashboardExportService, InvoiceDashboardExportService>();
         services.AddSingleton<DashboardViewModel>();
 
         return services;

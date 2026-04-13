@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using Avalonia.Platform.Storage;
 using PaymentDelayApp.BusinessLayer.Models;
 
 namespace PaymentDelayApp.Services;
@@ -18,4 +19,11 @@ public interface IDialogService
     Task ShowMessageAsync(string title, string message, Window? owner = null, CancellationToken cancellationToken = default);
 
     Task ShowSettingsAsync(Window? owner = null, CancellationToken cancellationToken = default);
+
+    /// <summary>Save-file picker for exports; returns null if cancelled or unavailable.</summary>
+    Task<IStorageFile?> PickSaveExportFileAsync(
+        string suggestedFileName,
+        IReadOnlyList<FilePickerFileType> fileTypes,
+        Window? owner = null,
+        CancellationToken cancellationToken = default);
 }

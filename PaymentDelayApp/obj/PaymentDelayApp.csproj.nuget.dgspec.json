@@ -208,6 +208,10 @@
               "target": "Package",
               "version": "[11.3.12, )"
             },
+            "ClosedXML": {
+              "target": "Package",
+              "version": "[0.104.2, )"
+            },
             "CommunityToolkit.Mvvm": {
               "target": "Package",
               "version": "[8.2.1, )"
@@ -219,6 +223,10 @@
             "Microsoft.Extensions.DependencyInjection": {
               "target": "Package",
               "version": "[9.0.0, )"
+            },
+            "QuestPDF": {
+              "target": "Package",
+              "version": "[2024.12.3, )"
             }
           },
           "imports": [

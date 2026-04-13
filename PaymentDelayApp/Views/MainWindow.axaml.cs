@@ -101,6 +101,7 @@ public partial class MainWindow : Window
             Header = RowContextHeader("🗑", "Supprimer"),
             Command = vm.DeleteInvoiceCommand,
             CommandParameter = invoiceRow,
+            IsEnabled = !invoiceRow.IsSettled,
         };
         var regler = new MenuItem
         {

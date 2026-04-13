@@ -22,7 +22,12 @@ C:\Users\yassin\.nuget\packages\avalonia\11.3.12\ref\net8.0\Avalonia.Vulkan.dll
 C:\Users\yassin\.nuget\packages\avalonia.win32\11.3.12\lib\net8.0\Avalonia.Win32.Automation.dll
 C:\Users\yassin\.nuget\packages\avalonia.win32\11.3.12\lib\net8.0\Avalonia.Win32.dll
 C:\Users\yassin\.nuget\packages\avalonia.x11\11.3.12\lib\net8.0\Avalonia.X11.dll
+C:\Users\yassin\.nuget\packages\closedxml\0.104.2\lib\netstandard2.1\ClosedXML.dll
+C:\Users\yassin\.nuget\packages\closedxml.parser\1.2.0\lib\netstandard2.1\ClosedXML.Parser.dll
 C:\Users\yassin\.nuget\packages\communitytoolkit.mvvm\8.2.1\lib\net6.0\CommunityToolkit.Mvvm.dll
+C:\Users\yassin\.nuget\packages\documentformat.openxml\3.1.1\lib\net8.0\DocumentFormat.OpenXml.dll
+C:\Users\yassin\.nuget\packages\documentformat.openxml.framework\3.1.1\lib\net8.0\DocumentFormat.OpenXml.Framework.dll
+C:\Users\yassin\.nuget\packages\excelnumberformat\1.1.0\lib\netstandard2.0\ExcelNumberFormat.dll
 C:\Users\yassin\.nuget\packages\harfbuzzsharp\8.3.1.1\lib\net8.0\HarfBuzzSharp.dll
 C:\Users\yassin\.nuget\packages\microcom.runtime\0.11.0\lib\net5.0\MicroCom.Runtime.dll
 C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\9.0.14\ref\net9.0\Microsoft.CSharp.dll
@@ -49,6 +54,9 @@ C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\9.0.14\ref\net9.0\mscorl
 C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\9.0.14\ref\net9.0\netstandard.dll
 c:\Users\yassin\Desktop\Payment Delay App\PaymentDelayApp.BusinessLayer\obj\Debug\net9.0\ref\PaymentDelayApp.BusinessLayer.dll
 C:\Users\yassin\Desktop\Payment Delay App\PaymentDelayApp.DataAccessLayer\obj\Debug\net9.0\ref\PaymentDelayApp.DataAccessLayer.dll
+C:\Users\yassin\.nuget\packages\questpdf\2024.12.3\lib\net8.0\QuestPDF.dll
+C:\Users\yassin\.nuget\packages\rbush\4.0.0\lib\net8.0\RBush.dll
+C:\Users\yassin\.nuget\packages\sixlabors.fonts\1.0.0\lib\netcoreapp3.1\SixLabors.Fonts.dll
 C:\Users\yassin\.nuget\packages\skiasharp\2.88.9\lib\net6.0\SkiaSharp.dll
 C:\Users\yassin\.nuget\packages\sqlitepclraw.bundle_e_sqlite3\2.1.10\lib\netstandard2.0\SQLitePCLRaw.batteries_v2.dll
 C:\Users\yassin\.nuget\packages\sqlitepclraw.core\2.1.10\lib\netstandard2.0\SQLitePCLRaw.core.dll
@@ -103,6 +111,7 @@ C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\9.0.14\ref\net9.0\System
 C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\9.0.14\ref\net9.0\System.IO.FileSystem.Watcher.dll
 C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\9.0.14\ref\net9.0\System.IO.IsolatedStorage.dll
 C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\9.0.14\ref\net9.0\System.IO.MemoryMappedFiles.dll
+C:\Users\yassin\.nuget\packages\system.io.packaging\8.0.1\lib\net8.0\System.IO.Packaging.dll
 C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\9.0.14\ref\net9.0\System.IO.Pipelines.dll
 C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\9.0.14\ref\net9.0\System.IO.Pipes.AccessControl.dll
 C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\9.0.14\ref\net9.0\System.IO.Pipes.dll

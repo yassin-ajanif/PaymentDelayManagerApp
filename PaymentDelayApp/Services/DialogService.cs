@@ -1,5 +1,6 @@
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Platform.Storage;
 using PaymentDelayApp.BusinessLayer.Abstractions;
 using PaymentDelayApp.BusinessLayer.Models;
 using PaymentDelayApp.ViewModels;
@@ -108,5 +109,29 @@ public sealed class DialogService : IDialogService
         win.DataContext = vm;
         await win.ShowDialog(ResolveOwner(owner));
         cancellationToken.ThrowIfCancellationRequested();
+    }
+
+    public async Task<IStorageFile?> PickSaveExportFileAsync(
+        string suggestedFileName,
+        IReadOnlyList<FilePickerFileType> fileTypes,
+        Window? owner = null,
+        CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        var window = ResolveOwner(owner);
+        var topLevel = TopLevel.GetTopLevel(window);
+        if (topLevel?.StorageProvider is not { CanSave: true } storage)
+            return null;
+
+        var options = new FilePickerSaveOptions
+        {
+            SuggestedFileName = suggestedFileName,
+            FileTypeChoices = new List<FilePickerFileType>(fileTypes),
+            ShowOverwritePrompt = true,
+        };
+
+        var file = await storage.SaveFilePickerAsync(options);
+        cancellationToken.ThrowIfCancellationRequested();
+        return file;
     }
 }

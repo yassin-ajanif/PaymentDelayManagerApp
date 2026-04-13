@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using Avalonia.Platform.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using PaymentDelayApp.BusinessLayer.Abstractions;
@@ -9,8 +10,19 @@ namespace PaymentDelayApp.ViewModels;
 
 public partial class DashboardViewModel : ViewModelBase
 {
+    private static readonly FilePickerFileType[] PdfSaveTypes =
+    [
+        new("PDF") { Patterns = ["*.pdf"], MimeTypes = ["application/pdf"] },
+    ];
+
+    private static readonly FilePickerFileType[] ExcelSaveTypes =
+    [
+        new("Excel") { Patterns = ["*.xlsx"], MimeTypes = ["application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"] },
+    ];
+
     private readonly IInvoiceService _invoiceService;
     private readonly IDialogService _dialogs;
+    private readonly IInvoiceDashboardExportService _export;
     private List<InvoiceDashboardRow> _allRows = [];
 
     [ObservableProperty]
@@ -78,14 +90,17 @@ public partial class DashboardViewModel : ViewModelBase
     {
         _invoiceService = null!;
         _dialogs = null!;
+        _export = null!;
     }
 
     public DashboardViewModel(
         IInvoiceService invoiceService,
-        IDialogService dialogs)
+        IDialogService dialogs,
+        IInvoiceDashboardExportService export)
     {
         _invoiceService = invoiceService;
         _dialogs = dialogs;
+        _export = export;
     }
 
     public async Task LoadAsync(CancellationToken cancellationToken = default)
@@ -174,6 +189,36 @@ public partial class DashboardViewModel : ViewModelBase
     private static DateOnly? ToDateOnly(DateTimeOffset? dto) =>
         dto is null ? null : DateOnly.FromDateTime(dto.Value.LocalDateTime.Date);
 
+    /// <summary>Document title for exports from the active list filter chip (mutually exclusive).</summary>
+    private string GetExportScopeTitle()
+    {
+        if (ShowAlertInvoicesOnly)
+            return "Factures en alerte";
+        if (ShowUnsettledInvoicesOnly)
+            return "Factures non réglées";
+        if (ShowSettledInvoicesOnly)
+            return "Factures réglées";
+        return "Toutes les factures";
+    }
+
+    private static string GetExportTimestampLine()
+    {
+        var n = DateTime.Now;
+        return $"Exporté le {n:dd/MM/yyyy} à {n:HH:mm}";
+    }
+
+    private string BuildSuggestedExportFileName(string extension)
+    {
+        var slug = ShowAlertInvoicesOnly
+            ? "en_alerte"
+            : ShowUnsettledInvoicesOnly
+                ? "non_reglees"
+                : ShowSettledInvoicesOnly
+                    ? "reglees"
+                    : "toutes";
+        return $"Factures_{slug}_{DateTime.Now:yyyyMMdd_HHmm}.{extension}";
+    }
+
     [RelayCommand]
     private void ClearInvoiceDateFilters()
     {
@@ -181,6 +226,68 @@ public partial class DashboardViewModel : ViewModelBase
             return;
         InvoiceDateFilterFrom = null;
         InvoiceDateFilterTo = null;
+    }
+
+    [RelayCommand]
+    private async Task ExportPdfAsync(CancellationToken cancellationToken)
+    {
+        if (_dialogs is null || _export is null)
+            return;
+        if (Rows.Count == 0)
+        {
+            await _dialogs.ShowMessageAsync("Export", "Aucune ligne à exporter.");
+            return;
+        }
+
+        var suggested = BuildSuggestedExportFileName("pdf");
+        var file = await _dialogs.PickSaveExportFileAsync(suggested, PdfSaveTypes, null, cancellationToken);
+        if (file is null)
+            return;
+
+        var snapshot = Rows.ToList();
+        var title = GetExportScopeTitle();
+        var stamp = GetExportTimestampLine();
+        try
+        {
+            await using var stream = await file.OpenWriteAsync();
+            await _export.WritePdfAsync(snapshot, stream, title, stamp, cancellationToken);
+            await _dialogs.ShowMessageAsync("Export", "Fichier PDF enregistré.");
+        }
+        catch (Exception ex)
+        {
+            await _dialogs.ShowMessageAsync("Export", $"Erreur lors de l'export : {ex.Message}");
+        }
+    }
+
+    [RelayCommand]
+    private async Task ExportExcelAsync(CancellationToken cancellationToken)
+    {
+        if (_dialogs is null || _export is null)
+            return;
+        if (Rows.Count == 0)
+        {
+            await _dialogs.ShowMessageAsync("Export", "Aucune ligne à exporter.");
+            return;
+        }
+
+        var suggested = BuildSuggestedExportFileName("xlsx");
+        var file = await _dialogs.PickSaveExportFileAsync(suggested, ExcelSaveTypes, null, cancellationToken);
+        if (file is null)
+            return;
+
+        var snapshot = Rows.ToList();
+        var title = GetExportScopeTitle();
+        var stamp = GetExportTimestampLine();
+        try
+        {
+            await using var stream = await file.OpenWriteAsync();
+            await _export.WriteExcelAsync(snapshot, stream, title, stamp, cancellationToken);
+            await _dialogs.ShowMessageAsync("Export", "Fichier Excel enregistré.");
+        }
+        catch (Exception ex)
+        {
+            await _dialogs.ShowMessageAsync("Export", $"Erreur lors de l'export : {ex.Message}");
+        }
     }
 
     [RelayCommand]

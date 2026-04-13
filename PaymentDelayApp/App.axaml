@@ -30,6 +30,12 @@
         <SolidColorBrush x:Key="AppBrushRowSettledBackground" Color="#d1fae5" />
         <SolidColorBrush x:Key="AppBrushAmberPrimary" Color="#d97706" />
         <SolidColorBrush x:Key="AppBrushAmberButtonHover" Color="#f59e0b" />
+        <!-- Dashboard export tiles (generic file-type look; not vendor logos). -->
+        <SolidColorBrush x:Key="AppBrushExportPdfRed" Color="#E5252A" />
+        <SolidColorBrush x:Key="AppBrushExportPdfDoc" Color="#EFEFEF" />
+        <SolidColorBrush x:Key="AppBrushExportExcelGreen" Color="#217346" />
+        <SolidColorBrush x:Key="AppBrushExportExcelGreenDark" Color="#185C37" />
+        <SolidColorBrush x:Key="AppBrushExportExcelGreenLight" Color="#107C41" />
         <!-- Reddit Sans variable (Google Fonts). Fallback: Segoe UI until RedditSans-Variable.ttf is in Assets/Fonts. -->
         <FontFamily x:Key="AppFontPrimary">avares://PaymentDelayApp/Assets/Fonts/RedditSans-Variable.ttf#Reddit Sans, Segoe UI</FontFamily>
         <x:Double x:Key="AppFontSizeUi">15</x:Double>
@@ -175,6 +181,34 @@
         <Style Selector="Button.bluebutton TextBlock">
             <Setter Property="FontWeight" Value="SemiBold" />
             <Setter Property="FontSize" Value="{DynamicResource AppFontSizeUi}" />
+        </Style>
+        <!-- Compact icon buttons: use with Classes="bluebutton iconbutton". -->
+        <Style Selector="Button.iconbutton">
+            <Setter Property="Padding" Value="6" />
+            <Setter Property="MinWidth" Value="36" />
+            <Setter Property="MinHeight" Value="32" />
+        </Style>
+        <!-- Toolbar: icon only, no chrome (e.g. reset dates). -->
+        <Style Selector="Button.toolbarghosticon">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Padding" Value="4" />
+            <Setter Property="MinWidth" Value="28" />
+            <Setter Property="MinHeight" Value="28" />
+        </Style>
+        <!-- PDF / Excel export tiles: no extra blue frame; content draws the colored tile. -->
+        <Style Selector="Button.exportfiletile">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Padding" Value="2" />
+            <Setter Property="MinWidth" Value="28" />
+            <Setter Property="MinHeight" Value="28" />
+        </Style>
+        <Style Selector="Button.exportfiletile:pointerover">
+            <Setter Property="Opacity" Value="0.88" />
+        </Style>
+        <Style Selector="Button.exportfiletile:pressed">
+            <Setter Property="Opacity" Value="0.78" />
         </Style>
 
         <!-- Input fields: border only (#D2D2D2), fill from Fluent theme -->

@@ -155,13 +155,83 @@
                                 />
 
 
-                    <Button Grid.Column="5"
-                            Classes="bluebutton"
-                            Content="Réinitialiser les dates"
-                            Command="{Binding ClearInvoiceDateFiltersCommand}"
-                            Padding="10,6"
-                            HorizontalAlignment="Right"
-                            VerticalAlignment="Center" />
+                    <StackPanel Grid.Column="5"
+                                Orientation="Horizontal"
+                                Spacing="8"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Center">
+                        <Button Classes="exportfiletile"
+                                ToolTip.Tip="Exporter en PDF"
+                                Command="{Binding ExportPdfCommand}">
+                            <Border Width="20" Height="20" CornerRadius="2" ClipToBounds="True">
+                                <Grid RowDefinitions="10,*">
+                                    <Border Grid.Row="0" Background="{DynamicResource AppBrushExportPdfDoc}">
+                                        <Grid>
+                                            <Path Fill="#C5C5C5"
+                                                  HorizontalAlignment="Right"
+                                                  VerticalAlignment="Top"
+                                                  Data="M14,0 L20,0 L20,5 L14,5 Z" />
+                                            <Path Fill="#B0B0B0"
+                                                  HorizontalAlignment="Right"
+                                                  VerticalAlignment="Top"
+                                                  Data="M16,0 L20,0 L20,5 Z" />
+                                            <Path Stroke="#A0A0A0"
+                                                  StrokeThickness="0.55"
+                                                  Margin="2,2,2,0"
+                                                  VerticalAlignment="Top"
+                                                  Data="M2,2 H12 M2,4 H10" />
+                                        </Grid>
+                                    </Border>
+                                    <Border Grid.Row="1"
+                                            Background="{DynamicResource AppBrushExportPdfRed}">
+                                        <TextBlock Text="PDF"
+                                                   Foreground="{DynamicResource AppBrushWhite}"
+                                                   FontSize="5.5"
+                                                   FontWeight="Bold"
+                                                   HorizontalAlignment="Center"
+                                                   VerticalAlignment="Center" />
+                                    </Border>
+                                </Grid>
+                            </Border>
+                        </Button>
+                        <Button Classes="exportfiletile"
+                                ToolTip.Tip="Exporter en Excel"
+                                Command="{Binding ExportExcelCommand}">
+                            <Border Width="20" Height="20" CornerRadius="2" ClipToBounds="True">
+                                <Grid>
+                                    <Grid ColumnDefinitions="*,*">
+                                        <Border Grid.Column="0"
+                                                Background="{DynamicResource AppBrushExportExcelGreenLight}" />
+                                        <Border Grid.Column="1"
+                                                Background="{DynamicResource AppBrushExportExcelGreenDark}" />
+                                    </Grid>
+                                    <Border Width="10" Height="10"
+                                            CornerRadius="1.5"
+                                            Background="{DynamicResource AppBrushExportExcelGreen}"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Margin="2,0,0,0">
+                                        <TextBlock Text="X"
+                                                   Foreground="{DynamicResource AppBrushWhite}"
+                                                   FontSize="7"
+                                                   FontWeight="Bold"
+                                                   HorizontalAlignment="Center"
+                                                   VerticalAlignment="Center" />
+                                    </Border>
+                                </Grid>
+                            </Border>
+                        </Button>
+                        <Button Classes="toolbarghosticon"
+                                ToolTip.Tip="Réinitialiser les dates"
+                                Command="{Binding ClearInvoiceDateFiltersCommand}">
+                            <TextBlock Text="&#x21ba;"
+                                       FontSize="20"
+                                       FontWeight="SemiBold"
+                                       Foreground="{DynamicResource AppBrushTextSecondary}"
+                                       VerticalAlignment="Center"
+                                       HorizontalAlignment="Center" />
+                        </Button>
+                    </StackPanel>
                 </Grid>
             </Grid>
         </Border>
