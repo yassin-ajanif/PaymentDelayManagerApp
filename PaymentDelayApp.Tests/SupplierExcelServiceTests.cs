@@ -7,7 +7,4 @@ namespace PaymentDelayApp.Tests;
 [TestClass]
 public sealed class SupplierExcelServiceTests
 {
-    [TestMethod]
-    [Ignore("Edge cases TBD — see class remarks.")]
-    public void Tbd() { }
 }

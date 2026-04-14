@@ -321,3 +321,8 @@ C:\Users\yassin\Desktop\Payment Delay App\PaymentDelayApp.Tests\bin\Debug\net9.0
 C:\Users\yassin\Desktop\Payment Delay App\PaymentDelayApp.Tests\bin\Debug\net9.0\PaymentDelayApp.BusinessLayer.pdb
 C:\Users\yassin\Desktop\Payment Delay App\PaymentDelayApp.Tests\bin\Debug\net9.0\PaymentDelayApp.DataAccessLayer.pdb
 C:\Users\yassin\Desktop\Payment Delay App\PaymentDelayApp.Tests\obj\Debug\net9.0\Avalonia\Resources.Inputs.cache
+C:\Users\yassin\Desktop\Payment Delay App\PaymentDelayApp.Tests\bin\Debug\net9.0\Castle.Core.dll
+C:\Users\yassin\Desktop\Payment Delay App\PaymentDelayApp.Tests\bin\Debug\net9.0\Moq.dll
+C:\Users\yassin\Desktop\Payment Delay App\PaymentDelayApp.Tests\bin\Debug\net9.0\System.Diagnostics.EventLog.dll
+C:\Users\yassin\Desktop\Payment Delay App\PaymentDelayApp.Tests\bin\Debug\net9.0\runtimes\win\lib\net6.0\System.Diagnostics.EventLog.Messages.dll
+C:\Users\yassin\Desktop\Payment Delay App\PaymentDelayApp.Tests\bin\Debug\net9.0\runtimes\win\lib\net6.0\System.Diagnostics.EventLog.dll
