@@ -13,10 +13,10 @@ public partial class MainWindow : Window
 {
     private const int DesignationColumnIndex = 4;
 
-    /// <summary>Fallback widths by column index (index 4 = Désignation, unused).</summary>
+    /// <summary>Fallback widths when <see cref="DataGridColumn.ActualWidth"/> is not ready yet (index 4 = Désignation, unused).</summary>
     private static readonly double[] NominalColumnWidths =
     [
-        120, 160, 110, 200, 0, 90, 130, 150, 110, 140,
+        100, 100, 110, 200, 0, 90, 142, 72, 100,
     ];
 
     private double _lastDesignationWidth;
@@ -74,11 +74,33 @@ public partial class MainWindow : Window
         if (available < minW)
             available = minW;
 
-        if (Math.Abs(available - _lastDesignationWidth) < 0.5)
-            return;
-        _lastDesignationWidth = available;
+        // If Désignation == exact remainder, total width matches the viewport and the horizontal scrollbar
+        // cannot move (last columns stay clipped). Widen slightly when the last column is under-sized.
+        const double lastColumnMinWidth = 112;
+        const double resteJoursMinWidth = 40;
+        var slack = 0.0;
+        if (grid.Columns.Count > DesignationColumnIndex + 1)
+        {
+            var lastCol = grid.Columns[^1];
+            var lastAw = lastCol.ActualWidth;
+            if (lastAw < lastColumnMinWidth - 0.5)
+                slack = lastColumnMinWidth - lastAw + 24;
+        }
 
-        grid.Columns[DesignationColumnIndex].Width = new DataGridLength(available);
+        if (grid.Columns.Count > 7)
+        {
+            var resteAw = grid.Columns[7].ActualWidth;
+            if (resteAw < resteJoursMinWidth - 0.5)
+                slack = Math.Max(slack, resteJoursMinWidth - resteAw + 16);
+        }
+
+        var designationWidth = Math.Max(minW, available + slack);
+
+        if (Math.Abs(designationWidth - _lastDesignationWidth) < 0.5)
+            return;
+        _lastDesignationWidth = designationWidth;
+
+        grid.Columns[DesignationColumnIndex].Width = new DataGridLength(designationWidth);
     }
 
     private void InvoiceGrid_OnPointerReleased(object? sender, PointerReleasedEventArgs e)

@@ -298,20 +298,24 @@
                 </DataGrid.RowTheme>
 
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Date de facture" Binding="{Binding DateFactureDisplay}" Width="120" />
-                <DataGridTextColumn Header="Date de livraison ou préstation" Binding="{Binding DateLivraisonDisplay}" Width="160" />
+                <DataGridTextColumn Header="Date de facture" Binding="{Binding DateFactureDisplay}" Width="108" MinWidth="100" />
+                <DataGridTextColumn Header="Date de livraison ou préstation" Binding="{Binding DateLivraisonDisplay}" Width="132" MinWidth="120" />
                 <DataGridTextColumn Header="N° de Facture" Binding="{Binding InvoiceNumber}" Width="110" />
                 <!-- * / 2* share extra grid width (Désignation gets more room for long text). -->
                 <DataGridTextColumn Header="Fournisseur" Binding="{Binding SupplierName}" Width="*" MinWidth="120" />
                 <DataGridTextColumn Header="Désignation" Binding="{Binding Designation}" Width="*" MinWidth="120" />
                 <DataGridTextColumn Header="TTC" Binding="{Binding TtcDisplay}" Width="90" />
-                <DataGridTextColumn Header="Date d'échéance respectée" Binding="{Binding EcheanceRespecteeDisplay}" Width="150" />
+                <DataGridTextColumn Header="Date d'échéance respectée"
+                                    Binding="{Binding EcheanceRespecteeDisplay}"
+                                    Width="142"
+                                    MinWidth="130" />
                 <DataGridTemplateColumn Header="Reste des jours"
-                                        Width="110"
+                                        Width="72"
+                                        MinWidth="40"
                                         SortMemberPath="ResteDesJours">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate DataType="models:InvoiceDashboardRow">
-                            <Panel VerticalAlignment="Center" Margin="8,4">
+                            <Panel VerticalAlignment="Center" Margin="4,4">
                                 <TextBlock Text="{Binding ResteDisplay}"
                                            Foreground="{DynamicResource AppBrushResteAlert}"
                                            IsVisible="{Binding IsResteJoursAlert}"
@@ -324,7 +328,10 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTextColumn Header="Date d'échéance/facture" Binding="{Binding EcheanceFactureDisplay}"/>
+                <DataGridTextColumn Header="Date d'échéance/facture"
+                                    Binding="{Binding EcheanceFactureDisplay}"
+                                    Width="124"
+                                    MinWidth="112" />
             </DataGrid.Columns>
             </DataGrid>
         </Border>
