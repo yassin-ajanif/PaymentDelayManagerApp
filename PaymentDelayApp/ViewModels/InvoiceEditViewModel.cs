@@ -156,7 +156,7 @@ public partial class InvoiceEditViewModel : ViewModelBase
         var inv = DateOnly.FromDateTime(d.Value.LocalDateTime.Date);
         var today = DateOnly.FromDateTime(DateTime.Today);
         var termJours = IsEcheanceFactureUnset ? 60 : EcheanceFactureJours;
-        if (termJours <= 0)
+        if (termJours < 0)
             return null;
         var echeanceRespectee = EcheanceCalculator.DateEcheanceNormale(inv, termJours);
         return EcheanceCalculator.ResteDesJours(echeanceRespectee, today);
@@ -189,17 +189,8 @@ public partial class InvoiceEditViewModel : ViewModelBase
         var inv = DateOnly.FromDateTime(InvoiceDateUi.Value.LocalDateTime.Date);
         var deadline = DateOnly.FromDateTime(value.Value.LocalDateTime.Date);
         var jours = deadline.DayNumber - inv.DayNumber;
-        var clamped = Math.Clamp(jours, 1, 120);
-        if (clamped != EcheanceFactureJours)
-            EcheanceFactureJours = clamped;
-
-        var expected = EcheanceCalculator.DateEcheanceNormale(inv, EcheanceFactureJours);
-        if (deadline != expected)
-        {
-            _suppressEcheanceDateSync = true;
-            EcheanceFactureDateUi = ToDateTimeOffset(expected.ToDateTime(TimeOnly.MinValue));
-            _suppressEcheanceDateSync = false;
-        }
+        if (jours != EcheanceFactureJours)
+            EcheanceFactureJours = jours;
 
         RefreshComputed();
     }
@@ -209,7 +200,7 @@ public partial class InvoiceEditViewModel : ViewModelBase
         if (InvoiceDateUi is null)
             return;
         _suppressEcheanceDateSync = true;
-        if (EcheanceFactureJours <= 0)
+        if (EcheanceFactureJours < 0)
             EcheanceFactureDateUi = null;
         else
         {
@@ -285,18 +276,18 @@ public partial class InvoiceEditViewModel : ViewModelBase
         {
             var deadline = DateOnly.FromDateTime(EcheanceFactureDateUi.Value.LocalDateTime.Date);
             var joursFromDates = deadline.DayNumber - invoiceDateOnly.DayNumber;
-            if (joursFromDates is < 1 or > 120)
+            if (joursFromDates is < 0 or > 120)
             {
                 await _dialogs.ShowMessageAsync(
                     "Validation",
-                    "La date d'échéance/facture doit être entre 1 et 120 jours après la date de facture.",
+                    "La date d'échéance/facture doit être entre 0 et 120 jours après la date de facture.",
                     _window);
                 return;
             }
 
             echeanceJours = joursFromDates;
         }
-        else if (EcheanceFactureJours is >= 1 and <= 120)
+        else if (EcheanceFactureJours is >= 0 and <= 120)
             echeanceJours = EcheanceFactureJours;
         else
             echeanceJours = 60;
