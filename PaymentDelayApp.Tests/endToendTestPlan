@@ -1,0 +1,43 @@
+# End-to-End Test Plan - Supplier Flow
+
+Use this checklist during manual E2E validation.
+Mark `Status` with: `Not Run`, `Pass`, `Fail`, `Blocked`.
+
+| Scenario | Status |
+|----------|--------|
+| Create supplier with empty name | `Pass` |
+| Create supplier with whitespace-only name |  `Pass`|
+| Create supplier with trimmed name | `Pass` |
+| Duplicate name (case-insensitive) on create | `Pass` |
+| Duplicate ICE on create | `Pass` |
+| Duplicate IF on create | `Pass`  |
+| Name lowercase vs uppercase on create (`acme` then `ACME`) | `pass` |
+| Name lowercase vs uppercase on edit (change to another supplier casing variant) | `PASS` |
+| ICE lowercase vs uppercase on create (`ab12` then `AB12`) | `Fail` |
+| ICE lowercase vs uppercase on edit (change to another supplier ICE casing variant) | `Fail` |
+| IF lowercase vs uppercase on create (`if9` then `IF9`) | `Fail` |
+| IF lowercase vs uppercase on edit (change to another supplier IF casing variant) | `Fail` |
+| Address lowercase/uppercase persistence (save `Rue test` vs `RUE TEST`) | `Fail` |
+
+
+| AlertSeuilJours maximum boundary | `Fail` the maximum alert time is 120days not 365days  |
+| AlertSeuilJours minmum boundary | `Fail` |
+| Cancel create | `pass` |
+| Edit form prefill | `pass` |
+| Edit without changes | `pass` |
+| Edit trims fields | `pass` |
+| Edit to duplicate name | `pass` |
+| Keep own unique fields on edit | `pass` |
+| Change only alert threshold | `pass` |
+| Delete supplier with linked invoices | `pass` |
+| Delete supplier without invoices | `pass`  |
+| Delete cancel flow | `pass` |
+| Double-save stress | `pass` |
+| Special characters and accents | `pass` |
+| Long input resilience | `pass` |
+
+## Summary
+
+| Total | Pass | Fail | Blocked | Not Run |
+|-------|------|------|---------|---------|
+| 31 |  |  |  |  |

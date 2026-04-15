@@ -58,6 +58,24 @@ Note: this class has its **own** private `GetCellText`; it is not the same symbo
 
 ---
 
+## `SupplierService` (`PaymentDelayApp.BusinessLayer/Services/SupplierService.cs`)
+
+| Member | Test class | Test methods (indicative) |
+|--------|------------|---------------------------|
+| `SaveSupplierAsync` | `SupplierServiceTests` | `SaveSupplierAsync_NameRequired_Throws`, `SaveSupplierAsync_TrimFields_BeforeAdd`, `SaveSupplierAsync_DuplicateName_Throws`, `SaveSupplierAsync_DuplicateIce_Throws`, `SaveSupplierAsync_DuplicateFiscalId_Throws`, `SaveSupplierAsync_Edit_UsesExcludeId` |
+
+**Not yet covered in unit tests:** `DeleteSupplierAsync`; alert-refresh branch in `SaveSupplierAsync` when threshold changes (`RefreshAlertsForSupplierAsync`).
+
+---
+
+## `SupplierAccess` (`PaymentDelayApp.DataAccessLayer/Access/SupplierAccess.cs`)
+
+| Member | Test class | Test methods (indicative) |
+|--------|------------|---------------------------|
+| `NameExistsAsync`, `IceExistsAsync`, `FiscalIdExistsAsync` | `SupplierAccessTests` | `NameExistsAsync_IsCaseInsensitive`, `IceExistsAsync_IsCaseSensitive_CurrentBehavior`, `FiscalIdExistsAsync_IsCaseSensitive_CurrentBehavior`, `ExistsChecks_RespectExcludeId` |
+
+---
+
 ## Shared test helpers
 
 | Helper | Location | Role |
