@@ -222,7 +222,7 @@ public sealed class InvoiceDashboardImportService : IInvoiceDashboardImportServi
         {
             Id = 0,
             SupplierId = supplier.Id,
-            Supplier = supplier,
+            Supplier = null,
             InvoiceDate = invoiceDate,
             DeliveryOrServiceDate = delivery,
             InvoiceNumber = c3.Trim(),
