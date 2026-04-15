@@ -32,6 +32,9 @@ build_property.EnableCodeStyleSeverity =
 [C:/Users/yassin/Desktop/Payment Delay App/PaymentDelayApp/App.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
+[C:/Users/yassin/Desktop/Payment Delay App/PaymentDelayApp/Views/Dialogs/BackupProgressWindow.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
 [C:/Users/yassin/Desktop/Payment Delay App/PaymentDelayApp/Views/Dialogs/BackupSettingsWindow.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 

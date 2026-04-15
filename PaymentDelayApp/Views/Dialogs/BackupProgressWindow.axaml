@@ -1,0 +1,24 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="PaymentDelayApp.Views.Dialogs.BackupProgressWindow"
+        Width="420"
+        SizeToContent="Height"
+        CanResize="False"
+        ShowInTaskbar="False"
+        WindowStartupLocation="CenterOwner"
+        Title="Sauvegarde">
+    <Border Padding="20">
+        <StackPanel Spacing="14">
+            <TextBlock Classes="dialog-body"
+                       Text="Création de la sauvegarde en cours…"
+                       TextWrapping="Wrap" />
+            <TextBlock Foreground="{DynamicResource AppBrushTextSecondary}"
+                       FontSize="12"
+                       Text="Veuillez patienter. Durée maximale : 30 secondes."
+                       TextWrapping="Wrap" />
+            <ProgressBar IsIndeterminate="True"
+                         Height="6"
+                         Margin="0,4,0,0" />
+        </StackPanel>
+    </Border>
+</Window>
