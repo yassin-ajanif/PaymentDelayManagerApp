@@ -15,6 +15,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <InternalsVisibleTo Include="PaymentDelayApp.Tests" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\PaymentDelayApp.BusinessLayer\PaymentDelayApp.BusinessLayer.csproj" />
     <ProjectReference Include="..\PaymentDelayApp.DataAccessLayer\PaymentDelayApp.DataAccessLayer.csproj" />
   </ItemGroup>

@@ -106,7 +106,9 @@ public partial class InvoiceEditViewModel : ViewModelBase
 
     public string WindowTitle => _invoiceId == 0 ? "Nouvelle facture" : "Modifier la facture";
 
-    private bool IsEcheanceFactureUnset => EcheanceFactureJours <= 0 || EcheanceFactureDateUi is null;
+    /// <summary>No explicit deadline: new facture or champ effacé — affichage et enregistrement par défaut 60 j.</summary>
+    private bool IsEcheanceFactureUnset =>
+        EcheanceFactureDateUi is null && EcheanceFactureJours < 1;
 
     public string EcheanceRespecteeDisplay => EcheanceLimiteDisplay;
 
@@ -278,24 +280,26 @@ public partial class InvoiceEditViewModel : ViewModelBase
             return;
         }
 
-        if (EcheanceFactureDateUi is null)
+        int echeanceJours;
+        if (EcheanceFactureDateUi is not null)
         {
-            await _dialogs.ShowMessageAsync("Validation", "Indiquez la date d'échéance/facture.", _window);
-            return;
-        }
+            var deadline = DateOnly.FromDateTime(EcheanceFactureDateUi.Value.LocalDateTime.Date);
+            var joursFromDates = deadline.DayNumber - invoiceDateOnly.DayNumber;
+            if (joursFromDates is < 1 or > 120)
+            {
+                await _dialogs.ShowMessageAsync(
+                    "Validation",
+                    "La date d'échéance/facture doit être entre 1 et 120 jours après la date de facture.",
+                    _window);
+                return;
+            }
 
-        var deadline = DateOnly.FromDateTime(EcheanceFactureDateUi.Value.LocalDateTime.Date);
-        var joursFromDates = deadline.DayNumber - invoiceDateOnly.DayNumber;
-        if (joursFromDates is < 1 or > 120)
-        {
-            await _dialogs.ShowMessageAsync(
-                "Validation",
-                "La date d'échéance/facture doit être entre 1 et 120 jours après la date de facture.",
-                _window);
-            return;
+            echeanceJours = joursFromDates;
         }
-
-        EcheanceFactureJours = joursFromDates;
+        else if (EcheanceFactureJours is >= 1 and <= 120)
+            echeanceJours = EcheanceFactureJours;
+        else
+            echeanceJours = 60;
 
         var invoice = new Invoice
         {
@@ -308,7 +312,7 @@ public partial class InvoiceEditViewModel : ViewModelBase
             InvoiceNumber = InvoiceNumber.Trim(),
             Designation = string.IsNullOrWhiteSpace(Designation) ? null : Designation.Trim(),
             TtcAmount = TtcAmount,
-            EcheanceFactureJours = EcheanceFactureJours,
+            EcheanceFactureJours = echeanceJours,
             IsSettled = _preserveSettled,
             PaidAt = _preservePaidAt,
             IsPaymentAlert = _preservePaymentAlert,

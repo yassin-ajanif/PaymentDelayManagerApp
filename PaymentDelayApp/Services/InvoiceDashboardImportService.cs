@@ -41,7 +41,7 @@ public sealed class InvoiceDashboardImportService : IInvoiceDashboardImportServi
         if (ws is null)
             return InvoiceDashboardImportResult.HeaderFailure(["Feuille introuvable."]);
 
-        var headerRow = FindHeaderRow(ws);
+        var headerRow = DashboardInvoiceExcelHeaderFinder.FindHeaderRow(ws);
         if (headerRow is null)
         {
             return InvoiceDashboardImportResult.HeaderFailure(
@@ -52,7 +52,7 @@ public sealed class InvoiceDashboardImportService : IInvoiceDashboardImportServi
         var supplierByName = BuildSupplierLookup(suppliers, out var ambiguousNames);
 
         var rowErrors = new List<(int ExcelRow, string Message)>();
-        var parsed = new List<ParsedInvoiceRow>();
+        var parsed = new List<InvoiceDashboardImportParsedRow>();
 
         var dataStartRow = headerRow.Value + 1;
         var lastRow = ws.LastRowUsed()?.RowNumber() ?? headerRow.Value;
@@ -71,7 +71,7 @@ public sealed class InvoiceDashboardImportService : IInvoiceDashboardImportServi
             if (err is not null)
                 rowErrors.Add((excelRow, err));
             else if (invoice is not null)
-                parsed.Add(new ParsedInvoiceRow(excelRow, invoice));
+                parsed.Add(new InvoiceDashboardImportParsedRow(excelRow, invoice));
         }
 
         AddInFileDuplicateErrors(parsed, rowErrors);
@@ -99,29 +99,7 @@ public sealed class InvoiceDashboardImportService : IInvoiceDashboardImportServi
         return InvoiceDashboardImportResult.Ok(parsed.Count);
     }
 
-    private static int? FindHeaderRow(IXLWorksheet ws)
-    {
-        for (var r = DashboardInvoiceExcelLayout.HeaderSearchFirstRow; r <= DashboardInvoiceExcelLayout.HeaderSearchLastRow; r++)
-        {
-            var ok = true;
-            for (var c = 0; c < DashboardInvoiceExcelLayout.ColumnCount; c++)
-            {
-                var cellText = GetCellText(ws, r, c + 1);
-                if (!string.Equals(cellText, DashboardInvoiceExcelLayout.ColumnHeaders[c], StringComparison.Ordinal))
-                {
-                    ok = false;
-                    break;
-                }
-            }
-
-            if (ok)
-                return r;
-        }
-
-        return null;
-    }
-
-    private static string GetCellText(IXLWorksheet ws, int row, int col)
+    internal static string GetCellText(IXLWorksheet ws, int row, int col)
     {
         var cell = ws.Cell(row, col);
         if (cell.IsEmpty())
@@ -129,7 +107,7 @@ public sealed class InvoiceDashboardImportService : IInvoiceDashboardImportServi
         return cell.GetString().Trim();
     }
 
-    private static bool IsBlankDataRow(IXLWorksheet ws, int row)
+    internal static bool IsBlankDataRow(IXLWorksheet ws, int row)
     {
         for (var c = 1; c <= DashboardInvoiceExcelLayout.ColumnCount; c++)
         {
@@ -141,7 +119,7 @@ public sealed class InvoiceDashboardImportService : IInvoiceDashboardImportServi
         return true;
     }
 
-    private static Dictionary<string, Supplier> BuildSupplierLookup(
+    internal static Dictionary<string, Supplier> BuildSupplierLookup(
         IReadOnlyList<Supplier> suppliers,
         out HashSet<string> ambiguousNames)
     {
@@ -163,7 +141,7 @@ public sealed class InvoiceDashboardImportService : IInvoiceDashboardImportServi
         return map;
     }
 
-    private static string? TryParseRow(
+    internal static string? TryParseRow(
         IXLWorksheet ws,
         int excelRow,
         IReadOnlyDictionary<string, Supplier> supplierByName,
@@ -259,7 +237,9 @@ public sealed class InvoiceDashboardImportService : IInvoiceDashboardImportServi
         return null;
     }
 
-    private static void AddInFileDuplicateErrors(IReadOnlyList<ParsedInvoiceRow> parsed, List<(int ExcelRow, string Message)> rowErrors)
+    internal static void AddInFileDuplicateErrors(
+        IReadOnlyList<InvoiceDashboardImportParsedRow> parsed,
+        List<(int ExcelRow, string Message)> rowErrors)
     {
         var firstRowByKey = new Dictionary<(int SupplierId, string Number), int>();
         foreach (var p in parsed.OrderBy(x => x.ExcelRow))
@@ -273,8 +253,8 @@ public sealed class InvoiceDashboardImportService : IInvoiceDashboardImportServi
         }
     }
 
-    private async Task AddDatabaseDuplicateErrorsAsync(
-        IReadOnlyList<ParsedInvoiceRow> parsed,
+    internal async Task AddDatabaseDuplicateErrorsAsync(
+        IReadOnlyList<InvoiceDashboardImportParsedRow> parsed,
         List<(int ExcelRow, string Message)> rowErrors,
         CancellationToken cancellationToken)
     {
@@ -290,18 +270,17 @@ public sealed class InvoiceDashboardImportService : IInvoiceDashboardImportServi
         }
     }
 
-    private static bool TryParseDateOnly(string text, out DateOnly date)
+    internal static bool TryParseDateOnly(string text, out DateOnly date)
     {
         text = text.Trim();
         return DateOnly.TryParseExact(text, DateFormats, FrCulture, DateTimeStyles.None, out date);
     }
 
-    private static bool TryParseDecimalFr(string text, out decimal value)
+    internal static bool TryParseDecimalFr(string text, out decimal value)
     {
         text = text.Trim().Replace('\u00a0', ' ').Replace(" ", "", StringComparison.Ordinal);
         return decimal.TryParse(text, NumberStyles.Number, FrCulture, out value)
                || decimal.TryParse(text, NumberStyles.Number, CultureInfo.InvariantCulture, out value);
     }
 
-    private sealed record ParsedInvoiceRow(int ExcelRow, Invoice Invoice);
 }

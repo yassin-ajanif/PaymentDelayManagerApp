@@ -327,24 +327,12 @@ public sealed class SupplierExcelService : ISupplierExcelService
         if (ambiguousNames.Contains(nameKey))
             return $"Nom « {nom} » ambigu (plusieurs entrées en base).";
 
-        if (!supplierByName.TryGetValue(nameKey, out var existing))
-        {
-            supplier = new Supplier
-            {
-                Id = 0,
-                Name = nom.Trim(),
-                Ice = ice,
-                FiscalId = fiscalId,
-                Address = address,
-                Activite = activite,
-                AlertSeuilJours = seuil,
-            };
-            return null;
-        }
+        if (supplierByName.TryGetValue(nameKey, out _))
+            return "Ce fournisseur existe déjà.";
 
         supplier = new Supplier
         {
-            Id = existing.Id,
+            Id = 0,
             Name = nom.Trim(),
             Ice = ice,
             FiscalId = fiscalId,
