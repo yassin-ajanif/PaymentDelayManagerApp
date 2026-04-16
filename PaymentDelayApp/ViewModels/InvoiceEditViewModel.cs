@@ -330,5 +330,13 @@ public partial class InvoiceEditViewModel : ViewModelBase
     }
 
     [RelayCommand]
+    private void ClearDeliveryDate()
+    {
+        if (DeliveryDateUi is null)
+            return;
+        DeliveryDateUi = null;
+    }
+
+    [RelayCommand]
     private void Cancel() => _window.Close(false);
 }

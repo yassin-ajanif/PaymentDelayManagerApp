@@ -28,8 +28,6 @@
                     <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding Activite}" />
                     <TextBlock Grid.Row="5" Grid.Column="0" Classes="dialog-label" Text="Seuil d'alerte (jours)" VerticalAlignment="Center" />
                     <NumericUpDown Grid.Row="5" Grid.Column="1"
-                                   Minimum="1"
-                                   Maximum="120"
                                    Value="{Binding AlertSeuilJours}"
                                    FormatString="N0" />
                 </Grid>
