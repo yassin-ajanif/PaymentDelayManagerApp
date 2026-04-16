@@ -15,8 +15,14 @@ internal static class PaymentDelayAppLauncher
         {
             var configured = settings.PaymentDelayAppExePath.Trim();
             if (File.Exists(configured))
-                return Path.GetFullPath(configured);
+            {
+                var resolved = Path.GetFullPath(configured);
+                ErrorsTextFile.AppendInfo($"Resolved PaymentDelayApp.exe from watcher settings: {resolved}");
+                return resolved;
+            }
+
             logger.LogWarning("paymentDelayAppExePath is set but file not found: {Path}", configured);
+            ErrorsTextFile.AppendWarning($"paymentDelayAppExePath is set but file not found: {configured}");
         }
 
         var baseDir = AppContext.BaseDirectory;
@@ -30,9 +36,13 @@ internal static class PaymentDelayAppLauncher
         foreach (var c in candidates)
         {
             if (File.Exists(c))
+            {
+                ErrorsTextFile.AppendInfo($"Resolved PaymentDelayApp.exe from candidate path: {c}");
                 return c;
+            }
         }
 
+        ErrorsTextFile.AppendWarning("Could not resolve PaymentDelayApp.exe (no settings path and no candidate file exists).");
         return null;
     }
 
@@ -40,13 +50,16 @@ internal static class PaymentDelayAppLauncher
     {
         if (string.IsNullOrEmpty(exePath))
         {
-            logger.LogWarning(
-                "PaymentDelayApp.exe not found. Set paymentDelayAppExePath in watcher-settings.json or publish the GUI next to AlterWatcherService.");
+            const string msg =
+                "PaymentDelayApp.exe not found. Set paymentDelayAppExePath in watcher-settings.json or publish the GUI next to AlterWatcherService.";
+            logger.LogWarning(msg);
+            ErrorsTextFile.AppendWarning(msg);
             return false;
         }
 
         try
         {
+            ErrorsTextFile.AppendInfo($"Attempting to start PaymentDelayApp: {exePath} (args: {ShowAlertsArg})");
             var workDir = Path.GetDirectoryName(exePath);
             Process.Start(new ProcessStartInfo
             {
@@ -56,11 +69,13 @@ internal static class PaymentDelayAppLauncher
                 WorkingDirectory = string.IsNullOrEmpty(workDir) ? AppContext.BaseDirectory : workDir,
             });
             logger.LogInformation("Started PaymentDelayApp with {Arg}.", ShowAlertsArg);
+            ErrorsTextFile.AppendInfo($"Started PaymentDelayApp with {ShowAlertsArg}.");
             return true;
         }
         catch (Exception ex)
         {
             logger.LogError(ex, "Failed to start PaymentDelayApp at {Path}", exePath);
+            ErrorsTextFile.AppendException(ex, $"Failed to start PaymentDelayApp at {exePath}");
             return false;
         }
     }

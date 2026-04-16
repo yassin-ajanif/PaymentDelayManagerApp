@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("AlterWatcherService")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c7624072633adb5c0dc0a6e291d578798b5f8e8b")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8645fae69d968eec9f3ce2ad93a616b7d8e5449f")]
 [assembly: System.Reflection.AssemblyProductAttribute("AlterWatcherService")]
 [assembly: System.Reflection.AssemblyTitleAttribute("AlterWatcherService")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

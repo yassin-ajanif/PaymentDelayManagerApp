@@ -9,6 +9,8 @@ using PaymentDelayApp.DataAccessLayer.Access;
 
 var builder = Host.CreateApplicationBuilder(args);
 
+builder.Services.AddWindowsService();
+
 builder.Services.AddDbContext<PaymentDelayDbContext>(
     options => options.UseSqlite(PaymentDelayDbPaths.BuildConnectionString()),
     ServiceLifetime.Singleton,
@@ -25,6 +27,7 @@ using (var scope = host.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<PaymentDelayDbContext>();
     DatabaseMigrator.Migrate(db);
+    ErrorsTextFile.AppendInfo("Database migration completed.");
 }
 
 await host.RunAsync();

@@ -30,7 +30,11 @@ public sealed class WatcherScanHostedService : BackgroundService
             "AlterWatcherService started. Database={Db}; WatcherSettings={Settings}",
             PaymentDelayDbPaths.DatabaseFilePath,
             PaymentDelayDbPaths.WatcherSettingsFilePath);
+        ErrorsTextFile.AppendInfo(
+            $"AlterWatcherService started. Database={PaymentDelayDbPaths.DatabaseFilePath}; WatcherSettings={PaymentDelayDbPaths.WatcherSettingsFilePath}");
         _logger.LogInformation(
+            "If this service runs as LocalSystem, LocalAppData is not the interactive user's folder; use the same Windows account as PaymentDelayApp or a shared data directory.");
+        ErrorsTextFile.AppendInfo(
             "If this service runs as LocalSystem, LocalAppData is not the interactive user's folder; use the same Windows account as PaymentDelayApp or a shared data directory.");
 
         while (!stoppingToken.IsCancellationRequested)
@@ -46,9 +50,12 @@ public sealed class WatcherScanHostedService : BackgroundService
                     "Scan finished. Factures en alerte non réglées: {Count}. Prochaine attente: {Minutes} min.",
                     alertUnsettled,
                     minutes);
+                ErrorsTextFile.AppendInfo(
+                    $"Scan finished. Factures en alerte non réglées: {alertUnsettled}. Prochaine attente: {minutes} min.");
 
                 if (alertUnsettled > 0)
                 {
+                    ErrorsTextFile.AppendInfo($"Unsettled alerts ({alertUnsettled}) > 0; resolving GUI executable path.");
                     var exe = PaymentDelayAppLauncher.ResolveExePath(settings, _logger);
                     PaymentDelayAppLauncher.TryLaunchShowAlerts(exe, _logger);
                 }
@@ -60,6 +67,7 @@ public sealed class WatcherScanHostedService : BackgroundService
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Scan failed.");
+                ErrorsTextFile.AppendException(ex, "Scan failed.");
             }
 
             try

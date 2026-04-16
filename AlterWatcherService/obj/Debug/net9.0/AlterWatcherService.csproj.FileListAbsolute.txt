@@ -81,3 +81,6 @@ C:\Users\yassin\Desktop\Payment Delay App\AlterWatcherService\obj\Debug\net9.0\r
 C:\Users\yassin\Desktop\Payment Delay App\AlterWatcherService\obj\Debug\net9.0\AlterWatcherService.pdb
 C:\Users\yassin\Desktop\Payment Delay App\AlterWatcherService\obj\Debug\net9.0\AlterWatcherService.genruntimeconfig.cache
 C:\Users\yassin\Desktop\Payment Delay App\AlterWatcherService\obj\Debug\net9.0\ref\AlterWatcherService.dll
+c:\Users\yassin\Desktop\Payment Delay App\AlterWatcherService\bin\Debug\net9.0\Microsoft.Extensions.Hosting.WindowsServices.dll
+c:\Users\yassin\Desktop\Payment Delay App\AlterWatcherService\bin\Debug\net9.0\System.ServiceProcess.ServiceController.dll
+c:\Users\yassin\Desktop\Payment Delay App\AlterWatcherService\bin\Debug\net9.0\runtimes\win\lib\net9.0\System.ServiceProcess.ServiceController.dll

@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "Vf/F+kod3Io=",
+  "dgSpecHash": "T0T2G4oZAOo=",
   "success": true,
   "projectFilePath": "C:\\Users\\yassin\\Desktop\\Payment Delay App\\AlterWatcherService\\AlterWatcherService.csproj",
   "expectedPackageFiles": [
@@ -31,6 +31,7 @@
     "C:\\Users\\yassin\\.nuget\\packages\\microsoft.extensions.filesystemglobbing\\9.0.0\\microsoft.extensions.filesystemglobbing.9.0.0.nupkg.sha512",
     "C:\\Users\\yassin\\.nuget\\packages\\microsoft.extensions.hosting\\9.0.0\\microsoft.extensions.hosting.9.0.0.nupkg.sha512",
     "C:\\Users\\yassin\\.nuget\\packages\\microsoft.extensions.hosting.abstractions\\9.0.0\\microsoft.extensions.hosting.abstractions.9.0.0.nupkg.sha512",
+    "C:\\Users\\yassin\\.nuget\\packages\\microsoft.extensions.hosting.windowsservices\\9.0.0\\microsoft.extensions.hosting.windowsservices.9.0.0.nupkg.sha512",
     "C:\\Users\\yassin\\.nuget\\packages\\microsoft.extensions.logging\\9.0.0\\microsoft.extensions.logging.9.0.0.nupkg.sha512",
     "C:\\Users\\yassin\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\9.0.0\\microsoft.extensions.logging.abstractions.9.0.0.nupkg.sha512",
     "C:\\Users\\yassin\\.nuget\\packages\\microsoft.extensions.logging.configuration\\9.0.0\\microsoft.extensions.logging.configuration.9.0.0.nupkg.sha512",
@@ -47,6 +48,7 @@
     "C:\\Users\\yassin\\.nuget\\packages\\sqlitepclraw.provider.e_sqlite3\\2.1.10\\sqlitepclraw.provider.e_sqlite3.2.1.10.nupkg.sha512",
     "C:\\Users\\yassin\\.nuget\\packages\\system.diagnostics.eventlog\\9.0.0\\system.diagnostics.eventlog.9.0.0.nupkg.sha512",
     "C:\\Users\\yassin\\.nuget\\packages\\system.memory\\4.5.3\\system.memory.4.5.3.nupkg.sha512",
+    "C:\\Users\\yassin\\.nuget\\packages\\system.serviceprocess.servicecontroller\\9.0.0\\system.serviceprocess.servicecontroller.9.0.0.nupkg.sha512",
     "C:\\Users\\yassin\\.nuget\\packages\\system.text.json\\9.0.0\\system.text.json.9.0.0.nupkg.sha512"
   ],
   "logs": []

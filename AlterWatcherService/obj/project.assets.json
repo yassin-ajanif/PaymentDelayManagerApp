@@ -536,6 +536,27 @@
           "buildTransitive/net8.0/_._": {}
         }
       },
+      "Microsoft.Extensions.Hosting.WindowsServices/9.0.0": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.Extensions.Hosting": "9.0.0",
+          "Microsoft.Extensions.Logging.EventLog": "9.0.0",
+          "System.ServiceProcess.ServiceController": "9.0.0"
+        },
+        "compile": {
+          "lib/net9.0/Microsoft.Extensions.Hosting.WindowsServices.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net9.0/Microsoft.Extensions.Hosting.WindowsServices.dll": {
+            "related": ".xml"
+          }
+        },
+        "build": {
+          "buildTransitive/net8.0/_._": {}
+        }
+      },
       "Microsoft.Extensions.Logging/9.0.0": {
         "type": "package",
         "dependencies": {
@@ -919,6 +940,31 @@
         },
         "runtime": {
           "lib/netcoreapp2.1/_._": {}
+        }
+      },
+      "System.ServiceProcess.ServiceController/9.0.0": {
+        "type": "package",
+        "dependencies": {
+          "System.Diagnostics.EventLog": "9.0.0"
+        },
+        "compile": {
+          "lib/net9.0/System.ServiceProcess.ServiceController.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net9.0/System.ServiceProcess.ServiceController.dll": {
+            "related": ".xml"
+          }
+        },
+        "build": {
+          "buildTransitive/net8.0/_._": {}
+        },
+        "runtimeTargets": {
+          "runtimes/win/lib/net9.0/System.ServiceProcess.ServiceController.dll": {
+            "assetType": "runtime",
+            "rid": "win"
+          }
         }
       },
       "System.Text.Json/9.0.0": {
@@ -1655,6 +1701,36 @@
         "useSharedDesignerContext.txt"
       ]
     },
+    "Microsoft.Extensions.Hosting.WindowsServices/9.0.0": {
+      "sha512": "OQ7aTejEpkj1OPibhvKYhygUSoKQ+O5YYuBmJxOCC3+F5v7d4szYfvOGd8aegK8/ARFTJqpeXZq1wyIwEza6lg==",
+      "type": "package",
+      "path": "microsoft.extensions.hosting.windowsservices/9.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "LICENSE.TXT",
+        "PACKAGE.md",
+        "THIRD-PARTY-NOTICES.TXT",
+        "buildTransitive/net461/Microsoft.Extensions.Hosting.WindowsServices.targets",
+        "buildTransitive/net462/_._",
+        "buildTransitive/net8.0/_._",
+        "buildTransitive/netcoreapp2.0/Microsoft.Extensions.Hosting.WindowsServices.targets",
+        "lib/net462/Microsoft.Extensions.Hosting.WindowsServices.dll",
+        "lib/net462/Microsoft.Extensions.Hosting.WindowsServices.xml",
+        "lib/net8.0/Microsoft.Extensions.Hosting.WindowsServices.dll",
+        "lib/net8.0/Microsoft.Extensions.Hosting.WindowsServices.xml",
+        "lib/net9.0/Microsoft.Extensions.Hosting.WindowsServices.dll",
+        "lib/net9.0/Microsoft.Extensions.Hosting.WindowsServices.xml",
+        "lib/netstandard2.0/Microsoft.Extensions.Hosting.WindowsServices.dll",
+        "lib/netstandard2.0/Microsoft.Extensions.Hosting.WindowsServices.xml",
+        "lib/netstandard2.1/Microsoft.Extensions.Hosting.WindowsServices.dll",
+        "lib/netstandard2.1/Microsoft.Extensions.Hosting.WindowsServices.xml",
+        "microsoft.extensions.hosting.windowsservices.9.0.0.nupkg.sha512",
+        "microsoft.extensions.hosting.windowsservices.nuspec",
+        "useSharedDesignerContext.txt"
+      ]
+    },
     "Microsoft.Extensions.Logging/9.0.0": {
       "sha512": "crjWyORoug0kK7RSNJBTeSE6VX8IQgLf3nUpTB9m62bPXp/tzbnOsnbe8TXEG0AASNaKZddnpHKw7fET8E++Pg==",
       "type": "package",
@@ -2141,6 +2217,38 @@
         "version.txt"
       ]
     },
+    "System.ServiceProcess.ServiceController/9.0.0": {
+      "sha512": "ciFstNZEWYf40HbwzdQLdgQpgpnjkleC1z0jMqBKRdkEQqQ6I/Aht0x9fTBODnaQTtcF+scvrdimoDbfNap/aQ==",
+      "type": "package",
+      "path": "system.serviceprocess.servicecontroller/9.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "LICENSE.TXT",
+        "PACKAGE.md",
+        "THIRD-PARTY-NOTICES.TXT",
+        "buildTransitive/net461/System.ServiceProcess.ServiceController.targets",
+        "buildTransitive/net462/_._",
+        "buildTransitive/net8.0/_._",
+        "buildTransitive/netcoreapp2.0/System.ServiceProcess.ServiceController.targets",
+        "lib/net462/System.ServiceProcess.ServiceController.dll",
+        "lib/net462/System.ServiceProcess.ServiceController.xml",
+        "lib/net8.0/System.ServiceProcess.ServiceController.dll",
+        "lib/net8.0/System.ServiceProcess.ServiceController.xml",
+        "lib/net9.0/System.ServiceProcess.ServiceController.dll",
+        "lib/net9.0/System.ServiceProcess.ServiceController.xml",
+        "lib/netstandard2.0/System.ServiceProcess.ServiceController.dll",
+        "lib/netstandard2.0/System.ServiceProcess.ServiceController.xml",
+        "runtimes/win/lib/net8.0/System.ServiceProcess.ServiceController.dll",
+        "runtimes/win/lib/net8.0/System.ServiceProcess.ServiceController.xml",
+        "runtimes/win/lib/net9.0/System.ServiceProcess.ServiceController.dll",
+        "runtimes/win/lib/net9.0/System.ServiceProcess.ServiceController.xml",
+        "system.serviceprocess.servicecontroller.9.0.0.nupkg.sha512",
+        "system.serviceprocess.servicecontroller.nuspec",
+        "useSharedDesignerContext.txt"
+      ]
+    },
     "System.Text.Json/9.0.0": {
       "sha512": "js7+qAu/9mQvnhA4EfGMZNEzXtJCDxgkgj8ohuxq/Qxv+R56G+ljefhiJHOxTNiw54q8vmABCWUwkMulNdlZ4A==",
       "type": "package",
@@ -2226,6 +2334,7 @@
   "projectFileDependencyGroups": {
     "net9.0": [
       "Microsoft.Extensions.Hosting >= 9.0.0",
+      "Microsoft.Extensions.Hosting.WindowsServices >= 9.0.0",
       "PaymentDelayApp.BusinessLayer >= 1.0.0",
       "PaymentDelayApp.DataAccessLayer >= 1.0.0"
     ]
@@ -2258,8 +2367,8 @@
             "C:\\Users\\yassin\\Desktop\\Payment Delay App\\PaymentDelayApp.BusinessLayer\\PaymentDelayApp.BusinessLayer.csproj": {
               "projectPath": "C:\\Users\\yassin\\Desktop\\Payment Delay App\\PaymentDelayApp.BusinessLayer\\PaymentDelayApp.BusinessLayer.csproj"
             },
-            "c:\\Users\\yassin\\Desktop\\Payment Delay App\\PaymentDelayApp.DataAccessLayer\\PaymentDelayApp.DataAccessLayer.csproj": {
-              "projectPath": "c:\\Users\\yassin\\Desktop\\Payment Delay App\\PaymentDelayApp.DataAccessLayer\\PaymentDelayApp.DataAccessLayer.csproj"
+            "C:\\Users\\yassin\\Desktop\\Payment Delay App\\PaymentDelayApp.DataAccessLayer\\PaymentDelayApp.DataAccessLayer.csproj": {
+              "projectPath": "C:\\Users\\yassin\\Desktop\\Payment Delay App\\PaymentDelayApp.DataAccessLayer\\PaymentDelayApp.DataAccessLayer.csproj"
             }
           }
         }
@@ -2283,6 +2392,10 @@
           "Microsoft.Extensions.Hosting": {
             "target": "Package",
             "version": "[9.0.0, )"
+          },
+          "Microsoft.Extensions.Hosting.WindowsServices": {
+            "target": "Package",
+            "version": "[9.0.0, )"
           }
         },
         "imports": [
@@ -2301,7 +2414,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.115/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.116/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
