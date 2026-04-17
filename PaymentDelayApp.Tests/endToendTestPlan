@@ -13,10 +13,10 @@ Mark `Status` with: `Not Run`, `Pass`, `Fail`, `Blocked`.
 | Duplicate IF on create | `Pass`  |
 | Name lowercase vs uppercase on create (`acme` then `ACME`) | `pass` |
 | Name lowercase vs uppercase on edit (change to another supplier casing variant) | `PASS` |
-| ICE lowercase vs uppercase on create (`ab12` then `AB12`) | `Fail` |
-| ICE lowercase vs uppercase on edit (change to another supplier ICE casing variant) | `Fail` |
-| IF lowercase vs uppercase on create (`if9` then `IF9`) | `Fail` |
-| IF lowercase vs uppercase on edit (change to another supplier IF casing variant) | `Fail` |
+| ICE lowercase vs uppercase on create (`ab12` then `AB12`) | `Pass` |
+| ICE lowercase vs uppercase on edit (change to another supplier ICE casing variant) | `Pass` |
+| IF lowercase vs uppercase on create (`if9` then `IF9`) | `Pass` |
+| IF lowercase vs uppercase on edit (change to another supplier IF casing variant) | `Pass` |
 | Address lowercase/uppercase persistence (save `Rue test` vs `RUE TEST`) | `Fail` |
 
 
@@ -36,8 +36,16 @@ Mark `Status` with: `Not Run`, `Pass`, `Fail`, `Blocked`.
 | Special characters and accents | `pass` |
 | Long input resilience | `pass` |
 
+## Business rules (code alignment)
+
+Manual scenarios above should match the following (re-validate and update the Status column after each release):
+
+- **SupplierService** (`PaymentDelayApp.BusinessLayer`): trims `Name`, `ICE`, `IF`, `Address`, `Activité`; requires non-empty name; `AlertSeuilJours` in **[1, 120]**; duplicate **name**, **ICE**, and **IF** (case-insensitive after trim).
+- **Supplier form**: `NumericUpDown` allows typing a wide range (no silent clamp to 1–120); **save** enforces **[1, 120]** via `SupplierService` and shows a **Validation** dialog (French message).
+- **Address**: no case normalization in code paths (only trim); casing is preserved for non-whitespace content.
+
 ## Summary
 
 | Total | Pass | Fail | Blocked | Not Run |
 |-------|------|------|---------|---------|
-| 31 |  |  |  |  |
+| 31 | *re-count after E2E run* | *re-count* | *re-count* | *re-count* |

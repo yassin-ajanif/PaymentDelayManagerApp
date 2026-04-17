@@ -6,6 +6,9 @@ namespace PaymentDelayApp.BusinessLayer.Services;
 
 public class SupplierService : ISupplierService
 {
+    private const int MinAlertSeuilJours = 1;
+    private const int MaxAlertSeuilJours = 120;
+
     private readonly ISupplierAccess _suppliers;
     private readonly IInvoiceAccess _invoices;
 
@@ -23,6 +26,30 @@ public class SupplierService : ISupplierService
 
     public async Task SaveSupplierAsync(Supplier supplier, CancellationToken cancellationToken = default)
     {
+        ArgumentNullException.ThrowIfNull(supplier);
+
+        NormalizeSupplierStrings(supplier);
+
+        if (string.IsNullOrEmpty(supplier.Name))
+            throw new InvalidOperationException("Le nom du fournisseur est obligatoire.");
+
+        if (supplier.AlertSeuilJours is < MinAlertSeuilJours or > MaxAlertSeuilJours)
+            throw new InvalidOperationException(
+                $"Le seuil d'alerte doit être entre {MinAlertSeuilJours} et {MaxAlertSeuilJours} jours.");
+
+        int? excludeId = supplier.Id == 0 ? null : supplier.Id;
+
+        if (await _suppliers.NameExistsAsync(supplier.Name, excludeId, cancellationToken))
+            throw new InvalidOperationException("Un autre fournisseur porte déjà ce nom.");
+
+        if (supplier.Ice is not null &&
+            await _suppliers.IceExistsAsync(supplier.Ice, excludeId, cancellationToken))
+            throw new InvalidOperationException("Un autre fournisseur utilise déjà cet ICE.");
+
+        if (supplier.FiscalId is not null &&
+            await _suppliers.FiscalIdExistsAsync(supplier.FiscalId, excludeId, cancellationToken))
+            throw new InvalidOperationException("Un autre fournisseur utilise déjà cet IF.");
+
         int? oldSeuil = null;
         if (supplier.Id != 0)
         {
@@ -46,6 +73,15 @@ public class SupplierService : ISupplierService
                 "Impossible de supprimer ce fournisseur : des factures y sont liées.");
 
         await _suppliers.DeleteAsync(id, cancellationToken);
+    }
+
+    private static void NormalizeSupplierStrings(Supplier supplier)
+    {
+        supplier.Name = supplier.Name?.Trim() ?? string.Empty;
+        supplier.Ice = string.IsNullOrWhiteSpace(supplier.Ice) ? null : supplier.Ice.Trim();
+        supplier.FiscalId = string.IsNullOrWhiteSpace(supplier.FiscalId) ? null : supplier.FiscalId.Trim();
+        supplier.Address = string.IsNullOrWhiteSpace(supplier.Address) ? null : supplier.Address.Trim();
+        supplier.Activite = string.IsNullOrWhiteSpace(supplier.Activite) ? null : supplier.Activite.Trim();
     }
 
     private async Task RefreshAlertsForSupplierAsync(int supplierId, CancellationToken cancellationToken)

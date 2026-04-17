@@ -57,7 +57,8 @@ public class SupplierAccess : ISupplierAccess
 
     public async Task<bool> IceExistsAsync(string ice, int? excludeId, CancellationToken cancellationToken = default)
     {
-        var q = _db.Suppliers.AsNoTracking().Where(s => s.Ice == ice);
+        var q = _db.Suppliers.AsNoTracking()
+            .Where(s => s.Ice != null && s.Ice.ToLower() == ice.ToLower());
         if (excludeId is int id)
             q = q.Where(s => s.Id != id);
         return await q.AnyAsync(cancellationToken);
@@ -65,7 +66,8 @@ public class SupplierAccess : ISupplierAccess
 
     public async Task<bool> FiscalIdExistsAsync(string fiscalId, int? excludeId, CancellationToken cancellationToken = default)
     {
-        var q = _db.Suppliers.AsNoTracking().Where(s => s.FiscalId == fiscalId);
+        var q = _db.Suppliers.AsNoTracking()
+            .Where(s => s.FiscalId != null && s.FiscalId.ToLower() == fiscalId.ToLower());
         if (excludeId is int id)
             q = q.Where(s => s.Id != id);
         return await q.AnyAsync(cancellationToken);

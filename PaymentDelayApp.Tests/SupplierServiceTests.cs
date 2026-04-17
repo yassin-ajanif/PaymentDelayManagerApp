@@ -49,8 +49,8 @@ public sealed class SupplierServiceTests
         Assert.AreEqual("ACME", captured!.Name);
         Assert.AreEqual("ICE1", captured.Ice);
         Assert.AreEqual("IF1", captured.FiscalId);
-        Assert.AreEqual("  Rue test  ", captured.Address);
-        Assert.AreEqual("  service  ", captured.Activite);
+        Assert.AreEqual("Rue test", captured.Address);
+        Assert.AreEqual("service", captured.Activite);
     }
 
     [TestMethod]
@@ -117,131 +117,137 @@ public sealed class SupplierServiceTests
         suppliers.Verify(x => x.FiscalIdExistsAsync("IF1", 7, It.IsAny<CancellationToken>()), Times.Once);
     }
 
-[TestMethod]
-public async Task SaveSupplierAsync_Create_DuplicateIce_DifferentCase_IsDetectedAsDuplicate()
-{
-    var suppliers = new Mock<ISupplierAccess>();
-    suppliers.Setup(x => x.NameExistsAsync(It.IsAny<string>(), null, It.IsAny<CancellationToken>()))
-        .ReturnsAsync(false);
-
-    // Existing value in storage is "ab12"; entered value is "AB12" -> duplicate must be detected.
-    suppliers.Setup(x => x.IceExistsAsync("ab12", null, It.IsAny<CancellationToken>()))
-        .ReturnsAsync(true);
-
-    var sut = new SupplierService(suppliers.Object, Mock.Of<IInvoiceAccess>());
-
-    await Assert.ThrowsExceptionAsync<InvalidOperationException>(() =>
-        sut.SaveSupplierAsync(new Supplier { Name = "A", Ice = "AB12" }));
-}
-
-[TestMethod]
-public async Task SaveSupplierAsync_Edit_DuplicateIce_DifferentCase_IsDetectedAsDuplicate()
-{
-    var suppliers = new Mock<ISupplierAccess>();
-    suppliers.Setup(x => x.GetByIdAsync(7, It.IsAny<CancellationToken>()))
-        .ReturnsAsync(new Supplier { Id = 7, Name = "Old", AlertSeuilJours = 7 });
-
-    suppliers.Setup(x => x.NameExistsAsync(It.IsAny<string>(), 7, It.IsAny<CancellationToken>()))
-        .ReturnsAsync(false);
-
-    // Existing value in storage is "ab12"; edited value is "AB12" -> duplicate must be detected.
-    suppliers.Setup(x => x.IceExistsAsync("ab12", 7, It.IsAny<CancellationToken>()))
-        .ReturnsAsync(true);
-
-    var sut = new SupplierService(suppliers.Object, Mock.Of<IInvoiceAccess>());
-
-    await Assert.ThrowsExceptionAsync<InvalidOperationException>(() =>
-        sut.SaveSupplierAsync(new Supplier { Id = 7, Name = "A", Ice = "AB12" }));
-}
-
-[TestMethod]
-public async Task SaveSupplierAsync_Create_DuplicateFiscalId_DifferentCase_IsDetectedAsDuplicate()
-{
-    var suppliers = new Mock<ISupplierAccess>();
-    suppliers.Setup(x => x.NameExistsAsync(It.IsAny<string>(), null, It.IsAny<CancellationToken>()))
-        .ReturnsAsync(false);
-    suppliers.Setup(x => x.IceExistsAsync(It.IsAny<string>(), null, It.IsAny<CancellationToken>()))
-        .ReturnsAsync(false);
-
-    // Existing value in storage is "ab12"; entered value is "AB12" -> duplicate must be detected.
-    suppliers.Setup(x => x.FiscalIdExistsAsync("ab12", null, It.IsAny<CancellationToken>()))
-        .ReturnsAsync(true);
-
-    var sut = new SupplierService(suppliers.Object, Mock.Of<IInvoiceAccess>());
-
-    await Assert.ThrowsExceptionAsync<InvalidOperationException>(() =>
-        sut.SaveSupplierAsync(new Supplier { Name = "A", FiscalId = "AB12" }));
-}
-
-[TestMethod]
-public async Task SaveSupplierAsync_Edit_DuplicateFiscalId_DifferentCase_IsDetectedAsDuplicate()
-{
-    var suppliers = new Mock<ISupplierAccess>();
-    suppliers.Setup(x => x.GetByIdAsync(7, It.IsAny<CancellationToken>()))
-        .ReturnsAsync(new Supplier { Id = 7, Name = "Old", AlertSeuilJours = 7 });
-
-    suppliers.Setup(x => x.NameExistsAsync(It.IsAny<string>(), 7, It.IsAny<CancellationToken>()))
-        .ReturnsAsync(false);
-    suppliers.Setup(x => x.IceExistsAsync(It.IsAny<string>(), 7, It.IsAny<CancellationToken>()))
-        .ReturnsAsync(false);
-
-    // Existing value in storage is "ab12"; edited value is "AB12" -> duplicate must be detected.
-    suppliers.Setup(x => x.FiscalIdExistsAsync("ab12", 7, It.IsAny<CancellationToken>()))
-        .ReturnsAsync(true);
-
-    var sut = new SupplierService(suppliers.Object, Mock.Of<IInvoiceAccess>());
-
-    await Assert.ThrowsExceptionAsync<InvalidOperationException>(() =>
-        sut.SaveSupplierAsync(new Supplier { Id = 7, Name = "A", FiscalId = "AB12" }));
-}
-
-[TestMethod]
-public async Task SaveSupplierAsync_AddressCase_IsPreserved()
-{
-    var suppliers = new Mock<ISupplierAccess>();
-    suppliers.Setup(x => x.NameExistsAsync(It.IsAny<string>(), null, It.IsAny<CancellationToken>()))
-        .ReturnsAsync(false);
-    suppliers.Setup(x => x.IceExistsAsync(It.IsAny<string>(), null, It.IsAny<CancellationToken>()))
-        .ReturnsAsync(false);
-    suppliers.Setup(x => x.FiscalIdExistsAsync(It.IsAny<string>(), null, It.IsAny<CancellationToken>()))
-        .ReturnsAsync(false);
-
-    Supplier? captured = null;
-    suppliers.Setup(x => x.AddAsync(It.IsAny<Supplier>(), It.IsAny<CancellationToken>()))
-        .Callback<Supplier, CancellationToken>((s, _) => captured = s)
-        .Returns(Task.CompletedTask);
-
-    var sut = new SupplierService(suppliers.Object, Mock.Of<IInvoiceAccess>());
-
-    await sut.SaveSupplierAsync(new Supplier
+    [TestMethod]
+    public async Task SaveSupplierAsync_Create_IceDifferentCase_Duplicate_Throws()
     {
-        Name = "A",
-        Address = "RUE TEST",
-        Activite = "SERVICE"
-    });
+        var suppliers = new Mock<ISupplierAccess>();
+        suppliers.Setup(x => x.NameExistsAsync(It.IsAny<string>(), null, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(false);
+        suppliers.Setup(x => x.IceExistsAsync("AB12", null, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(true);
 
-    Assert.IsNotNull(captured);
-    Assert.AreEqual("RUE TEST", captured!.Address);
-    Assert.AreEqual("SERVICE", captured.Activite);
-}
+        var sut = new SupplierService(suppliers.Object, Mock.Of<IInvoiceAccess>());
 
-[TestMethod]
-public async Task SaveSupplierAsync_AlertSeuilJours_BelowMinimum_Throws()
-{
-    var suppliers = new Mock<ISupplierAccess>();
-    var sut = new SupplierService(suppliers.Object, Mock.Of<IInvoiceAccess>());
+        await Assert.ThrowsExceptionAsync<InvalidOperationException>(() =>
+            sut.SaveSupplierAsync(new Supplier { Name = "A", Ice = "AB12" }));
 
-    await Assert.ThrowsExceptionAsync<InvalidOperationException>(() =>
-        sut.SaveSupplierAsync(new Supplier { Name = "A", AlertSeuilJours = 0 }));
-}
+        suppliers.Verify(x => x.IceExistsAsync("AB12", null, It.IsAny<CancellationToken>()), Times.Once);
+        suppliers.Verify(x => x.AddAsync(It.IsAny<Supplier>(), It.IsAny<CancellationToken>()), Times.Never);
+    }
 
-[TestMethod]
-public async Task SaveSupplierAsync_AlertSeuilJours_AboveMaximum_Throws()
-{
-    var suppliers = new Mock<ISupplierAccess>();
-    var sut = new SupplierService(suppliers.Object, Mock.Of<IInvoiceAccess>());
+    [TestMethod]
+    public async Task SaveSupplierAsync_Edit_IceDifferentCase_Duplicate_Throws()
+    {
+        var suppliers = new Mock<ISupplierAccess>();
+        suppliers.Setup(x => x.GetByIdAsync(7, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new Supplier { Id = 7, Name = "Old", AlertSeuilJours = 7 });
 
-    await Assert.ThrowsExceptionAsync<InvalidOperationException>(() =>
-        sut.SaveSupplierAsync(new Supplier { Name = "A", AlertSeuilJours = 121 }));
-}
+        suppliers.Setup(x => x.NameExistsAsync(It.IsAny<string>(), 7, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(false);
+        suppliers.Setup(x => x.IceExistsAsync("AB12", 7, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(true);
+        suppliers.Setup(x => x.FiscalIdExistsAsync(It.IsAny<string>(), 7, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(false);
+
+        var sut = new SupplierService(suppliers.Object, Mock.Of<IInvoiceAccess>());
+
+        await Assert.ThrowsExceptionAsync<InvalidOperationException>(() =>
+            sut.SaveSupplierAsync(new Supplier { Id = 7, Name = "A", Ice = "AB12", AlertSeuilJours = 7 }));
+
+        suppliers.Verify(x => x.IceExistsAsync("AB12", 7, It.IsAny<CancellationToken>()), Times.Once);
+        suppliers.Verify(x => x.UpdateAsync(It.IsAny<Supplier>(), It.IsAny<CancellationToken>()), Times.Never);
+    }
+
+    [TestMethod]
+    public async Task SaveSupplierAsync_Create_FiscalIdDifferentCase_Duplicate_Throws()
+    {
+        var suppliers = new Mock<ISupplierAccess>();
+        suppliers.Setup(x => x.NameExistsAsync(It.IsAny<string>(), null, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(false);
+        suppliers.Setup(x => x.IceExistsAsync(It.IsAny<string>(), null, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(false);
+        suppliers.Setup(x => x.FiscalIdExistsAsync("AB12", null, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(true);
+
+        var sut = new SupplierService(suppliers.Object, Mock.Of<IInvoiceAccess>());
+
+        await Assert.ThrowsExceptionAsync<InvalidOperationException>(() =>
+            sut.SaveSupplierAsync(new Supplier { Name = "A", FiscalId = "AB12" }));
+
+        suppliers.Verify(x => x.FiscalIdExistsAsync("AB12", null, It.IsAny<CancellationToken>()), Times.Once);
+        suppliers.Verify(x => x.AddAsync(It.IsAny<Supplier>(), It.IsAny<CancellationToken>()), Times.Never);
+    }
+
+    [TestMethod]
+    public async Task SaveSupplierAsync_Edit_FiscalIdDifferentCase_Duplicate_Throws()
+    {
+        var suppliers = new Mock<ISupplierAccess>();
+        suppliers.Setup(x => x.GetByIdAsync(7, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new Supplier { Id = 7, Name = "Old", AlertSeuilJours = 7 });
+
+        suppliers.Setup(x => x.NameExistsAsync(It.IsAny<string>(), 7, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(false);
+        suppliers.Setup(x => x.IceExistsAsync(It.IsAny<string>(), 7, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(false);
+        suppliers.Setup(x => x.FiscalIdExistsAsync("AB12", 7, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(true);
+
+        var sut = new SupplierService(suppliers.Object, Mock.Of<IInvoiceAccess>());
+
+        await Assert.ThrowsExceptionAsync<InvalidOperationException>(() =>
+            sut.SaveSupplierAsync(new Supplier { Id = 7, Name = "A", FiscalId = "AB12", AlertSeuilJours = 7 }));
+
+        suppliers.Verify(x => x.FiscalIdExistsAsync("AB12", 7, It.IsAny<CancellationToken>()), Times.Once);
+        suppliers.Verify(x => x.UpdateAsync(It.IsAny<Supplier>(), It.IsAny<CancellationToken>()), Times.Never);
+    }
+
+    [TestMethod]
+    public async Task SaveSupplierAsync_AddressCase_IsPreserved()
+    {
+        var suppliers = new Mock<ISupplierAccess>();
+        suppliers.Setup(x => x.NameExistsAsync(It.IsAny<string>(), null, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(false);
+        suppliers.Setup(x => x.IceExistsAsync(It.IsAny<string>(), null, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(false);
+        suppliers.Setup(x => x.FiscalIdExistsAsync(It.IsAny<string>(), null, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(false);
+
+        Supplier? captured = null;
+        suppliers.Setup(x => x.AddAsync(It.IsAny<Supplier>(), It.IsAny<CancellationToken>()))
+            .Callback<Supplier, CancellationToken>((s, _) => captured = s)
+            .Returns(Task.CompletedTask);
+
+        var sut = new SupplierService(suppliers.Object, Mock.Of<IInvoiceAccess>());
+
+        await sut.SaveSupplierAsync(new Supplier
+        {
+            Name = "A",
+            Address = "RUE TEST",
+            Activite = "SERVICE",
+        });
+
+        Assert.IsNotNull(captured);
+        Assert.AreEqual("RUE TEST", captured!.Address);
+        Assert.AreEqual("SERVICE", captured.Activite);
+    }
+
+    [TestMethod]
+    public async Task SaveSupplierAsync_AlertSeuilJours_BelowMinimum_Throws()
+    {
+        var suppliers = new Mock<ISupplierAccess>();
+        var sut = new SupplierService(suppliers.Object, Mock.Of<IInvoiceAccess>());
+
+        await Assert.ThrowsExceptionAsync<InvalidOperationException>(() =>
+            sut.SaveSupplierAsync(new Supplier { Name = "A", AlertSeuilJours = 0 }));
+    }
+
+    [TestMethod]
+    public async Task SaveSupplierAsync_AlertSeuilJours_AboveMaximum_Throws()
+    {
+        var suppliers = new Mock<ISupplierAccess>();
+        var sut = new SupplierService(suppliers.Object, Mock.Of<IInvoiceAccess>());
+
+        await Assert.ThrowsExceptionAsync<InvalidOperationException>(() =>
+            sut.SaveSupplierAsync(new Supplier { Name = "A", AlertSeuilJours = 121 }));
+    }
 }

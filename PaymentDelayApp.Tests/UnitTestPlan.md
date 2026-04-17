@@ -72,7 +72,7 @@ Note: this class has its **own** private `GetCellText`; it is not the same symbo
 
 | Member | Test class | Test methods (indicative) |
 |--------|------------|---------------------------|
-| `NameExistsAsync`, `IceExistsAsync`, `FiscalIdExistsAsync` | `SupplierAccessTests` | `NameExistsAsync_IsCaseInsensitive`, `IceExistsAsync_IsCaseSensitive_CurrentBehavior`, `FiscalIdExistsAsync_IsCaseSensitive_CurrentBehavior`, `ExistsChecks_RespectExcludeId` |
+| `NameExistsAsync`, `IceExistsAsync`, `FiscalIdExistsAsync` | `SupplierAccessTests` | `NameExistsAsync_IsCaseInsensitive`, `IceExistsAsync_IsCaseInsensitive`, `FiscalIdExistsAsync_IsCaseInsensitive`, `ExistsChecks_RespectExcludeId` |
 
 ---
 

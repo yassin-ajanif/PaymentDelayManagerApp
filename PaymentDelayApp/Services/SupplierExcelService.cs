@@ -362,7 +362,7 @@ public sealed class SupplierExcelService : ISupplierExcelService
         IReadOnlyList<ParsedSupplierRow> parsed,
         List<(int ExcelRow, string Message)> rowErrors)
     {
-        var firstRowByIce = new Dictionary<string, int>(StringComparer.Ordinal);
+        var firstRowByIce = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
         foreach (var p in parsed.OrderBy(x => x.ExcelRow))
         {
             var ice = p.Supplier.Ice;
@@ -379,7 +379,7 @@ public sealed class SupplierExcelService : ISupplierExcelService
         IReadOnlyList<ParsedSupplierRow> parsed,
         List<(int ExcelRow, string Message)> rowErrors)
     {
-        var firstRowByFiscal = new Dictionary<string, int>(StringComparer.Ordinal);
+        var firstRowByFiscal = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
         foreach (var p in parsed.OrderBy(x => x.ExcelRow))
         {
             var fid = p.Supplier.FiscalId;

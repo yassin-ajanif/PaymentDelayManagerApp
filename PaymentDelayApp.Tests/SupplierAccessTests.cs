@@ -34,7 +34,7 @@ public sealed class SupplierAccessTests
     }
 
     [TestMethod]
-    public async Task IceExistsAsync_IsCaseSensitive_CurrentBehavior()
+    public async Task IceExistsAsync_IsCaseInsensitive()
     {
         await using var db = CreateSqliteDb();
         db.Suppliers.Add(new Supplier { Name = "A", Ice = "ab12" });
@@ -43,11 +43,11 @@ public sealed class SupplierAccessTests
         var sut = new SupplierAccess(db);
 
         Assert.IsTrue(await sut.IceExistsAsync("ab12", null));
-        Assert.IsFalse(await sut.IceExistsAsync("AB12", null));
+        Assert.IsTrue(await sut.IceExistsAsync("AB12", null));
     }
 
     [TestMethod]
-    public async Task FiscalIdExistsAsync_IsCaseSensitive_CurrentBehavior()
+    public async Task FiscalIdExistsAsync_IsCaseInsensitive()
     {
         await using var db = CreateSqliteDb();
         db.Suppliers.Add(new Supplier { Name = "A", FiscalId = "if9" });
@@ -56,7 +56,7 @@ public sealed class SupplierAccessTests
         var sut = new SupplierAccess(db);
 
         Assert.IsTrue(await sut.FiscalIdExistsAsync("if9", null));
-        Assert.IsFalse(await sut.FiscalIdExistsAsync("IF9", null));
+        Assert.IsTrue(await sut.FiscalIdExistsAsync("IF9", null));
     }
 
     [TestMethod]
