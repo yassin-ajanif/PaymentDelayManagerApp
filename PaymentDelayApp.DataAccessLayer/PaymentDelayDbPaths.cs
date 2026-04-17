@@ -7,7 +7,7 @@ public static class PaymentDelayDbPaths
         get
         {
             var dir = Path.Combine(
-                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
                 "PaymentDelayApp");
             Directory.CreateDirectory(dir);
             return dir;

@@ -28,6 +28,10 @@ using (var scope = host.Services.CreateScope())
     var db = scope.ServiceProvider.GetRequiredService<PaymentDelayDbContext>();
     DatabaseMigrator.Migrate(db);
     ErrorsTextFile.AppendInfo("Database migration completed.");
+
+    WatcherSettingsFile.EnsureCreated();
+    BackupSettingsFile.EnsureCreated();
+    ErrorsTextFile.AppendInfo("Settings files ensured (watcher-settings.json, backup-settings.json).");
 }
 
 await host.RunAsync();

@@ -45,6 +45,23 @@ public static class BackupSettingsFile
         File.WriteAllText(path, json);
     }
 
+    /// <summary>Creates <c>backup-settings.json</c> with defaults if it does not exist (idempotent).</summary>
+    public static void EnsureCreated()
+    {
+        var path = PaymentDelayDbPaths.BackupSettingsFilePath;
+        if (File.Exists(path))
+            return;
+
+        try
+        {
+            Save(DefaultDocument());
+        }
+        catch
+        {
+            // Do not crash startup over a missing default file.
+        }
+    }
+
     private static BackupSettingsDocument DefaultDocument() => new()
     {
         SchemaVersion = 1,

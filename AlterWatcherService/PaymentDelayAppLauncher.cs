@@ -8,6 +8,70 @@ internal static class PaymentDelayAppLauncher
 {
     private const string ShowAlertsArg = "--show-alerts";
 
+    /// <summary>Runs <c>schtasks.exe /Run /TN ...</c> so Task Scheduler launches the GUI in the user desktop session.</summary>
+    internal static bool TryLaunchViaScheduledTask(string taskName, ILogger logger)
+    {
+        if (string.IsNullOrWhiteSpace(taskName))
+        {
+            const string msg = "scheduledTaskName is empty; cannot run schtasks /Run.";
+            logger.LogWarning(msg);
+            ErrorsTextFile.AppendWarning(msg);
+            return false;
+        }
+
+        var trimmed = taskName.Trim();
+        try
+        {
+            var systemRoot = Environment.GetFolderPath(Environment.SpecialFolder.System);
+            var schtasks = Path.Combine(systemRoot, "schtasks.exe");
+            ErrorsTextFile.AppendInfo($"Attempting schtasks: {schtasks} /Run /TN \"{trimmed}\"");
+
+            var startInfo = new ProcessStartInfo
+            {
+                FileName = schtasks,
+                UseShellExecute = false,
+                CreateNoWindow = true,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+            };
+            startInfo.ArgumentList.Add("/Run");
+            startInfo.ArgumentList.Add("/TN");
+            startInfo.ArgumentList.Add(trimmed);
+
+            using var p = Process.Start(startInfo);
+
+            if (p is null)
+            {
+                const string msg = "schtasks.exe Process.Start returned null.";
+                logger.LogWarning(msg);
+                ErrorsTextFile.AppendWarning(msg);
+                return false;
+            }
+
+            p.WaitForExit();
+            var exit = p.ExitCode;
+            var stderr = p.StandardError.ReadToEnd();
+            var stdout = p.StandardOutput.ReadToEnd();
+            if (exit == 0)
+            {
+                logger.LogInformation("schtasks /Run succeeded for task {Task}.", trimmed);
+                ErrorsTextFile.AppendInfo($"schtasks /Run succeeded for task \"{trimmed}\".");
+                return true;
+            }
+
+            var detail = string.Join(" ", new[] { stdout, stderr }.Where(s => !string.IsNullOrWhiteSpace(s)));
+            logger.LogWarning("schtasks /Run failed for task {Task}. ExitCode={Exit}. Output: {Output}", trimmed, exit, detail);
+            ErrorsTextFile.AppendWarning($"schtasks /Run failed for task \"{trimmed}\". ExitCode={exit}. {detail}");
+            return false;
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Failed to run schtasks for task {Task}", trimmed);
+            ErrorsTextFile.AppendException(ex, $"Failed to run schtasks for task \"{trimmed}\"");
+            return false;
+        }
+    }
+
     /// <summary>Resolves PaymentDelayApp.exe: JSON path, then side-by-side publish, then common dev output locations.</summary>
     internal static string? ResolveExePath(WatcherSettingsDocument settings, ILogger logger)
     {

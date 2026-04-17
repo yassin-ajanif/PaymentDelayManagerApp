@@ -55,9 +55,12 @@ public sealed class WatcherScanHostedService : BackgroundService
 
                 if (alertUnsettled > 0)
                 {
-                    ErrorsTextFile.AppendInfo($"Unsettled alerts ({alertUnsettled}) > 0; resolving GUI executable path.");
-                    var exe = PaymentDelayAppLauncher.ResolveExePath(settings, _logger);
-                    PaymentDelayAppLauncher.TryLaunchShowAlerts(exe, _logger);
+                    var taskName = string.IsNullOrWhiteSpace(settings.ScheduledTaskName)
+                        ? "PaymentDelayAppShowAlerts"
+                        : settings.ScheduledTaskName;
+                    ErrorsTextFile.AppendInfo(
+                        $"Unsettled alerts ({alertUnsettled}) > 0; triggering scheduled task \"{taskName}\" (schtasks /Run).");
+                    PaymentDelayAppLauncher.TryLaunchViaScheduledTask(taskName, _logger);
                 }
             }
             catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested)

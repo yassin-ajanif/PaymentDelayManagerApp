@@ -46,6 +46,9 @@ public partial class App : Application
             var db = _serviceProvider.GetRequiredService<PaymentDelayDbContext>();
             DatabaseMigrator.Migrate(db);
 
+            WatcherSettingsFile.EnsureCreated();
+            BackupSettingsFile.EnsureCreated();
+
             var dashboard = _serviceProvider.GetRequiredService<DashboardViewModel>();
 
             if (HasShowAlertsArgument(desktop))
