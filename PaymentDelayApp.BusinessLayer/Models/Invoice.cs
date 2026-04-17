@@ -10,7 +10,8 @@ public class Invoice
     public string InvoiceNumber { get; set; } = string.Empty;
     public string? Designation { get; set; }
     public decimal TtcAmount { get; set; }
-    public int EcheanceFactureJours { get; set; } = 60;
+    /// <summary>Null = échéance/facture non renseignée (comme date de livraison optionnelle).</summary>
+    public int? EcheanceFactureJours { get; set; }
     public bool IsSettled { get; set; }
     public bool IsPaymentAlert { get; set; }
     public DateTime? PaidAt { get; set; }

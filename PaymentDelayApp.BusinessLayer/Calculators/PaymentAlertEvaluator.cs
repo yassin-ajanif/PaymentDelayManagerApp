@@ -8,7 +8,8 @@ public static class PaymentAlertEvaluator
     {
         if (invoice.IsSettled)
             return false;
-        var reste = EcheanceCalculator.ResteDesJours(invoice.InvoiceDate, today, invoice.EcheanceFactureJours);
+        var term = EcheanceCalculator.EffectiveEcheanceFactureJours(invoice.EcheanceFactureJours);
+        var reste = EcheanceCalculator.ResteDesJours(invoice.InvoiceDate, today, term);
         return reste < supplier.AlertSeuilJours;
     }
 

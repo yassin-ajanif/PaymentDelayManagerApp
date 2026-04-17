@@ -13,10 +13,10 @@ public sealed class InvoiceDashboardRow
     public string SupplierName { get; init; } = string.Empty;
     public string? Designation { get; init; }
     public decimal TtcAmount { get; init; }
-    public int EcheanceFactureJours { get; init; }
+    public int? EcheanceFactureJours { get; init; }
     public int EcheanceNormaleJours { get; init; }
-    public int EcheanceRespecteeJours { get; init; }
-    public int ResteDesJours { get; init; }
+    public int? EcheanceRespecteeJours { get; init; }
+    public int? ResteDesJours { get; init; }
     public int AlertSeuilJours { get; init; }
     public bool IsSettled { get; init; }
 
@@ -25,7 +25,8 @@ public sealed class InvoiceDashboardRow
     public bool CanUnsettle => IsSettled;
 
     /// <summary>Facture non réglée et reste des jours strictement inférieur au seuil.</summary>
-    public bool IsResteJoursAlert => !IsSettled && ResteDesJours < AlertSeuilJours;
+    public bool IsResteJoursAlert =>
+        !IsSettled && ResteDesJours is int r && r < AlertSeuilJours;
 
     /// <summary>Used in grid cell template (IsVisible); Foreground binding to IBrush was unreliable with DataGrid recycling.</summary>
     public bool IsResteJoursNormalColor => !IsResteJoursAlert;
@@ -45,21 +46,28 @@ public sealed class InvoiceDashboardRow
     /// <summary>Échéance normale (j) = date de facture − aujourd'hui.</summary>
     public string EcheanceNormaleDisplay => $"{EcheanceNormaleJours} j";
 
-    /// <summary>Date limite = date de facture + délai (jours).</summary>
-    private string EcheanceLimiteDisplay =>
-        EcheanceCalculator.DateEcheanceNormale(InvoiceDate, EcheanceFactureJours).ToString("dd/MM/yyyy");
+    /// <summary>Date limite = date de facture + délai ; si non renseigné, +60 j.</summary>
+    private string EcheanceLimiteDisplay
+    {
+        get
+        {
+            var term = EcheanceCalculator.EffectiveEcheanceFactureJours(EcheanceFactureJours);
+            return EcheanceCalculator.DateEcheanceNormale(InvoiceDate, term).ToString("dd/MM/yyyy");
+        }
+    }
 
     public string EcheanceRespecteeDisplay => EcheanceLimiteDisplay;
     public string EcheanceFactureDisplay => EcheanceLimiteDisplay;
 
-    /// <summary>Date d'échéance respectée − aujourd'hui (affichage grille).</summary>
-    public string ResteDisplay => $"{ResteDesJours} j";
+    /// <summary>Reste des jours = date limite (facture + N) − aujourd'hui (affichage grille).</summary>
+    public string ResteDisplay => ResteDesJours is int r ? $"{r} j" : "—";
 
     public static InvoiceDashboardRow FromInvoice(Invoice invoice, DateOnly today)
     {
         var norm = EcheanceCalculator.EcheanceNormaleJours(invoice.InvoiceDate, today);
-        var resp = EcheanceCalculator.EcheanceRespecteeJours(invoice.EcheanceFactureJours);
-        var reste = EcheanceCalculator.ResteDesJours(invoice.InvoiceDate, today, invoice.EcheanceFactureJours);
+        var term = EcheanceCalculator.EffectiveEcheanceFactureJours(invoice.EcheanceFactureJours);
+        int? resp = invoice.EcheanceFactureJours ?? EcheanceCalculator.DefaultEcheanceFactureJoursWhenUnset;
+        var reste = EcheanceCalculator.ResteDesJours(invoice.InvoiceDate, today, term);
         return new InvoiceDashboardRow
         {
             Id = invoice.Id,

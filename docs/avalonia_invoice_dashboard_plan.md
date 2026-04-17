@@ -63,10 +63,10 @@ isProject: false
 Let **D_F** = date de facture (date only), **D_T** = date aujourd’hui (evaluation date, typically today), **N** = user’s **Date d'échéance/facture** value in **days** (integer **60–120**, default **60**).
 
 1. **Date d'échéance normale (jrs)** = **D_F − D_T** in **whole days** (*date de facture − date aujourd’hui*).
-2. **Date d'échéance_respectée (jrs)** = **N** (the same **60–120** day term the user set for that invoice — the “délai à respecter” in days).
-3. **Reste des jours** = **(Date d'échéance normale)** − **(Date d'échéance_respectée)** using the numeric **jrs** from (1) and (2).
+2. **Date d'échéance_respectée** — stored term **N** (days); the UI shows the calendar **deadline** **D_lim** = **D_F + N** (same **60–120** day range as configured in the app).
+3. **Reste des jours** = **D_lim − D_T** in **whole days** (*date limite de paiement − aujourd’hui*). Negative if the deadline has passed.
 
-**Optional display (read-only):** calendar **deadline** = **D_F + N days** can be shown as a tooltip or extra column for clarity; it is derived, not stored separately.
+**Optional display (read-only):** calendar **deadline** = **D_F + N days** is the same **D_lim** used for “Reste des jours”.
 
 Recompute on load, after save, and when “today” crosses midnight if the app stays open (optional timer or refresh on focus).
 

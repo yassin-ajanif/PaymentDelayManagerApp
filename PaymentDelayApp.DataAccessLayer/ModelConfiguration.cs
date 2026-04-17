@@ -32,7 +32,6 @@ public static class ModelConfiguration
             entity.Property(e => e.InvoiceNumber).IsRequired().HasMaxLength(100);
             entity.Property(e => e.Designation).HasMaxLength(2000);
             entity.Property(e => e.TtcAmount).HasPrecision(18, 2).IsRequired();
-            entity.Property(e => e.EcheanceFactureJours).IsRequired();
             entity.Property(e => e.IsSettled).IsRequired();
             entity.Property(e => e.IsPaymentAlert).IsRequired();
             entity.HasIndex(e => e.SupplierId).HasDatabaseName("IX_Invoices_SupplierId");

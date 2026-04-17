@@ -44,6 +44,12 @@ Manual scenarios above should match the following (re-validate and update the St
 - **Supplier form**: `NumericUpDown` allows typing a wide range (no silent clamp to 1–120); **save** enforces **[1, 120]** via `SupplierService` and shows a **Validation** dialog (French message).
 - **Address**: no case normalization in code paths (only trim); casing is preserved for non-whitespace content.
 
+## Invoice / facture (code alignment)
+
+- **Reste des jours** (`EcheanceCalculator.ResteDesJours`): **(date de facture + `EcheanceFactureJours`) − aujourd’hui** (jours entiers).
+- **`InvoiceService.SaveInvoiceAsync`**: date de livraison/prestation **≥** date de facture si renseignée ; **TTC ≥ 1** ; numéro de facture **unique par fournisseur** (après trim) ; `InvalidOperationException` avec messages en français (dialogue **Validation** dans le formulaire facture).
+- **Formulaire facture** : mêmes contrôles UX avant envoi ; erreurs métier = titre **Validation**, autres exceptions = **Erreur**.
+
 ## Summary
 
 | Total | Pass | Fail | Blocked | Not Run |

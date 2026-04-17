@@ -11,6 +11,12 @@ namespace PaymentDelayApp.ViewModels;
 
 public partial class InvoiceEditViewModel : ViewModelBase
 {
+    private const string EcheanceAvantFactureMessage =
+        "La date d'échéance/facture ne peut pas être antérieure à la date de facture.";
+
+    private const string EcheanceFacturePlageMessage =
+        "La date d'échéance/facture doit être entre 0 et 120 jours après la date de facture.";
+
     private readonly IInvoiceService _invoiceService;
     private readonly ISupplierService _supplierService;
     private readonly IDialogService _dialogs;
@@ -41,9 +47,9 @@ public partial class InvoiceEditViewModel : ViewModelBase
     [ObservableProperty]
     private decimal _ttcAmount;
 
-    /// <summary>0 = utilisateur n'a pas encore choisi la date d'échéance/facture (nouvelle facture).</summary>
+    /// <summary>Null = échéance/facture non renseignée (effacée ou jamais choisie).</summary>
     [ObservableProperty]
-    private int _echeanceFactureJours;
+    private int? _echeanceFactureJours;
 
     /// <summary>Calendar deadline = date de facture + <see cref="EcheanceFactureJours"/> (stored value remains days in DB).</summary>
     [ObservableProperty]
@@ -97,8 +103,6 @@ public partial class InvoiceEditViewModel : ViewModelBase
         else
         {
             InvoiceDateUi = ToDateTimeOffset(DateTime.Today);
-            EcheanceFactureJours = 0;
-            EcheanceFactureDateUi = null;
         }
 
         _ = LoadSuppliersAsync(existing);
@@ -106,29 +110,28 @@ public partial class InvoiceEditViewModel : ViewModelBase
 
     public string WindowTitle => _invoiceId == 0 ? "Nouvelle facture" : "Modifier la facture";
 
-    /// <summary>No explicit deadline: new facture or champ effacé — affichage et enregistrement par défaut 60 j.</summary>
-    private bool IsEcheanceFactureUnset =>
-        EcheanceFactureDateUi is null && EcheanceFactureJours < 1;
-
     public string EcheanceRespecteeDisplay => EcheanceLimiteDisplay;
 
-    /// <summary>Échéance respectée (date) − aujourd'hui ; délai par défaut 60 j si échéance/facture non renseignée.</summary>
+    /// <summary>Reste des jours jusqu'à la date limite ; si échéance/facture non renseignée, délai par défaut 60 j.</summary>
     public string ResteDisplay => FormatJoursNormale(ComputeResteJours());
 
     /// <summary>
-    /// Date limite affichée pour « échéance respectée » : date de facture + délai.
-    /// Mode par défaut (échéance/facture non renseignée) : +60 jours.
+    /// Date limite « échéance respectée » : date picker si présente, sinon facture + jours stockés,
+    /// sinon facture + <see cref="EcheanceCalculator.DefaultEcheanceFactureJoursWhenUnset"/> j.
     /// </summary>
     private string EcheanceLimiteDisplay
     {
         get
         {
-            var d = InvoiceDateUi;
-            if (d is null)
+            if (InvoiceDateUi is not { } invDto)
                 return "—";
-            var inv = DateOnly.FromDateTime(d.Value.LocalDateTime.Date);
-            var jours = IsEcheanceFactureUnset ? 60 : EcheanceFactureJours;
-            return EcheanceCalculator.DateEcheanceNormale(inv, jours).ToString("dd/MM/yyyy");
+            var inv = DateOnly.FromDateTime(invDto.LocalDateTime.Date);
+            if (EcheanceFactureDateUi is { } limDto)
+                return DateOnly.FromDateTime(limDto.LocalDateTime.Date).ToString("dd/MM/yyyy");
+            if (EcheanceFactureJours is int storedJours)
+                return EcheanceCalculator.DateEcheanceNormale(inv, storedJours).ToString("dd/MM/yyyy");
+            var term = EcheanceCalculator.EffectiveEcheanceFactureJours(EcheanceFactureJours);
+            return EcheanceCalculator.DateEcheanceNormale(inv, term).ToString("dd/MM/yyyy");
         }
     }
 
@@ -150,15 +153,20 @@ public partial class InvoiceEditViewModel : ViewModelBase
 
     private int? ComputeResteJours()
     {
-        var d = InvoiceDateUi;
-        if (d is null)
+        if (InvoiceDateUi is not { } invDto)
             return null;
-        var inv = DateOnly.FromDateTime(d.Value.LocalDateTime.Date);
+        var inv = DateOnly.FromDateTime(invDto.LocalDateTime.Date);
         var today = DateOnly.FromDateTime(DateTime.Today);
-        var termJours = IsEcheanceFactureUnset ? 60 : EcheanceFactureJours;
-        if (termJours < 0)
-            return null;
-        return EcheanceCalculator.ResteDesJours(inv, today, termJours);
+        if (EcheanceFactureDateUi is { } limDto)
+        {
+            var deadline = DateOnly.FromDateTime(limDto.LocalDateTime.Date);
+            return deadline.DayNumber - today.DayNumber;
+        }
+
+        if (EcheanceFactureJours is int t)
+            return EcheanceCalculator.ResteDesJours(inv, today, t);
+        var term = EcheanceCalculator.EffectiveEcheanceFactureJours(EcheanceFactureJours);
+        return EcheanceCalculator.ResteDesJours(inv, today, term);
     }
 
     partial void OnInvoiceDateUiChanged(DateTimeOffset? value)
@@ -169,7 +177,13 @@ public partial class InvoiceEditViewModel : ViewModelBase
         RefreshComputed();
     }
 
-    partial void OnEcheanceFactureJoursChanged(int value) => RefreshComputed();
+    partial void OnEcheanceFactureJoursChanged(int? value)
+    {
+        if (_suppressEcheanceDateSync)
+            return;
+        RefreshEcheanceFactureDateFromJours();
+        RefreshComputed();
+    }
 
     partial void OnEcheanceFactureDateUiChanged(DateTimeOffset? value)
     {
@@ -177,8 +191,7 @@ public partial class InvoiceEditViewModel : ViewModelBase
             return;
         if (value is null)
         {
-            if (EcheanceFactureJours != 0)
-                EcheanceFactureJours = 0;
+            EcheanceFactureJours = null;
             RefreshComputed();
             return;
         }
@@ -188,7 +201,7 @@ public partial class InvoiceEditViewModel : ViewModelBase
         var inv = DateOnly.FromDateTime(InvoiceDateUi.Value.LocalDateTime.Date);
         var deadline = DateOnly.FromDateTime(value.Value.LocalDateTime.Date);
         var jours = deadline.DayNumber - inv.DayNumber;
-        if (jours != EcheanceFactureJours)
+        if (!EcheanceFactureJours.HasValue || EcheanceFactureJours.Value != jours)
             EcheanceFactureJours = jours;
 
         RefreshComputed();
@@ -199,13 +212,13 @@ public partial class InvoiceEditViewModel : ViewModelBase
         if (InvoiceDateUi is null)
             return;
         _suppressEcheanceDateSync = true;
-        if (EcheanceFactureJours < 0)
+        if (!EcheanceFactureJours.HasValue)
             EcheanceFactureDateUi = null;
         else
         {
             var inv = DateOnly.FromDateTime(InvoiceDateUi.Value.LocalDateTime.Date);
             EcheanceFactureDateUi = ToDateTimeOffset(
-                EcheanceCalculator.DateEcheanceNormale(inv, EcheanceFactureJours).ToDateTime(TimeOnly.MinValue));
+                EcheanceCalculator.DateEcheanceNormale(inv, EcheanceFactureJours.Value).ToDateTime(TimeOnly.MinValue));
         }
 
         _suppressEcheanceDateSync = false;
@@ -262,6 +275,24 @@ public partial class InvoiceEditViewModel : ViewModelBase
                     _window);
                 return;
             }
+
+            if (delOnly < invoiceDateOnly)
+            {
+                await _dialogs.ShowMessageAsync(
+                    "Validation",
+                    "La date de livraison ou prestation doit être le même jour ou après la date de facture.",
+                    _window);
+                return;
+            }
+        }
+
+        if (TtcAmount < 1m)
+        {
+            await _dialogs.ShowMessageAsync(
+                "Validation",
+                "Le TTC doit être supérieur ou égal à 1.",
+                _window);
+            return;
         }
 
         if (string.IsNullOrWhiteSpace(InvoiceNumber))
@@ -270,26 +301,43 @@ public partial class InvoiceEditViewModel : ViewModelBase
             return;
         }
 
-        int echeanceJours;
+        int? echeanceJours;
         if (EcheanceFactureDateUi is not null)
         {
             var deadline = DateOnly.FromDateTime(EcheanceFactureDateUi.Value.LocalDateTime.Date);
             var joursFromDates = deadline.DayNumber - invoiceDateOnly.DayNumber;
-            if (joursFromDates is < 0 or > 120)
+            if (joursFromDates < 0)
             {
-                await _dialogs.ShowMessageAsync(
-                    "Validation",
-                    "La date d'échéance/facture doit être entre 0 et 120 jours après la date de facture.",
-                    _window);
+                await _dialogs.ShowMessageAsync("Validation", EcheanceAvantFactureMessage, _window);
+                return;
+            }
+
+            if (joursFromDates > 120)
+            {
+                await _dialogs.ShowMessageAsync("Validation", EcheanceFacturePlageMessage, _window);
                 return;
             }
 
             echeanceJours = joursFromDates;
         }
-        else if (EcheanceFactureJours is >= 0 and <= 120)
-            echeanceJours = EcheanceFactureJours;
+        else if (EcheanceFactureJours is int ej)
+        {
+            if (ej < 0)
+            {
+                await _dialogs.ShowMessageAsync("Validation", EcheanceAvantFactureMessage, _window);
+                return;
+            }
+
+            if (ej > 120)
+            {
+                await _dialogs.ShowMessageAsync("Validation", EcheanceFacturePlageMessage, _window);
+                return;
+            }
+
+            echeanceJours = ej;
+        }
         else
-            echeanceJours = 60;
+            echeanceJours = null;
 
         var invoice = new Invoice
         {
@@ -313,6 +361,10 @@ public partial class InvoiceEditViewModel : ViewModelBase
             await _invoiceService.SaveInvoiceAsync(invoice);
             _window.Close(true);
         }
+        catch (InvalidOperationException ex)
+        {
+            await _dialogs.ShowMessageAsync("Validation", ex.Message, _window);
+        }
         catch (Exception ex)
         {
             await _dialogs.ShowMessageAsync("Erreur", ex.Message, _window);
@@ -323,9 +375,9 @@ public partial class InvoiceEditViewModel : ViewModelBase
     [RelayCommand]
     private void ClearEcheanceFactureDate()
     {
-        if (EcheanceFactureDateUi is null && EcheanceFactureJours <= 0)
+        if (!EcheanceFactureJours.HasValue && EcheanceFactureDateUi is null)
             return;
-        EcheanceFactureDateUi = null;
+        EcheanceFactureJours = null;
     }
 
     [RelayCommand]

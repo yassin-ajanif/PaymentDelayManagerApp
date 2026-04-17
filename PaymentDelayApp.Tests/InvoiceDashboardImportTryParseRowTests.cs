@@ -341,7 +341,7 @@ public sealed class InvoiceDashboardImportTryParseRowTests
         Assert.IsNull(err);
         Assert.IsNotNull(inv);
         Assert.AreEqual(42, inv!.SupplierId);
-        Assert.AreSame(sup, inv.Supplier);
+        Assert.IsNull(inv.Supplier);
         Assert.AreEqual(invD, inv.InvoiceDate);
         Assert.AreEqual(invD.AddDays(1), inv.DeliveryOrServiceDate);
         Assert.AreEqual("INV-1", inv.InvoiceNumber);

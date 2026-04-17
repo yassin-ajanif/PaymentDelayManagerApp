@@ -81,8 +81,11 @@ public class InvoiceAccess : IInvoiceAccess
         int? excludeInvoiceId,
         CancellationToken cancellationToken = default)
     {
+        var key = (invoiceNumber ?? string.Empty).Trim();
         var q = _db.Invoices.AsNoTracking()
-            .Where(i => i.SupplierId == supplierId && i.InvoiceNumber == invoiceNumber);
+            .Where(i =>
+                i.SupplierId == supplierId
+                && i.InvoiceNumber.ToLower() == key.ToLower());
         if (excludeInvoiceId is int id)
             q = q.Where(i => i.Id != id);
         return await q.AnyAsync(cancellationToken);

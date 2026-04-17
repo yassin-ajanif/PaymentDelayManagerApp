@@ -25,9 +25,28 @@ public class InvoiceService : IInvoiceService
 
     public async Task SaveInvoiceAsync(Invoice invoice, CancellationToken cancellationToken = default)
     {
-        if (invoice.EcheanceFactureJours > MaxEcheanceFactureJours)
-            throw new ArgumentOutOfRangeException(nameof(invoice), invoice.EcheanceFactureJours,
+        ArgumentNullException.ThrowIfNull(invoice);
+
+        invoice.InvoiceNumber = invoice.InvoiceNumber?.Trim() ?? string.Empty;
+
+        if (invoice.EcheanceFactureJours is int ej && ej > MaxEcheanceFactureJours)
+            throw new InvalidOperationException(
                 $"La date d'échéance/facture ne peut pas dépasser {MaxEcheanceFactureJours} jours.");
+
+        if (invoice.DeliveryOrServiceDate is { } del && del < invoice.InvoiceDate)
+            throw new InvalidOperationException(
+                "La date de livraison ou prestation doit être le même jour ou après la date de facture.");
+
+        if (invoice.TtcAmount < 1m)
+            throw new InvalidOperationException("Le TTC doit être supérieur ou égal à 1.");
+
+        int? excludeId = invoice.Id == 0 ? null : invoice.Id;
+        if (await _invoices.ExistsWithSupplierAndNumberAsync(
+                invoice.SupplierId,
+                invoice.InvoiceNumber,
+                excludeId,
+                cancellationToken))
+            throw new InvalidOperationException("Ce numéro de facture existe déjà pour ce fournisseur.");
 
         var supplier = await _suppliers.GetByIdAsync(invoice.SupplierId, cancellationToken)
             ?? throw new InvalidOperationException("Fournisseur introuvable.");
