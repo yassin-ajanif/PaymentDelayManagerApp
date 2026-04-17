@@ -1,0 +1,32 @@
+# Build outputs (all projects: PaymentDelayApp, BusinessLayer, DataAccessLayer, Tests, AlterWatcherService)
+[Bb]in/
+[Oo]bj/
+
+# .NET
+*.user
+*.userosscache
+*.suo
+*.cache
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# Rider / VS Code / VS
+.idea/
+.vs/
+*.rsuser
+
+# NuGet
+*.nupkg
+**/packages/*
+!**/packages/build/
+
+# Test / tooling
+TestResults/
+*.trx
+coverage*.json
+coverage*.xml
+
+# OS
+.DS_Store
+Thumbs.db

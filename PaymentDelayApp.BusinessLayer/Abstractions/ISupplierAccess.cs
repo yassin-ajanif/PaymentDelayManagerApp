@@ -9,4 +9,8 @@ public interface ISupplierAccess
     Task AddAsync(Supplier supplier, CancellationToken cancellationToken = default);
     Task UpdateAsync(Supplier supplier, CancellationToken cancellationToken = default);
     Task DeleteAsync(int id, CancellationToken cancellationToken = default);
+
+    Task<bool> NameExistsAsync(string name, int? excludeId, CancellationToken cancellationToken = default);
+    Task<bool> IceExistsAsync(string ice, int? excludeId, CancellationToken cancellationToken = default);
+    Task<bool> FiscalIdExistsAsync(string fiscalId, int? excludeId, CancellationToken cancellationToken = default);
 }

@@ -74,4 +74,17 @@ public class InvoiceAccess : IInvoiceAccess
 
         await _db.SaveChangesAsync(cancellationToken);
     }
+
+    public async Task<bool> ExistsWithSupplierAndNumberAsync(
+        int supplierId,
+        string invoiceNumber,
+        int? excludeInvoiceId,
+        CancellationToken cancellationToken = default)
+    {
+        var q = _db.Invoices.AsNoTracking()
+            .Where(i => i.SupplierId == supplierId && i.InvoiceNumber == invoiceNumber);
+        if (excludeInvoiceId is int id)
+            q = q.Where(i => i.Id != id);
+        return await q.AnyAsync(cancellationToken);
+    }
 }

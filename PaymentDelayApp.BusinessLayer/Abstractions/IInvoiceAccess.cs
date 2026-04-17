@@ -13,4 +13,10 @@ public interface IInvoiceAccess
     Task UpdatePaymentAlertFlagsAsync(
         IReadOnlyDictionary<int, bool> flagsByInvoiceId,
         CancellationToken cancellationToken = default);
+
+    Task<bool> ExistsWithSupplierAndNumberAsync(
+        int supplierId,
+        string invoiceNumber,
+        int? excludeInvoiceId,
+        CancellationToken cancellationToken = default);
 }

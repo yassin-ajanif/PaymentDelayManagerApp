@@ -45,4 +45,29 @@ public class SupplierAccess : ISupplierAccess
         _db.Suppliers.Remove(entity);
         await _db.SaveChangesAsync(cancellationToken);
     }
+
+    public async Task<bool> NameExistsAsync(string name, int? excludeId, CancellationToken cancellationToken = default)
+    {
+        var q = _db.Suppliers.AsNoTracking()
+            .Where(s => s.Name.ToLower() == name.ToLower());
+        if (excludeId is int id)
+            q = q.Where(s => s.Id != id);
+        return await q.AnyAsync(cancellationToken);
+    }
+
+    public async Task<bool> IceExistsAsync(string ice, int? excludeId, CancellationToken cancellationToken = default)
+    {
+        var q = _db.Suppliers.AsNoTracking().Where(s => s.Ice == ice);
+        if (excludeId is int id)
+            q = q.Where(s => s.Id != id);
+        return await q.AnyAsync(cancellationToken);
+    }
+
+    public async Task<bool> FiscalIdExistsAsync(string fiscalId, int? excludeId, CancellationToken cancellationToken = default)
+    {
+        var q = _db.Suppliers.AsNoTracking().Where(s => s.FiscalId == fiscalId);
+        if (excludeId is int id)
+            q = q.Where(s => s.Id != id);
+        return await q.AnyAsync(cancellationToken);
+    }
 }

@@ -158,8 +158,7 @@ public partial class InvoiceEditViewModel : ViewModelBase
         var termJours = IsEcheanceFactureUnset ? 60 : EcheanceFactureJours;
         if (termJours < 0)
             return null;
-        var echeanceRespectee = EcheanceCalculator.DateEcheanceNormale(inv, termJours);
-        return EcheanceCalculator.ResteDesJours(echeanceRespectee, today);
+        return EcheanceCalculator.ResteDesJours(inv, today, termJours);
     }
 
     partial void OnInvoiceDateUiChanged(DateTimeOffset? value)

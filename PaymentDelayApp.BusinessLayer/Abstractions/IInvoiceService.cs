@@ -11,4 +11,6 @@ public interface IInvoiceService
     Task SettleInvoiceAsync(int id, DateTime paidAt, CancellationToken cancellationToken = default);
     Task UnsettleInvoiceAsync(int id, CancellationToken cancellationToken = default);
     Task RefreshPaymentAlertFlagsAsync(CancellationToken cancellationToken = default);
+
+    Task<int> CountUnsettledPaymentAlertsAsync(CancellationToken cancellationToken = default);
 }

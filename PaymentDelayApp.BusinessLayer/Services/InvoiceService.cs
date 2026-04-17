@@ -90,4 +90,10 @@ public class InvoiceService : IInvoiceService
         if (flags.Count > 0)
             await _invoices.UpdatePaymentAlertFlagsAsync(flags, cancellationToken);
     }
+
+    public async Task<int> CountUnsettledPaymentAlertsAsync(CancellationToken cancellationToken = default)
+    {
+        var invoices = await _invoices.GetAllAsync(cancellationToken);
+        return invoices.Count(i => i.IsPaymentAlert && !i.IsSettled);
+    }
 }

@@ -1,5 +1,9 @@
 using Microsoft.Data.Sqlite;
+using Moq;
+using PaymentDelayApp.BusinessLayer.Abstractions;
+using PaymentDelayApp.BusinessLayer.Models;
 using PaymentDelayApp.DataAccessLayer;
+using PaymentDelayApp.Models;
 using PaymentDelayApp.Services;
 
 namespace PaymentDelayApp.Tests;
@@ -7,6 +11,37 @@ namespace PaymentDelayApp.Tests;
 [TestClass]
 public sealed class DatabaseBackupServiceTests
 {
+    private static DatabaseBackupService CreateSut()
+    {
+        var invoices = new Mock<IInvoiceService>();
+        invoices.Setup(x => x.GetInvoicesAsync(It.IsAny<CancellationToken>()))
+            .ReturnsAsync(Array.Empty<Invoice>());
+        var suppliers = new Mock<ISupplierService>();
+        suppliers.Setup(x => x.GetSuppliersAsync(It.IsAny<CancellationToken>()))
+            .ReturnsAsync(Array.Empty<Supplier>());
+        var export = new Mock<IInvoiceDashboardExportService>();
+        export.Setup(x => x.WriteExcelAsync(
+                It.IsAny<IReadOnlyList<InvoiceDashboardRow>>(),
+                It.IsAny<Stream>(),
+                It.IsAny<string>(),
+                It.IsAny<string>(),
+                It.IsAny<CancellationToken>()))
+            .Returns(Task.CompletedTask);
+        var supplierExcel = new Mock<ISupplierExcelService>();
+        supplierExcel.Setup(x => x.WriteExcelAsync(
+                It.IsAny<IReadOnlyList<Supplier>>(),
+                It.IsAny<Stream>(),
+                It.IsAny<string>(),
+                It.IsAny<string>(),
+                It.IsAny<CancellationToken>()))
+            .Returns(Task.CompletedTask);
+        return new DatabaseBackupService(
+            invoices.Object,
+            suppliers.Object,
+            export.Object,
+            supplierExcel.Object);
+    }
+
     private static string CreateTempDir() =>
         Path.Combine(Path.GetTempPath(), "PaymentDelayApp.Tests.DbBackup." + Guid.NewGuid().ToString("N"));
 
@@ -43,7 +78,7 @@ public sealed class DatabaseBackupServiceTests
     [TestMethod]
     public async Task CreateBackupAsync_SourceMissing_ThrowsFileNotFoundException()
     {
-        var sut = new DatabaseBackupService();
+        var sut = CreateSut();
         var backupDir = CreateTempDir();
         Directory.CreateDirectory(backupDir);
         try
@@ -61,7 +96,7 @@ public sealed class DatabaseBackupServiceTests
     [TestMethod]
     public async Task CreateBackupAsync_NullOrWhiteSpacePaths_ThrowArgumentException()
     {
-        var sut = new DatabaseBackupService();
+        var sut = CreateSut();
         var dir = CreateTempDir();
         Directory.CreateDirectory(dir);
         try
@@ -86,7 +121,7 @@ public sealed class DatabaseBackupServiceTests
     [TestMethod]
     public async Task CreateBackupAsync_WritesBackupFileAndCopiesData()
     {
-        var sut = new DatabaseBackupService();
+        var sut = CreateSut();
         var sourcePath = await CreateSourceSqliteFileAsync().ConfigureAwait(false);
         var sourceDir = Path.GetDirectoryName(sourcePath)!;
         var backupRoot = CreateTempDir();
@@ -113,7 +148,7 @@ public sealed class DatabaseBackupServiceTests
     [TestMethod]
     public async Task CreateBackupAsync_PreCancelledToken_DoesNotWriteBackup()
     {
-        var sut = new DatabaseBackupService();
+        var sut = CreateSut();
         var sourcePath = await CreateSourceSqliteFileAsync().ConfigureAwait(false);
         var sourceDir = Path.GetDirectoryName(sourcePath)!;
         var backupRoot = CreateTempDir();
@@ -135,7 +170,7 @@ public sealed class DatabaseBackupServiceTests
     [TestMethod]
     public async Task PruneBackupsAsync_MissingDirectory_CompletesWithoutThrow()
     {
-        var sut = new DatabaseBackupService();
+        var sut = CreateSut();
         var missing = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N") + "_no_such_backup_dir");
         await sut.PruneBackupsAsync(missing, 10, CancellationToken.None).ConfigureAwait(false);
     }
@@ -143,7 +178,7 @@ public sealed class DatabaseBackupServiceTests
     [TestMethod]
     public async Task PruneBackupsAsync_NullOrWhiteSpaceDirectory_ThrowsArgumentException()
     {
-        var sut = new DatabaseBackupService();
+        var sut = CreateSut();
         await Assert.ThrowsExceptionAsync<ArgumentException>(() =>
             sut.PruneBackupsAsync("", 10, CancellationToken.None)).ConfigureAwait(false);
         await Assert.ThrowsExceptionAsync<ArgumentException>(() =>
@@ -153,7 +188,7 @@ public sealed class DatabaseBackupServiceTests
     [TestMethod]
     public async Task PruneBackupsAsync_DeletesOldAppBackupFilesOnly()
     {
-        var sut = new DatabaseBackupService();
+        var sut = CreateSut();
         var dir = CreateTempDir();
         Directory.CreateDirectory(dir);
         var oldBackup = Path.Combine(dir, "app_backup_old.db");
@@ -181,7 +216,7 @@ public sealed class DatabaseBackupServiceTests
     [TestMethod]
     public async Task PruneBackupsAsync_RetentionDaysClampedToMinimum()
     {
-        var sut = new DatabaseBackupService();
+        var sut = CreateSut();
         var dir = CreateTempDir();
         Directory.CreateDirectory(dir);
         var path = Path.Combine(dir, "app_backup_stale.db");
@@ -201,7 +236,7 @@ public sealed class DatabaseBackupServiceTests
     [TestMethod]
     public async Task PruneBackupsAsync_CancelledToken_ThrowsOperationCanceled()
     {
-        var sut = new DatabaseBackupService();
+        var sut = CreateSut();
         var dir = CreateTempDir();
         Directory.CreateDirectory(dir);
         var path = Path.Combine(dir, "app_backup_x.db");
@@ -222,7 +257,7 @@ public sealed class DatabaseBackupServiceTests
     [TestMethod]
     public async Task CreateBackupAsync_ThenPruneRemovesStaleBackups()
     {
-        var sut = new DatabaseBackupService();
+        var sut = CreateSut();
         var sourcePath = await CreateSourceSqliteFileAsync().ConfigureAwait(false);
         var sourceDir = Path.GetDirectoryName(sourcePath)!;
         var backupRoot = CreateTempDir();
