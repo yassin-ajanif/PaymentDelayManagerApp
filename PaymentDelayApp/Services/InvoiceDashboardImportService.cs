@@ -205,8 +205,8 @@ public sealed class InvoiceDashboardImportService : IInvoiceDashboardImportServi
             return "Les dates d'échéance (colonnes 7 et 9) ne correspondent pas.";
 
         var echeanceJours = dateLimite7.DayNumber - invoiceDate.DayNumber;
-        if (echeanceJours is < 1 or > 120)
-            return "Délai d'échéance dérivé hors plage (1–120 jours).";
+        if (echeanceJours is < 0 or > 120)
+            return "Délai d'échéance dérivé hors plage (0–120 jours).";
 
         var expectedLimit = EcheanceCalculator.DateEcheanceNormale(invoiceDate, echeanceJours);
         if (expectedLimit != dateLimite7)

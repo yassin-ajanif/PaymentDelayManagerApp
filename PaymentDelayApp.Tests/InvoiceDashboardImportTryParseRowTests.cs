@@ -235,7 +235,7 @@ public sealed class InvoiceDashboardImportTryParseRowTests
     }
 
     [TestMethod]
-    public void TryParseRow_DerivedEcheanceTooShort_ReturnsRangeMessage()
+    public void TryParseRow_DerivedEcheanceZeroDays_Accepted()
     {
         using var wb = new XLWorkbook();
         var ws = wb.AddWorksheet("S");
@@ -243,8 +243,24 @@ public sealed class InvoiceDashboardImportTryParseRowTests
         var invD = new DateOnly(DateTime.Today.Year, 4, 5);
         var lim = invD;
         InvoiceDashboardImportTestExcel.WriteDataCells(ws, 2,
+            [Fr(invD), "", "N1", "S", "", "1", Fr(lim), "0 j", Fr(lim)]);
+        var err = ParseRow(ws, 2, map, amb, out var inv);
+        Assert.IsNull(err);
+        Assert.IsNotNull(inv);
+        Assert.AreEqual(0, inv!.EcheanceFactureJours);
+    }
+
+    [TestMethod]
+    public void TryParseRow_DerivedEcheanceBeforeInvoice_ReturnsRangeMessage()
+    {
+        using var wb = new XLWorkbook();
+        var ws = wb.AddWorksheet("S");
+        var (map, amb) = Lookup(new Supplier { Id = 1, Name = "S" });
+        var invD = new DateOnly(DateTime.Today.Year, 4, 5);
+        var lim = invD.AddDays(-1);
+        InvoiceDashboardImportTestExcel.WriteDataCells(ws, 2,
             [Fr(invD), "", "N1", "S", "", "1", Fr(lim), "3 j", Fr(lim)]);
-        Assert.AreEqual("Délai d'échéance dérivé hors plage (1–120 jours).", ParseRow(ws, 2, map, amb, out _));
+        Assert.AreEqual("Délai d'échéance dérivé hors plage (0–120 jours).", ParseRow(ws, 2, map, amb, out _));
     }
 
     [TestMethod]
@@ -257,7 +273,7 @@ public sealed class InvoiceDashboardImportTryParseRowTests
         var lim = invD.AddDays(121);
         InvoiceDashboardImportTestExcel.WriteDataCells(ws, 2,
             [Fr(invD), "", "N1", "S", "", "1", Fr(lim), "3 j", Fr(lim)]);
-        Assert.AreEqual("Délai d'échéance dérivé hors plage (1–120 jours).", ParseRow(ws, 2, map, amb, out _));
+        Assert.AreEqual("Délai d'échéance dérivé hors plage (0–120 jours).", ParseRow(ws, 2, map, amb, out _));
     }
 
     [TestMethod]
