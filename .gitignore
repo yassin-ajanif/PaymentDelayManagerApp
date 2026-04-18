@@ -1,6 +1,7 @@
 # Build outputs (all projects: PaymentDelayApp, BusinessLayer, DataAccessLayer, Tests, AlterWatcherService)
 [Bb]in/
 [Oo]bj/
+[Dd]eployment/
 
 # .NET
 *.user
