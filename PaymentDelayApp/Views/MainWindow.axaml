@@ -11,7 +11,7 @@
         MinHeight="560"
         x:Class="PaymentDelayApp.Views.MainWindow"
         x:DataType="vm:DashboardViewModel"
-        Icon="/Assets/avalonia-logo.ico"
+        Icon="/Assets/AppIcon.png"
         Title="Délais de paiement">
 
     <Design.DataContext>
